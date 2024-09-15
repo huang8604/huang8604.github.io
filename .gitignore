@@ -2,6 +2,10 @@ node_modules/
 build/
 public/
 resources/
-
+.DS_Store
+*.DS_Store
+content/post/obsidion/.obsidian/
+.obsidian
+.gitignore
 .hugo_build.lock
 _vendor
