@@ -6,7 +6,7 @@
 title = "Hugo FixIt Blog"
 baseURL = "https://huang8604.github.io/"
 # theme = "FixIt"
-defaultContentLanguage = "zh-CN"
+defaultContentLanguage = "en"
 languageCode = "zh-CN"
 hasCJKLanguage = true
 enableRobotsTXT = true
