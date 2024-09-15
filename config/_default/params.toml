@@ -6,9 +6,9 @@
 # FixIt 0.2.15 | CHANGED FixIt theme version
 version = "0.3.X" # e.g. "0.2.X", "0.2.15", "v0.2.15" etc.
 # site description
-description = "This is my new Hugo FixIt site"
+description = "简单记录工作总结💼，学习整理。💰🍺"
 # site keywords
-keywords = ["Hugo", "FixIt"]
+keywords = ["Hugo", "FixIt","wentao","android","framework"]
 # site default theme ["light", "dark", "auto"]
 defaultTheme = "auto"
 # which hash function used for SRI, when empty, no SRI is used
@@ -224,15 +224,15 @@ disableThemeInject = false
   [home.profile]
     enable = true
     # Gravatar Email for preferred avatar in home page
-    gravatarEmail = "xx@xx.com"
+    gravatarEmail = "huang8604@163.com"
     # URL of avatar shown in home page
-    avatarURL = ""
+    avatarURL = "https://gravatar.com/coolmortallyadbff0d1a8"
     # FixIt 0.2.17 | NEW identifier of avatar menu link
     avatarMenu = ""
     # title shown in home page (HTML format is supported)
     title = ""
     # subtitle shown in home page
-    subtitle = "This is my new Hugo FixIt site"
+    subtitle = "记录多一点，懂得多一点"
     # whether to use typeit animation for subtitle
     typeit = true
     # whether to show social links
@@ -243,7 +243,7 @@ disableThemeInject = false
   [home.posts]
     enable = true
     # special amount of posts in each home posts page
-    paginate = 6
+    paginate = 8
 
 # FixIt 0.2.16 | CHANGED Social config about the author
 [social]
