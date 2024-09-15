@@ -83,7 +83,7 @@ disableThemeInject = false
   # max number of results length
   maxResultLength = 10
   # snippet length of the result
-  snippetLength = 30
+  snippetLength = 50
   # HTML tag name of the highlight part in results
   highlightTag = "em"
   # whether to use the absolute URL based on the baseURL in search index
@@ -113,7 +113,7 @@ disableThemeInject = false
   # Header title config
   [header.title]
     # URL of the LOGO
-    logo = "/hugo-fixit-starter/images/fixit.min.svg"
+    logo = "/images/doc.jpg"
     # title name
     name = ""
     # you can add extra information before the name (HTML format is supported), such as icons
