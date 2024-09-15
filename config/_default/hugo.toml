@@ -3,11 +3,11 @@
 # See: https://gohugo.io/getting-started/configuration/
 # -------------------------------------------------------------------------------------
 
-title = "文涛的文档记录2"
+title = "文韬的文档"
 baseURL = "https://huang8604.github.io/"
 
 # theme = "FixIt"
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh-cn"
 #网站语言
 languageCode = "zh-CN"
 # 语言名称 ["English", "简体中文", "Français", "Polski", ...]
