@@ -4,10 +4,10 @@
 # -------------------------------------------------------------------------------------
 
 title = "Hugo FixIt Blog"
-baseURL = "https://hugo-fixit.github.io/hugo-fixit-starter/"
+baseURL = "https://huang8604.github.io/"
 # theme = "FixIt"
-defaultContentLanguage = "en"
-languageCode = "en"
+defaultContentLanguage = "zh-CN"
+languageCode = "zh-CN"
 hasCJKLanguage = true
 enableRobotsTXT = true
 enableEmoji = true
