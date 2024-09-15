@@ -4,7 +4,7 @@ public/
 resources/
 .DS_Store
 *.DS_Store
-content/post/obsidion/.obsidian/
+content/posts/obsidion/.obsidian/
 .obsidian
 .gitignore
 .hugo_build.lock
