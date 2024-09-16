@@ -8,90 +8,51 @@ categories:
   - Android
 title: adsp wristdown 流程与实现
 date: 2024-03-31T02:00:33.830Z
-lastmod: 2024-09-16T04:38:05.813Z
+lastmod: 2024-09-16T04:54:06.331Z
 ---
 \#Peppermill #算法研究
 
-目前 落腕灭屏算法大致在framework 层实现。\
+目前 落腕灭屏算法大致在 framework 层实现。\
 目前算法的思路：
 
 1. [#运动检测](#%E8%BF%90%E5%8A%A8%E6%A3%80%E6%B5%8B)，通过一些特征值，来判断是否是一个运动段落。
 2. 符合的运动检测后，我们来判断是否是落腕的动作。
-3. 符合的落腕的动作后，sensor上报event。 framework 监听获取后进行灭屏的判断动作。
+3. 符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。
 
 #### 背景介绍
 
-早起的Android 平台，Sensor 是放在 AP侧实现的，Sensor 生成设备节点供上层使用，Sensor的工作CPU就不能完好的休眠。\
-后续的高版本android 各个平台厂商都有了不同的方案，SensorHub，ADSP
+早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。\
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP
 
 ###### SensorHub
 
-个人理解啊，SensorHub 应该算一个独立的子系统，MCU，可以不依赖CPU架构独立运行，可以较大的程度省电。主要功能就是连接各类sensor并且去处理，MTK采用的该方案，使用的是SRAM架构，通电就可以保存数据，相对内存需要不停的刷新，长期运行可以节省用电。
+个人理解啊，SensorHub 应该算一个独立的子系统，MCU，可以不依赖 CPU 架构独立运行，可以较大的程度省电。主要功能就是连接各类 sensor 并且去处理，MTK 采用的该方案，使用的是 SRAM 架构，通电就可以保存数据，相对内存需要不停的刷新，长期运行可以节省用电。
 
 ###### ADSP
 
-将sensor放到adsp（audio dsp; dsp: 应用数字信号处理系统）中，待机时主处理器休眠以降低功耗，adsp在处理音频数据的间隙处理sensor数据，以减小功耗。  slpi架构：slpi(sensor low power island)
-
-> \[!island]\
-> **低功耗空间（island 空间）**\
-> 本质：CPU的二级缓存（即外部缓存，L2 cache、TCM），通过SRAM器件实现，空间大小由硬件限制，后期一般无法调整大小。
->
-> 原理：SRAM不需要实时刷新电路就能够保存数据，所以具有静止存取数据的作用，功耗较低；DRAM需要不停地反复刷新电路，否则内部的数据将会消失，因此功耗会高。
->
-> 需要运行在island mode的业务一般是Sensor、Audio等领域，涉及业务包含器件驱动、计步、语音唤醒、AONCamera等需要在AP休眠后仍继续运行的业务。
->
-> 大小：其大小可以在相应芯片手册sensors overview上查到。也可以在编译log中看到，可以搜索如下关键字：
->
-> > Island Meminfo for: SSC\_TCM\_PHYSPOOL 表示Sensor空间\
-> > Island Meminfo for: QURTOS\_SSC\_ISLAND\_POOL 表示Sensor空间\
-> > Island Meminfo for: AUDIO\_TCM\_PHYSPOOL 表示Audio空间\
-> > Total island space copied at boot 表示已使用空间\
-> > Total island space left in island pool 表示剩余空间
->
-> **重新划分island 空间**\
-> 高通平台的island划分在不同的物理片区，sensor 的空间 oversize 不会影响 audio ， audio 的空间 oversize 也不会影响 sensor 。
->
-> audio/sensor 低功耗空间目前基本遵循各 50% 的原则，而高通原始基线一般 audio 预分配空间占用会超过 50% ， sensor 预分配空间会低于 50% ，有时会导致sensor的驱动或者自研算法无法加进island mode，这时候就需要手动调整低功耗空间分区大小。
->
-> 不同PD之间划分内存大小必须以 64K 的整数倍进行，否则会因为内存对齐方式造成内存浪费，从audio 划分内存到 sensor 空间，一般是裁剪 audio 的 heap 空间，再划分至 sensor 空间
->
-> 可以参考如下修改方案：\
-> adsp\_proc/build/chipset/divar/adsp/qdsp6.xml
->
-> > ```xml
-> > <physical_pool name="QURTOS_VA_ISLAND_POOL">
-> >        <region base="0x0A000000" size="0x60000" name="QURTOS_ISLAND_REGION_TCM" cache_policy="l1_wb_l2_uncacheable"/>
-> > </physical_pool>
-> >
-> > <physical_pool name="QURTOS_SSC_ISLAND_POOL">
-> >        <region base="0x0A060000" size="0x20000" name="QURTOS_ISLAND_REGION_TCM" cache_policy="l1_wb_l2_uncacheable"/>
-> >        <region allocate="island" size="0x40000" name="QURTOS_ISLAND_REGION_DDR" cache_policy="l1_wb_l2_cacheable"/>
-> > </physical_pool>
-> > ```
-
 #### ADSP 部分
 
-之前把落腕的检测放在framework里面实现，在亮屏之后，监听Asensor 和GSensor，做为落腕其实只在亮屏后使用，整体上来说，是不影响耗流。\
-将算法下沉到ADSP，主要考虑后续方案的适配性，针对一些低耗流的需求，可以能够较好的满足。
+之前把落腕的检测放在 framework 里面实现，在亮屏之后，监听 Asensor 和 GSensor，做为落腕其实只在亮屏后使用，整体上来说，是不影响耗流。\
+将算法下沉到 ADSP，主要考虑后续方案的适配性，针对一些低耗流的需求，可以能够较好的满足。
 
 ##### 编译
 
-记录我目前编译的一个问题，完整的AMSS编译OK，但是单独编译ADSP的时候就会报错
+记录我目前编译的一个问题，完整的 AMSS 编译 OK，但是单独编译 ADSP 的时候就会报错
 
 ```shell
 RuntimeError: Cannot proceed with encryption/decryption: openssl v1.0.1 is unavailable.
 ```
 
-应该是编译出adsp的mbn后，签名找不到openssl导致的，全编译和单编译的环境变量可能有个环节有问题。后来添加了编译的环境变量才能够正常的编译
+应该是编译出 adsp 的 mbn 后，签名找不到 openssl 导致的，全编译和单编译的环境变量可能有个环节有问题。后来添加了编译的环境变量才能够正常的编译
 
 ```
  export PATH=/pkg/qct/software/python/2.7/bin:$PATH
 ```
 
-##### 虚拟合成Sensor添加
+##### 虚拟合成 Sensor 添加
 
-这部分是驱动同事做的，目前我只是记录下来，具体代码我也同步在了Media\&File -> WristDown 路径下面\
-主要一个是在adsp\_proc/ssc/build/ssc.scons和adsp\_proc/ssc\_api/build/ssc\_api.scons 下添加sensor
+这部分是驱动同事做的，目前我只是记录下来，具体代码我也同步在了 Media\&File -> WristDown 路径下面\
+主要一个是在 adsp\_proc/ssc/build/ssc.scons 和 adsp\_proc/ssc\_api/build/ssc\_api.scons 下添加 sensor
 
 ```diff
 diff --git a/adsp_proc/ssc/build/ssc.scons b/adsp_proc/ssc/build/ssc.scons
@@ -103,7 +64,7 @@ index 8b6ab05..28f98a9 100755 (executable)
 -  'sns_pedometer','sns_psmd','sns_rmd','sns_rotv','smd','sns_multishake','sns_threshold','sns_tilt','sns_tilt_to_wake','sdc',
 +  'sns_pedometer','sns_psmd','sns_rmd','sns_rotv','smd','sns_multishake','sns_threshold','sns_tilt','sns_tilt_to_wake','sdc','sns_wrist_tilt_updown',
    'pah_813x_algo','pah_hr','sns_pah_hrd_algo_lib']
- 
+
    #-------------------------------------------------------------------------------
 ```
 
@@ -119,23 +80,23 @@ index b5ca9ee..d67bc30 100755 (executable)
 -  'sns_philips_vso.proto']
 +  'sns_philips_vso.proto',
 +  'sns_wrist_tilt_updown.proto']
- 
+
  if 'SENSORS_ALGO_DEV_FLAG' in env:
     WHITELIST += [
 ```
 
-sensor hal里面也要添加
+sensor hal 里面也要添加
 
 ###### 算法添加
 
-主要是在adsp\_proc/ssc/sensors/wrist\_tilt\_updown/src/sns\_wrist\_tilt\_updown\_sensor\_instance\_island.c里面，\
-根据获取到的Asensor 和 Gsensor 数据来计算处理
+主要是在 adsp\_proc/ssc/sensors/wrist\_tilt\_updown/src/sns\_wrist\_tilt\_updown\_sensor\_instance\_island.c 里面，\
+根据获取到的 Asensor 和 Gsensor 数据来计算处理
 
 #### 算法部分
 
 ##### 数据结构
 
-定义了一个先进先出的队列，用来保存A sensor 和 G sensor的数据
+定义了一个先进先出的队列，用来保存 A sensor 和 G sensor 的数据
 
 ```c
 /*===========================================================================
@@ -213,18 +174,18 @@ typedef struct {
             float deltaX = x - lastX;
             float deltaY = y - lastY;
             float deltaZ = z - lastZ;
-        
+
 //通过计算加速度差值的开方除以间隔时间，作为就检测运动强度的判断依据
             float sqrtV = sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             double speed =(double) ((sqrtV*1000.0f / (int)timeInterval));
-				
+
 
             SensorState state = {speed,x,y,z,time};
-//加入到队列里面            
+//加入到队列里面
             if (accelLinkedList.count >= QUEE_LENGTH) {
                 LinkedList_dequeue(&accelLinkedList);
                 LinkedList_enqueue(&accelLinkedList, state,this);
-/*    
+/*
 //一次有效的手势运动的特征：
 手势动作的特征都是一个个的波形，有强度高峰，然后区域平静
 1. 往前追溯，有初始运动强度的要求，数组开始阶段有一定的强度要求，高于某个阈值
@@ -233,7 +194,7 @@ typedef struct {
 这里的调整，如果强度阈值设置的太低，就会太灵敏。太高就会太迟缓
 低强度阈值也不能设置的太低，除非放在桌子上，不然手腕一般都都有一定的运动值
 TODO： 后续看看学习数字信号的处理，能不能通过滤波，过滤出运动来。
-*/    
+*/
 int isEffectEvent(LinkedList *list,sns_sensor_instance *const this) {
     int result = 0;
 
@@ -313,12 +274,12 @@ if (accelLinkedList.count >= QUEE_LENGTH) {
 
 #### Framework 部分
 
-由于虚拟的是一个一次性的sensor\
-注册sensor用的方法：
+由于虚拟的是一个一次性的 sensor\
+注册 sensor 用的方法：
 
 > mSensorManager.requestTriggerSensor(triggerEventListener, wristDownSensor);
 
-取消sensor的方法：
+取消 sensor 的方法：
 
 > mSensorManager.cancelTriggerSensor(triggerEventListener, wristDownSensor);
 
@@ -372,18 +333,18 @@ public void onDisplayStateChange(int state) {
 ```
 
 触发函数：\
-走power key的灭屏流程：
+走 power key 的灭屏流程：
 
 > goToSleepInternal(time,PowerManager.GO\_TO\_SLEEP\_REASON\_WRISTDOWN,0,Process.SYSTEM\_UID);
 
-添加了一个息屏reason: GO\_TO\_SLEEP\_REASON\_WRISTDOWN ,用于log 和其余业务的判断依据
+添加了一个息屏 reason: GO\_TO\_SLEEP\_REASON\_WRISTDOWN ,用于 log 和其余业务的判断依据
 
-添加了isSkipWristDown，增加了接口，用于过滤一些无需要手势息屏的业务。\
-(mWakeLockSummary & WAKE\_LOCK\_STAY\_AWAKE) != 0   主要针对 申请wakelock的页面，不去执行息屏。
+添加了 isSkipWristDown，增加了接口，用于过滤一些无需要手势息屏的业务。\
+(mWakeLockSummary & WAKE\_LOCK\_STAY\_AWAKE) != 0 主要针对 申请 wakelock 的页面，不去执行息屏。
 
 **PS：**\
-由于sensor 虚拟的是TriggerSensor，在onChange 方法后，sensor会自动任务结束。\
-所以如果判断到非息屏状态，要从新去注册sensor
+由于 sensor 虚拟的是 TriggerSensor，在 onChange 方法后，sensor 会自动任务结束。\
+所以如果判断到非息屏状态，要从新去注册 sensor
 
 ```java
 private void onWristDownTrigger(){
@@ -415,7 +376,7 @@ private boolean isSkipWristDown(){
 
 1.[基于加速度传感器的人体运动模式识别](http://www.c-s-a.org.cn/html/2020/6/7443.html)
 
-2.[基于惯性传感器MPU6050的手势识别方法.pdf](%E5%9F%BA%E4%BA%8E%E6%83%AF%E6%80%A7%E4%BC%A0%E6%84%9F%E5%99%A8MPU6050%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95.pdf)
+2.[基于惯性传感器 MPU6050 的手势识别方法.pdf](%E5%9F%BA%E4%BA%8E%E6%83%AF%E6%80%A7%E4%BC%A0%E6%84%9F%E5%99%A8%20MPU6050%20%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95.pdf)
 
 3.[基于三轴加速度传感器的手势识别-刘蓉.pdf](https://max.book118.com/html/2018/1013/6232040220001222.shtm)\
 论文连接：[手势参考资料资源#基于三轴加速度传感器的手势识别-刘蓉](%E6%89%8B%E5%8A%BF%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E8%B5%84%E6%BA%90#%E5%9F%BA%E4%BA%8E%E4%B8%89%E8%BD%B4%E5%8A%A0%E9%80%9F%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB-%E5%88%98%E8%93%89)
