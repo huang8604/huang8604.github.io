@@ -552,7 +552,7 @@ disableThemeInject = false
   # whether to show the full text content in RSS
   rssFullText = false
   # FixIt 0.3.10 | CHANGED Page style ["narrow", "normal", "wide", ...]
-  pageStyle = "normal"
+  pageStyle = "wide"
   # FixIt 0.2.17 | CHANGED Auto Bookmark Support
   # If true, save the reading progress when closing the page.
   autoBookmark = false
