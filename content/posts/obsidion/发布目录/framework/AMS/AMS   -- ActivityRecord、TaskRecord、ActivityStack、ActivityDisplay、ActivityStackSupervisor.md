@@ -8,7 +8,7 @@ categories:
   - Android
 title: AMS   -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor
 date: 2024-09-16T04:32:47.976Z
-lastmod: 2024-09-16T04:33:23.013Z
+lastmod: 2024-09-16T05:01:22.369Z
 ---
 ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor  的关系
 
@@ -105,7 +105,11 @@ java
 
 > ActivityStack.mDisplayId可以找到对应的ActivityDisplay，HOME\_STACK\_ID=0可以在ActivityStackSupervisor.mActivityDisplays找到桌面的ActivityStack。
 
-![AMS关系链表](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb1298eb27824d40aa6e94775d81d823~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp) ![Activity栈模型](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/250a7683134d4193a1e833caf9607b50~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![image.png](https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb91a30eb.png)
+
+![TaskRecord.webp](https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb4e3cafe.webp)
+
+引用：
 
 作者：彭小铭\
 链接：https://juejin.cn/post/7267554771540049957\
