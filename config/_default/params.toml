@@ -552,7 +552,7 @@ disableThemeInject = false
   # whether to show the full text content in RSS
   rssFullText = false
   # FixIt 0.3.10 | CHANGED Page style ["narrow", "normal", "wide", ...]
-  pageStyle = "wide"
+  pageStyle = "normal"
   # FixIt 0.2.17 | CHANGED Auto Bookmark Support
   # If true, save the reading progress when closing the page.
   autoBookmark = false
@@ -827,7 +827,7 @@ disableThemeInject = false
       enable = true
       repo = "huang8604/huang8604.github.io"
       repoId = "R_kgDOMx3bEg"
-      category = "General"
+      category = "Announcements"
       categoryId = "DIC_kwDOMx3bEs4CigIq"
       mapping = "pathname"
       origin = "https://giscus.app" # FixIt NEW | 0.3.7 Or set it to your self-hosted domain
