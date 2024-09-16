@@ -552,7 +552,7 @@ disableThemeInject = false
   # whether to show the full text content in RSS
   rssFullText = false
   # FixIt 0.3.10 | CHANGED Page style ["narrow", "normal", "wide", ...]
-  pageStyle = "normal"
+  pageStyle = "wide"
   # FixIt 0.2.17 | CHANGED Auto Bookmark Support
   # If true, save the reading progress when closing the page.
   autoBookmark = false
@@ -565,7 +565,7 @@ disableThemeInject = false
   # FixIt 0.2.18 | NEW whether to enable instant.page
   instantPage = false
   # FixIt 0.3.0 | NEW whether to enable collection list at the sidebar
-  collectionList = false
+  collectionList = true
   # FixIt 0.3.0 | NEW whether to enable collection navigation at the end of the post
   collectionNavigation = false
 
@@ -659,8 +659,8 @@ disableThemeInject = false
     count = 5
   # FixIt 0.2.17 | NEW Donate (Sponsor) settings
   [page.reward]
-    enable = false
-    animation = false
+    enable = true
+    animation = true
     # position relative to post footer, optional values: ["before", "after"]
     position = "after"
     # comment = "Buy me a coffee"
@@ -700,7 +700,7 @@ disableThemeInject = false
     Mix = false
   # FixIt 0.2.15 | CHANGED Comment config
   [page.comment]
-    enable = false
+    enable = true
     # FixIt 0.2.13 | NEW Artalk comment config (https://artalk.js.org/)
     [page.comment.artalk]
       enable = false
@@ -824,19 +824,19 @@ disableThemeInject = false
       katex = false
     # FixIt 0.2.14 | NEW Giscus comments config
     [page.comment.giscus]
-      enable = false
-      repo = ""
-      repoId = ""
-      category = ""
-      categoryId = ""
-      mapping = ""
+      enable = true
+      repo = "huang8604/huang8604.github.io"
+      repoId = "R_kgDOMx3bEg"
+      category = "General"
+      categoryId = "DIC_kwDOMx3bEs4CigIq"
+      mapping = "pathname"
       origin = "https://giscus.app" # FixIt NEW | 0.3.7 Or set it to your self-hosted domain
       strict = "0" # FixIt NEW | 0.2.18
       term = ""
       reactionsEnabled = "1"
       emitMetadata = "0"
       inputPosition = "bottom" # ["top", "bottom"]
-      lang = ""
+      lang = "zh-CN"
       lightTheme = "light"
       darkTheme = "dark"
       lazyLoad = true
