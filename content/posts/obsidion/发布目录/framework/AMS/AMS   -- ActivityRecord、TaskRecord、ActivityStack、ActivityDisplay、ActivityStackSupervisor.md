@@ -6,9 +6,11 @@ tags:
 categories:
   - AMS
   - Android
+collections:
+  - AMS
 title: AMS   -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor
 date: 2024-09-16T04:32:47.976Z
-lastmod: 2024-09-16T05:01:22.369Z
+lastmod: 2024-09-18T10:22:54.854Z
 ---
 ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor  的关系
 

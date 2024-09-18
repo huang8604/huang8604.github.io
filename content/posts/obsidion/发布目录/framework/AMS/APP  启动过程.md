@@ -6,9 +6,11 @@ tags:
 categories:
   - 学习总结
   - AMS
+collections:
+  - AMS
 title: APP  启动过程
 date: 2024-08-08T10:07:11.000Z
-lastmod: 2024-09-15T14:55:51.050Z
+lastmod: 2024-09-18T10:23:06.442Z
 ---
 ### AMS中Activity栈管理
 
