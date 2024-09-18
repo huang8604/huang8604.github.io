@@ -5,7 +5,7 @@ tags:
 categories: 学习总结
 title: Zygote进程相关
 date: 2024-08-21T10:20:51.000Z
-lastmod: 2024-09-14T10:21:28.781Z
+lastmod: 2024-09-18T02:08:46.752Z
 ---
 [【Android Framework系列】第3章 Zygote进程相关\_android zygote进程-CSDN博客](https://blog.csdn.net/u010687761/article/details/131404918)\
 1 Zygote简介
@@ -943,30 +943,3 @@ zygote进程的作用：\
 3.启动System Server进程
 
 **Zygote进程预加载系统资源后，然后通过它孵化出其他的虚拟机进程，进而共享虚拟机内存和框架层资源`（共享内存）`，这样大幅度提高应用程序的启动和运行速度。**
-
-### 6 PMS 是干什么的，你是怎么理解PMS
-
-**包管理，包解析，结果缓存，提供查询接口。**
-
-1. 遍历`/data/app`的文件夹
-2. 解压`apk`文件
-3. dom解析`AndroidManifest.xml`文件。
-
-### 7 为什么会有AMS AMS的作用
-
-1. 查询PMS
-2. 反射生成对象
-3. 管理Activity生命周期
-
-AMS缓存中心：`ActivityThread`
-
-### 8 AMS如何管理Activity，探探AMS的执行原理
-
-Activity在应用端由`ActivityClientRecord`负责描述其生命周期的过程与状态，但最终这些过程与状态是由`ActivityManagerService(以下简称AMS)`来管理和控制的
-
-1. `BroadcastRecord`：描述了应用进程的BroadcastReceiver，由`BroadcastQueue`负责管理。
-2. `ServiceRecord`：描述了Service服务组件，由`ActiveServices`负责管理。
-3. `ContentProviderRecord`：描述ContentProvider内容提供者，由`ProviderMap`管理。
-4. `ActivityRecord`：用于描述Activity，由`ActivityStackSupervisor`进行管理。## 目标
-
-### 原理
