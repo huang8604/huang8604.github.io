@@ -567,7 +567,7 @@ disableThemeInject = false
   # FixIt 0.3.0 | NEW whether to enable collection list at the sidebar
   collectionList = true
   # FixIt 0.3.0 | NEW whether to enable collection navigation at the end of the post
-  collectionNavigation = true
+  collectionNavigation = false
 
   # FixIt 0.2.15 | NEW Repost config
   [page.repost]
@@ -674,8 +674,8 @@ disableThemeInject = false
   # social share links in post page
   [page.share]
     enable = true
-    Twitter = true
-    Facebook = true
+    Twitter = false
+    Facebook = false
     Linkedin = false
     Whatsapp = false
     Pinterest = false
