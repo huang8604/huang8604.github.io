@@ -1,10 +1,5 @@
 ---
 title: SurfaceControl及SurfaceFlinger中的Layer创建过程深入剖析-CSDN博客
-source: https://blog.csdn.net/learnframework/article/details/135049795
-author: 
-published: 
-created: 2024-09-20
-description: 文章浏览阅读1.4k次，点赞16次，收藏20次。surfacecontrol
 tags:
   - clippings
   - blog
@@ -13,7 +8,7 @@ collections:
   - SurfaceControl
   - Framework
 date: 2024-09-20T07:43:33.100Z
-lastmod: 2024-09-20T07:44:49.497Z
+lastmod: 2024-09-20T07:53:40.620Z
 ---
 ### SurfaceComposerClient创建
 
@@ -223,9 +218,8 @@ status_t SurfaceFlinger::addClientLayer(const sp<Client>& client, const sp<IBind
 ```
 
 简单总结图：\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/65f3e5c650f8c236e92178d8d229166d.png#pic_center)
+![1726818533519.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed28d90130d.png))
 
 本文章对应视频手把手教你学framework：\
 hal+perfetto+surfaceflinger\
-<https://mp.weixin.qq.com/s/LbVLnu1udqExHVKxd74ILg>\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4fe7ed2eaa2349de18d5d39ef9a1d04b.png#pic_center)
+<https://mp.weixin.qq.com/s/LbVLnu1udqExHVKxd74ILg>  s

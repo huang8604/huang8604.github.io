@@ -1,10 +1,5 @@
 ---
 title: SurfaceControl之Transaction事物深入剖析-android framework实战开发-CSDN博客
-source: https://blog.csdn.net/learnframework/article/details/135076600
-author: 
-published: 
-created: 2024-09-20
-description: 文章浏览阅读2.9k次，点赞22次，收藏36次。surfacecontrol
 tags:
   - clippings
   - blog
@@ -12,7 +7,7 @@ tags:
 collections:
   - SurfaceControl
 date: 2024-09-20T07:45:02.050Z
-lastmod: 2024-09-20T07:45:30.405Z
+lastmod: 2024-09-20T07:53:23.758Z
 ---
 ### 背景
 
@@ -27,7 +22,7 @@ lastmod: 2024-09-20T07:45:30.405Z
     mTransaction.apply();//针对事物进行apply操作
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/75c04dd83fe05883b95c342039f10d8f.png#pic_center)\
+![1726818760305.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed29bb06b82.png)\
 上面可以看出，Transaction是一个独立的事物对象，专门用于操作一个个SurfaceControl的属性，但并不是属于SurfaceControl对象的成员，即Transaction完全可以实现一对多个SurfaceControl情况。
 
 ### Transaction的构造
@@ -310,15 +305,3 @@ uint32_t SurfaceFlinger::setClientStateLocked(const FrameTimelineInfo& frameTime
 }
 
 ```
-
-本文章对应视频手把手教你学framework：\
-hal+perfetto+surfaceflinger\
-<https://mp.weixin.qq.com/s/LbVLnu1udqExHVKxd74ILg>\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4fe7ed2eaa2349de18d5d39ef9a1d04b.png#pic_center)
-
-私聊作者+v(androidframework007)
-
-七件套专题：![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/44ae39edb2ef03be6f2aeff206317b23.png#pic_center)\
-点击这里 <https://mp.weixin.qq.com/s/Qv8zjgQ0CkalKmvi8tMGaw>
-
-视频：<https://www.bilibili.com/video/BV1wc41117L4/>
