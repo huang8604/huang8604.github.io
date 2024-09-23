@@ -7,7 +7,7 @@ tags:
 collections:
   - SurfaceControl
 date: 2024-09-20T07:45:02.050Z
-lastmod: 2024-09-20T07:53:23.758Z
+lastmod: 2024-09-20T08:10:10.894Z
 ---
 ### 背景
 
@@ -62,7 +62,7 @@ SurfaceComposerClient::Transaction::Transaction() {
 **layer\_state\_t结构体**\
 用来代表Layer图层的的相关信息，SurfaceControl与sf的Layer共用这个layer\_state\_t结构体，layer\_state\_t包括layer所有属性\
 主要成员如下：\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b341b3a278a1f8a4b62e5849a28ba4f5.png#pic_center)\
+![1726819760954.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed2da37dee6.png)\
 可以看到常见的主要属性：坐标，长宽，变换矩阵，变化值what，flags，mask等，一般是一个图层就有一个layer\_state\_t结构体。\
 ComposerStates结构体
 
@@ -151,7 +151,7 @@ SurfaceComposerClient::Transaction& SurfaceComposerClient::Transaction::setPosit
 3、进行具体属性改变
 
 其他的属性方法套路都和上面基本一样\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/10a848d82fd3779ad24c754feada9a30.png#pic_center)
+![1726819803806.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed2dce3f7de.png)
 
 ##### merge方法
 

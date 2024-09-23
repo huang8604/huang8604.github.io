@@ -8,7 +8,7 @@ collections:
   - SurfaceControl
   - Framework
 date: 2024-09-20T07:43:33.100Z
-lastmod: 2024-09-20T07:53:40.620Z
+lastmod: 2024-09-20T08:05:39.776Z
 ---
 ### SurfaceComposerClient创建
 
@@ -25,9 +25,9 @@ static jlong nativeCreate(JNIEnv* env, jclass clazz) {
 
 这里的SurfaceSession是在哪里创建的呢？这里直接上堆栈
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/3411249efc552b899d80bae4cda25790.png#pic_center)\
+![1726819413770.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed2c488d9a5.png)\
 实际是在ViewRootImpl构造期间就创建\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/9e7b1e7eb9381fc78e89b8f4a6b36d9a.png#pic_center)
+![在这里插入图片描述](https://picgo.myjojo.fun:666/i/2024/09/20/66ed2c6f12c37.png#pic_center)
 
 ### SurfaceComposerClient的mClient初始化
 
@@ -219,7 +219,3 @@ status_t SurfaceFlinger::addClientLayer(const sp<Client>& client, const sp<IBind
 
 简单总结图：\
 ![1726818533519.png](https://picgo.myjojo.fun:666/i/2024/09/20/66ed28d90130d.png))
-
-本文章对应视频手把手教你学framework：\
-hal+perfetto+surfaceflinger\
-<https://mp.weixin.qq.com/s/LbVLnu1udqExHVKxd74ILg>  s
