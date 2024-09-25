@@ -2,7 +2,6 @@
 title: Android Surface-CSDN博客
 source: https://blog.csdn.net/liuning1985622/article/details/138462996
 author: 
-published: 
 created: 2024-09-25
 tags:
   - clippings
@@ -11,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-25T09:28:17.349Z
+lastmod: 2024-09-25T09:42:30.039Z
 ---
 ## 一、Surface介绍
 
@@ -163,7 +162,7 @@ class ComposerServiceAIDL : public Singleton<ComposerServiceAIDL> {}
 
 ## 三、Surface相关流程分析
 
-### Surface创建流程分析
+### \[\[Android13 Surface创建流程分析-CSDN博客]]
 
 ### SurfaceControl创建流程分析
 
