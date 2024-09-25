@@ -2,7 +2,6 @@
 title: Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客
 source: https://blog.csdn.net/liuning1985622/article/details/138467228
 author: 
-published: 
 created: 2024-09-25
 tags:
   - clippings
@@ -11,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T10:26:26.391Z
-lastmod: 2024-09-25T10:33:18.033Z
+lastmod: 2024-09-25T10:36:50.849Z
 ---
 BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些[初始化操作](https://so.csdn.net/so/search?q=%E5%88%9D%E5%A7%8B%E5%8C%96%E6%93%8D%E4%BD%9C\&spm=1001.2101.3001.7020)，例如创建和配置图像缓冲区队列。
 
