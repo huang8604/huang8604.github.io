@@ -1,16 +1,15 @@
 ---
 title: Framework层添加SystemService和Manager的超详细步骤_framework添加新service-CSDN博客
-source: https://blog.csdn.net/lvyaer_1122/article/details/130139795?spm=1001.2014.3001.5502
-author: 
-published: 
-created: 2024-09-20
-description: 文章浏览阅读2.8k次，点赞13次，收藏28次。本文适用于Android 12中增加系统服务。_framework添加新service
+source: 
 tags:
   - clippings
   - 转载
   - blog
+collections:
+  - PMS
+  - Framework
 date: 2024-09-20T02:17:25.314Z
-lastmod: 2024-09-20T02:18:49.410Z
+lastmod: 2024-09-25T07:25:00.600Z
 ---
 本文适用于Android 12中增加系统服务。
 

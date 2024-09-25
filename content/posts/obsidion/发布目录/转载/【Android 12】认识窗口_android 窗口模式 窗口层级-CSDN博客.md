@@ -1,6 +1,6 @@
 ---
 title: 【Android 12】认识窗口_android 窗口模式 窗口层级-CSDN博客
-source: https://blog.csdn.net/ukynho/article/details/132327216?spm=1001.2014.3001.5501
+source: 
 tags:
   - clippings
   - blog
@@ -8,7 +8,7 @@ tags:
 collections:
   - WMS
 date: 2024-09-24T06:59:16.867Z
-lastmod: 2024-09-24T07:10:37.448Z
+lastmod: 2024-09-25T03:26:30.167Z
 ---
 该文章为窗口层级结构系列文章的总结，重新回看这方面内容的时候我自己也有了一些新的感悟，希望通过本次总结能让大家再次对窗口有一个全面的认识。
 
