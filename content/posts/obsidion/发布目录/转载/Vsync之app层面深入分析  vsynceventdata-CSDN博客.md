@@ -1,5 +1,4 @@
 ---
-published: true
 tags:
   - clippings
   - 转载
@@ -10,7 +9,7 @@ collections:
   - Framework
 title: Vsync之app层面深入分析  vsynceventdata-CSDN博客
 date: 2024-09-25T07:24:04.939Z
-lastmod: 2024-09-25T07:31:04.997Z
+lastmod: 2024-09-25T07:54:12.390Z
 ---
 ### 背景
 
@@ -19,8 +18,8 @@ lastmod: 2024-09-25T07:31:04.997Z
 ### java层面的分析和堆栈：
 
 在Activity进行Resume时候，会addView,这个时候会对ViewRootImpl进行够着，构建出一个Choreographer，在构造时候会构造方法里面又会对应的FrameDisplayEventReceiver，FrameDisplayEventReceiver本身继承DisplayEventReceiver\
-这里的DisplayEventReceiver就是核心部分，它负责和sf进行双向通讯，不过这里双向不是一种[ipc](https://so.csdn.net/so/search?q=ipc\&spm=1001.2101.3001.7020)通讯方式，涉及到两个方式\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/e8f24b7644ca2d4ca2a70be1460c2b38.png)
+这里的DisplayEventReceiver就是核心部分，它负责和sf进行双向通讯，不过这里双向不是一种ipc通讯方式，涉及到两个方式\
+![e868c7a9e8b03a790bcc24748e61a83a\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3c152969c1.png)
 
 app主动发起请求一般都是直接使用binder调用，比如常见的如下几个接口：
 
@@ -53,7 +52,7 @@ interface IDisplayEventConnection {
 ```
 
 SurfaceFlinger进程也需要与app进行通讯，比如把vsync来临这种通知调用：\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f1f9751ad3ad45e8bcf524eac01a5aca.png)
+![62252d47f74aa498190dffbad848ebbc\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3c1533f76d.png)
 
 ***这里为啥sf要是有socket呢？这里主要还是为了性能考虑，socket相比延时阻塞情况比binder好，vsync通知这种属于实时性较强的操作。***
 
@@ -81,7 +80,7 @@ SurfaceFlinger进程也需要与app进行通讯，比如把vsync来临这种通�
 
 这里调用了nativeInit，接下来代码就到了native层面了\
 具体堆栈如下：\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/197651d0bd2aab60c4daf83fd4c6bd8f.png)
+![b4742751a5faa8e30ce847a35042b753\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3c15398bf1.png)
 
 ### native层面的分析和堆栈：
 
@@ -298,18 +297,4 @@ void BitTube::init(size_t rcvbuf, size_t sndbuf) {
 ```
 
 sf总结图如下：\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/7bc89613b1e7f9b3c994e5e9bccbce46.png)
-
-本文章更多详细代码和资料需要购买课程获取\
-hal+perfetto+surfaceflinger\
-<https://mp.weixin.qq.com/s/LbVLnu1udqExHVKxd74ILg>\
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4fe7ed2eaa2349de18d5d39ef9a1d04b.png)
-
-私聊作者+v(androidframework007)
-
-其他课程七件套专题：![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/44ae39edb2ef03be6f2aeff206317b23.png)\
-点击这里\
-<https://mp.weixin.qq.com/s/Qv8zjgQ0CkalKmvi8tMGaw>
-
-视频试看：\
-<https://www.bilibili.com/video/BV1wc41117L4/>
+![537cecdafe17aef5ed3148bb737b240b\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3c1531616b.png)
