@@ -10,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-25T09:42:30.039Z
+lastmod: 2024-09-25T09:48:58.857Z
 ---
 ## 一、Surface介绍
 
@@ -109,7 +109,11 @@ class Surface : public ANativeObjectBase<ANativeWindow, Surface, RefBase> {}
 Surface方法：
 
 ```cpp
-int connect(int api, const sp<IProducerListener>& listener)：连接int Surface::disconnect(int api, IGraphicBufferProducer::DisconnectMode mode) ：断开int queueBuffers(const std::vector<BatchQueuedBuffer>& buffers)：生产者填充缓存区并返回给队列int dequeueBuffers(std::vector<BatchBuffer>* buffers)：生产者请求一块空闲的缓存区int cancelBuffers(const std::vector<BatchBuffer>& buffers)：关闭缓冲区
+int connect(int api, const sp<IProducerListener>& listener)：连接
+int Surface::disconnect(int api, IGraphicBufferProducer::DisconnectMode mode) ：断开
+int queueBuffers(const std::vector<BatchQueuedBuffer>& buffers)：生产者填充缓存区并返回给队列
+int dequeueBuffers(std::vector<BatchBuffer>* buffers)：生产者请求一块空闲的缓存区
+int cancelBuffers(const std::vector<BatchBuffer>& buffers)：关闭缓冲区
 ```
 
 #### SurfaceControl
@@ -129,7 +133,12 @@ frameworks/native/include/gui/SurfaceControl.h
 SurfaceControl的定义：
 
 ```cpp
-public final class SurfaceControl implements Parcelable {}class SurfaceControl : public RefBase{}
+public final class SurfaceControl implements Parcelable {
+
+}
+class SurfaceControl : public RefBase{
+
+}
 ```
 
 #### ComposerService
