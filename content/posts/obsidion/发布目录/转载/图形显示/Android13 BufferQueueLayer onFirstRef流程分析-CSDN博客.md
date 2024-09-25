@@ -30,7 +30,7 @@ BufferLayerConsumer：消费者的封装
 
 生产者提供图形数据，放入BufferQueue，消费者拿到图形数据进行合成，通常认为生产者为Surface，消费者为SurfaceFlinger，下面我们就分析一下生产者-消费者模型架构的搭建。
 
-![841e2b18f38d679c90587b9589409df0\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png)
+![841e2b18f38d679c90587b9589409df0\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png#pic_center)
 
 我们以BufferQueueLayer的创建为入口分析：
 
