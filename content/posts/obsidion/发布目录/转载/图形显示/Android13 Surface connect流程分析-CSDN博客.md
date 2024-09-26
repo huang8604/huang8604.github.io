@@ -1,12 +1,14 @@
 ---
-title: "Android13 Surface connect流程分析_surfaceview connect: already connected-CSDN博客"
+title: Android13 Surface connect流程分析-CSDN博客
 created: 2024-09-26
 tags:
   - clippings
   - 转载
   - blog
+collections:
+  - 图形显示
 date: 2024-09-26T06:49:46.173Z
-lastmod: 2024-09-26T06:56:42.833Z
+lastmod: 2024-09-26T07:03:24.116Z
 ---
 Surface的connect方法用于建立与BufferQueueCore[Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客#new BufferQueueCore](Android13%20BufferQueueLayer%20onFirstRef%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2#new%20BufferQueueCore)连接，代码如下：
 

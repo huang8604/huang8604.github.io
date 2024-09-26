@@ -1,6 +1,5 @@
 ---
 title: Android13 Surface创建流程分析-CSDN博客
-source: https://blog.csdn.net/liuning1985622/article/details/138463081
 author: 
 created: 2024-09-25
 tags:
@@ -11,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:39:12.990Z
-lastmod: 2024-09-26T01:14:34.000Z
+lastmod: 2024-09-26T07:04:10.460Z
 ---
 Surface是Android中用于表示一个图像缓冲区的类，Surface是在SurfaceControl创建时创建的，代码如下：
 

@@ -1,6 +1,5 @@
 ---
 title: Android Surface-CSDN博客
-source: https://blog.csdn.net/liuning1985622/article/details/138462996
 author: 
 created: 2024-09-25
 tags:
@@ -10,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-25T09:48:58.857Z
+lastmod: 2024-09-26T07:03:46.127Z
 ---
 ## 一、Surface介绍
 
