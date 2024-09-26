@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T05:55:39.573Z
-lastmod: 2024-09-26T06:13:43.587Z
+lastmod: 2024-09-26T06:23:03.423Z
 ---
 SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：
 
@@ -20,7 +20,7 @@ SurfaceControl是Android系统中的一个类，用于管理和控制Surface的�
 * 首先应用进程会new一个java层SurfaceControl，什么都没做，然后传递到WMS进程，因为SurfaceControl在AIDL中是out类型，所以在WMS进程赋值。
 * WMS在创建java层SurfaceControl的同时通过nativeCreate方法到native层做一系列初始化。
 * 在SurfaceComposerClient的createSurfaceChecked函数中通过ISurfaceComposerClient的Bp端mClient向SurfaceFlinger进程请求创建Surface，即调用createSurface函数，而在SurfaceFlinger进程Surface对应的是Layer。
-* 在第一次创建Layer的子类BufferQueueLayer的过程中，即在BufferQueueLayer的onFirstRef函数中会创建生产者消费者模型架构。
+* 在第一次创建Layer的子类BufferQueueLayer的过程中，即在BufferQueueLayer的onFirstRef函数中会创建生产者消费者模型架构。[Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客](/Android13%20BufferQueueLayer%20onFirstRef%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
 * SurfaceFlinger进程的任务完成之后会直接new一个SurfaceControl，并将SurfaceFlinger进程创建的Layer引用和生产者保存到SurfaceControl中，最后将native层SurfaceControl指针保存到java层SurfaceControl。
 * native层SurfaceControl创建好了之后就可以通过此对象创建native层的Surface对象，最后将native层Surface指针保存到java层Surface，最终java层和native层的Surface和SurfaceControl都创建完毕。
 
@@ -232,7 +232,7 @@ status_t BnSurfaceComposerClient::onTransact(uint32_t code, const Parcel& data, 
 
 调用Client的createSurface函数：
 
-[Android Surface-CSDN博客 ](https://wentao03.space/posts/android-surface-csdn%E5%8D%9A%E5%AE%A2/)
+[Android13 Surface创建流程分析](Android13%20Surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90)
 
 ## new SurfaceControl
 
