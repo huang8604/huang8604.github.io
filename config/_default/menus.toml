@@ -46,4 +46,15 @@
   title = ""
   weight = 3
   [main.params]
-    icon = "fa-solid fa-tags"
+    icon = "fa-solid fa-tags"    
+[[main]]
+  identifier = "collections"
+  parent = ""
+  pre = ""
+  post = ""
+  name = "合集"
+  url = "/collections/"
+  title = ""
+  weight = 4
+  [main.params]
+    icon = "fa-solid fa-group"
