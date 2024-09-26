@@ -10,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T10:26:26.391Z
-lastmod: 2024-09-25T10:36:50.849Z
+lastmod: 2024-09-26T05:58:27.157Z
 ---
 BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些[初始化操作](https://so.csdn.net/so/search?q=%E5%88%9D%E5%A7%8B%E5%8C%96%E6%93%8D%E4%BD%9C\&spm=1001.2101.3001.7020)，例如创建和配置图像缓冲区队列。
 
@@ -30,7 +30,7 @@ BufferLayerConsumer：消费者的封装
 
 生产者提供图形数据，放入BufferQueue，消费者拿到图形数据进行合成，通常认为生产者为Surface，消费者为SurfaceFlinger，下面我们就分析一下生产者-消费者模型架构的搭建。
 
-![841e2b18f38d679c90587b9589409df0\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png#pic_center)
+![841e2b18f38d679c90587b9589409df0\_MD5](https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png " BufferQueue")
 
 我们以BufferQueueLayer的创建为入口分析：
 
