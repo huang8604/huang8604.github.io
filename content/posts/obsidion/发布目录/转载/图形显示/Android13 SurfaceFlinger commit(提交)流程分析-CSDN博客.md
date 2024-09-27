@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-09-26T09:05:04.109Z
-lastmod: 2024-09-26T09:15:26.342Z
+lastmod: 2024-09-27T03:07:57.960Z
 ---
 SurfaceFlinger的commit方法用于将应用程序的绘制结果提交到屏幕上显示。
 
@@ -1670,7 +1670,7 @@ bool BufferLayer::latchBuffer(bool& recomputeVisibleRegions, nsecs_t latchTime,
 
 调用BufferLayer的updateTexImage方法，BufferQueueLayer继承与于BufferLayer，调用BufferQueueLayer的updateTexImage方法：
 
-[Android13 BufferQueueLayer updateTexImage流程分析-CSDN博客](https://blog.csdn.net/liuning1985622/article/details/138467516?spm=1001.2014.3001.5502 "Android13 BufferQueueLayer updateTexImage流程分析-CSDN博客")
+[Android13 BufferQueueLayer updateTexImage流程分析-CSDN博客](/Android13%20BufferQueueLayer%20updateTexImage%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
 
 ## SurfaceFlinger updateLayerGeometry
 

@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-09-26T09:00:49.006Z
-lastmod: 2024-09-26T09:16:00.004Z
+lastmod: 2024-09-27T03:26:49.146Z
 ---
 SurfaceFlinger的onLayerUpdate方法用于在图形层更新时进行相应的处理，代码如下：
 
@@ -158,4 +158,4 @@ void MessageQueue::Handler::handleMessage(const Message&) {
 
 调用mCompositor(ICompositor)的commit方法，ICompositor是一个接口，由SurfaceFlinger实现，SurfaceFlinger的composite用于将多个窗口的图像进行合成：
 
-[Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客](https://blog.csdn.net/liuning1985622/article/details/138465549?csdn_share_tail=%7B%22type%22%3A%22blog%22%2C%22rType%22%3A%22article%22%2C%22rId%22%3A%22138465549%22%2C%22source%22%3A%22liuning1985622%22%7D "Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客")
+[Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客](/Android13%20SurfaceFlinger%20composite\(%E5%90%88%E6%88%90\)%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
