@@ -180,7 +180,7 @@ disableThemeInject = false
 # Section page config (all pages in section)
 [section]
   # special amount of pages in each section page
-  paginate = 20
+  paginate = 40
   # date format (month and day)
   dateFormat = "01-02"
   # FixIt 0.3.10 | NEW Section feed config for RSS, Atom and JSON feed.
@@ -200,7 +200,7 @@ disableThemeInject = false
 # List (category or tag) page config
 [list]
   # special amount of posts in each list page
-  paginate = 20
+  paginate = 40
   # date format (month and day)
   dateFormat = "01-02"
   # FixIt 0.3.10 | NEW Term list feed config for RSS, Atom and JSON feed.
@@ -565,9 +565,9 @@ disableThemeInject = false
   # FixIt 0.2.18 | NEW whether to enable instant.page
   instantPage = true
   # FixIt 0.3.0 | NEW whether to enable collection list at the sidebar
-  collectionList = true
+  collectionList = false
   # FixIt 0.3.0 | NEW whether to enable collection navigation at the end of the post
-  collectionNavigation = false
+  collectionNavigation = true
 
   # FixIt 0.2.15 | NEW Repost config
   [page.repost]
