@@ -9,13 +9,13 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-26T07:03:46.127Z
+lastmod: 2024-09-27T07:30:35.324Z
 ---
 ## 一、Surface介绍
 
 在Android系统中，Surface是一种用于图形和视频渲染的抽象概念，它可以用来将应用程序绘制的图形或视频显示在屏幕上。一个Surface代表一个屏幕表面，可以是整个屏幕或者应用程序UI的一个独立窗口。
 
-Surface通过一个SurfaceHolder对象来提供访问接口。SurfaceHolder管理了Surface的[生命周期](https://so.csdn.net/so/search?q=%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F\&spm=1001.2101.3001.7020)和绘画信息，并提供了锁定(SurfaceHolder.lockCanvas())和解锁(SurfaceHolder.lockCanvas())和解锁(SurfaceHolder.unlockCanvasAndPost())Canvas对象接口，使得应用程序可以直接在Surface上进行绘制操作。
+Surface通过一个SurfaceHolder对象来提供访问接口。SurfaceHolder管理了Surface的生命周期和绘画信息，并提供了锁定(SurfaceHolder.lockCanvas())和解锁(SurfaceHolder.lockCanvas())和解锁(SurfaceHolder.unlockCanvasAndPost())Canvas对象接口，使得应用程序可以直接在Surface上进行绘制操作。
 
 一个Surface可以包含多个Buffer，每个Buffer都包含了一个图像或视频的副本，应用程序可以在一个Buffer中渲染图形或视频数据，而使用另一个Buffer时，只需要将绘图信息提交后，即可直接显示另一个Buffer的图像或视频内容，从而提高了渲染效率和性能。
 

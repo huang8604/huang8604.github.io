@@ -7,9 +7,9 @@ tags:
   - 转载
   - blog
 collections: 图形显示
-source: https://blog.csdn.net/liuning1985622/article/details/138465125?spm=1001.2014.3001.5502
+source: https://blog.csdn.net/liuning1985622/article/details/138465125
 date: 2024-09-27T03:38:56.608Z
-lastmod: 2024-09-27T03:45:39.239Z
+lastmod: 2024-09-27T03:58:21.000Z
 ---
 在Android13版本中，SurfaceFlinger是由Android.bp去启动init.rc文件，然后再解析文件去加载SurfaceFlinger。
 
