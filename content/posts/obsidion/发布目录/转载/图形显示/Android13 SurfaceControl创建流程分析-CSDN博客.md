@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T05:55:39.573Z
-lastmod: 2024-09-26T06:23:03.423Z
+lastmod: 2024-09-27T09:36:24.617Z
 ---
 SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：
 
@@ -107,6 +107,8 @@ static jlong nativeCreate(JNIEnv* env, jclass clazz, jobject sessionObj,
  
  
     //这里的sessionObj是java层传递下来的SurfaceSession对象，如果不为空就从此对象中获取SurfaceComposerClient，否则重新创建一个
+    //addview --> viewrootImpl 创建 SurfaceSession --> natvieCreate
+    //--> SurfaceComposerClient 创建
     if (sessionObj != NULL) {
         client = android_view_SurfaceSession_getClient(env, sessionObj);
     } else {

@@ -8,8 +8,9 @@ tags:
   - 转载
 collections:
   - 图形显示
+  - 总结文章
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-27T07:30:35.324Z
+lastmod: 2024-09-29T06:49:29.094Z
 ---
 ## 一、Surface介绍
 
@@ -173,8 +174,6 @@ class ComposerServiceAIDL : public Singleton<ComposerServiceAIDL> {}
 ### \[\[Android13 Surface创建流程分析-CSDN博客]]
 
 ### SurfaceControl创建流程分析
-
-### SurfaceSession创建流程分析
 
 ### Surface connect流程分析
 
