@@ -1,7 +1,6 @@
 ---
 title: Android13 SurfaceSession创建流程分析_android surfacesession-CSDN博客
 author: 
-published: 
 created: 2024-09-26
 tags:
   - clippings
@@ -10,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T06:38:40.489Z
-lastmod: 2024-09-26T06:44:49.313Z
+lastmod: 2024-09-30T06:24:25.421Z
 ---
 SurfaceSession是Android系统中与图形表面相关的一个关键类，它提供了与SurfaceFlinger服务通信以创建和管理图形表面连接的API，SurfaceSession在WindowManagerService的addWindow时创建，构造方法如下：
 
