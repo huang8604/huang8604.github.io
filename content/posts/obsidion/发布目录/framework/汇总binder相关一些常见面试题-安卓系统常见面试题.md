@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-10-10T07:09:20.792Z
-lastmod: 2024-10-11T06:18:57.230Z
+lastmod: 2024-10-11T06:20:33.152Z
 ---
 ### binder讨论的一些场景面试题
 
@@ -16,7 +16,6 @@ lastmod: 2024-10-11T06:18:57.230Z
 
 binder中有多个进程作为客户端通过servicemanager获取service的bpbinder，bpbinder都会有一个handle，那么多个进程获取同一个service对应的handle一样么？
 
-> \[!answer]\
 > 是的，多个进程获取同一个服务对应的 `BpBinder` 的 handle 是一样的。
 >
 > 在 Android 的 Binder IPC 机制中，`ServiceManager` 负责管理系统中的各种服务。当一个客户端进程请求某个服务时，它会通过 `ServiceManager` 获取到服务的 `Binder` 引用（即 `BpBinder`），这个引用在内部包含了一个 handle，该 handle 是一个整数值，唯一标识了这个服务在 Binder 驱动中的位置。
@@ -35,8 +34,6 @@ binder中有多个进程作为客户端通过servicemanager获取service的bpbin
 
 **请问binder通讯过程中是否可以传递bpbinder对象？**
 
-> \[!Answer]
->
 > 是的，在 Binder 通信过程中可以传递 `BpBinder` 对象。
 >
 > `BpBinder` 是一个客户端侧的 Binder 引用，它在跨进程通信中可以被当作普通的 Binder 对象传递。具体过程如下：
