@@ -8,13 +8,11 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-10-10T07:09:20.792Z
-lastmod: 2024-10-11T06:20:33.152Z
+lastmod: 2024-10-11T06:23:32.540Z
 ---
 ### binder讨论的一些场景面试题
 
-##### 问题1：
-
-binder中有多个进程作为客户端通过servicemanager获取service的bpbinder，bpbinder都会有一个handle，那么多个进程获取同一个service对应的handle一样么？
+##### 问题1：binder中有多个进程作为客户端通过servicemanager获取service的bpbinder，bpbinder都会有一个handle，那么多个进程获取同一个service对应的handle一样么？
 
 > 是的，多个进程获取同一个服务对应的 `BpBinder` 的 handle 是一样的。
 >
@@ -30,9 +28,7 @@ binder中有多个进程作为客户端通过servicemanager获取service的bpbin
 >
 > 希望这个回答能帮到你！如果你有更多问题，请随时提问。
 
-##### 问题2：
-
-**请问binder通讯过程中是否可以传递bpbinder对象？**
+##### 问题2：**请问binder通讯过程中是否可以传递bpbinder对象？**
 
 > 是的，在 Binder 通信过程中可以传递 `BpBinder` 对象。
 >
@@ -46,9 +42,7 @@ binder中有多个进程作为客户端通过servicemanager获取service的bpbin
 >
 > 这种机制使得 Binder 能够灵活地支持对象引用的传递和跨进程交互，是 Android IPC 的核心特性之一。
 
-##### 问题3：
-
-**请问同binder 服务端进程自己进程内部如果进行binder调用需要经过binder驱动吗，需要和不需要请详细描述？**
+##### 问题3：**请问同binder 服务端进程自己进程内部如果进行binder调用需要经过binder驱动吗，需要和不需要请详细描述？**
 
 这个要看情况和调用方式：
 
@@ -105,9 +99,7 @@ public static com.example.aidlapplication.IMyAidlInterface asInterface(android.o
 
 这种方式可能还是要通过binder去调用，但在binder驱动内部，可能还是有一定的优化流程。 #TODO
 
-##### 问题4：
-
-**Android App进程天生支持binder通讯的原理是什么，刚开始初始化时候自带了几个binder线程？**
+##### 问题4：**Android App进程天生支持binder通讯的原理是什么，刚开始初始化时候自带了几个binder线程？**
 
 zygote 启动的时候就支持了binder通讯，所有后面的app孵化之后，也会自带binder通讯。
 
@@ -223,9 +215,8 @@ app刚开始启动Binder时候：\
 
 这部分内容在zygote中已经干完了，所以app在fork出来后，会自带binder功能。
 
-##### 问题5：
+##### 问题5：**请描述一下binder通讯起来后，需要新开binder线程的创建是怎么一个过程？**
 
-**请描述一下binder通讯起来后，需要新开binder线程的创建是怎么一个过程？**\
 \[\[#2. 启动线程池：**proc->startThreadPool();**]]
 
 ```java
@@ -318,9 +309,7 @@ void IPCThreadState::joinThreadPool(bool isMain)
 参考：\
 [Binder之ProcessState和IPCThreadState类分析-CSDN博客](https://blog.csdn.net/jiejingguo/article/details/86518401)
 
-##### 问题6：
-
-请问binder的如何使用异步请求，优势是什么，但频繁使用相关风险？
+##### 问题6：请问binder的如何使用异步请求，优势是什么，但频繁使用相关风险？
 
 在 Android 的 Binder IPC（进程间通信）机制中，异步请求的使用可以提高应用的响应性和用户体验。下面是异步请求的基本使用方法、优势及其频繁使用的风险。
 
@@ -376,9 +365,7 @@ void IPCThreadState::joinThreadPool(bool isMain)
 
 总的来说，虽然异步请求在 Android Binder 通信中具有诸多优势，但需要在实现时注意潜在的风险和复杂性。合理设计的异步机制能够提高应用的性能和用户体验。
 
-##### 问题7：
-
-**跨进程通讯一般都需要通过ServiceManager进行getService获取bpbinder，但普通app经常使用系统组件Service的bindService进行跨进程通讯也可以获取bpbinder，这个是啥原理？**
+##### 问题7：**跨进程通讯一般都需要通过ServiceManager进行getService获取bpbinder，但普通app经常使用系统组件Service的bindService进行跨进程通讯也可以获取bpbinder，这个是啥原理？**
 
 客户端 bindService
 
