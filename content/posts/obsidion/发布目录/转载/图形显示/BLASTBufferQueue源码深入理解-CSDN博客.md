@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/learnframework/article/details/135133293
 date: 2024-09-29T10:42:45.965Z
-lastmod: 2024-09-29T10:43:37.854Z
+lastmod: 2024-09-30T06:28:19.514Z
 ---
 ## BLASTBufferQueue创建部分
 
@@ -159,8 +159,8 @@ BufferQueueCore::BufferQueueCore()
     std::set<int> mActiveBuffers;
 ```
 
-mQueue —> 存放BufferItem的[FIFO](https://so.csdn.net/so/search?q=FIFO\&spm=1001.2101.3001.7020)队列\
-mSlots —> BufferSlot[结构体数组](https://so.csdn.net/so/search?q=%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84\&spm=1001.2101.3001.7020)，数组长度固定为64\
+mQueue —> 存放BufferItem的FIFO队列\
+mSlots —> BufferSlot结构体数组，数组长度固定为64\
 mFreeSlots —> BufferSlot状态为FREE，且没有GraphicBuffer与之相绑定的slot集合\
 mFreeBuffers —> BufferSlot状态为FREE，且有GraphicBuffer与之相绑定的slot集合\
 mActiveBuffers —> BufferSlot状态不为FREE（即DEQUEUED、QUEUED、ACQUIRED、SHARED）的slot集合。既然状态不是FREE，那么该BufferSlot必然有一个GraphicBuffer与之相绑定\

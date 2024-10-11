@@ -10,7 +10,7 @@ collections:
   - 图形显示
   - 总结文章
 date: 2024-09-25T09:26:31.080Z
-lastmod: 2024-09-29T06:49:29.094Z
+lastmod: 2024-10-08T10:45:59.067Z
 ---
 ## 一、Surface介绍
 
@@ -173,14 +173,14 @@ class ComposerServiceAIDL : public Singleton<ComposerServiceAIDL> {}
 
 ### \[\[Android13 Surface创建流程分析-CSDN博客]]
 
-### SurfaceControl创建流程分析
+### \[\[Android13 SurfaceControl创建流程分析-CSDN博客]]
 
-### Surface connect流程分析
+### \[\[Android13 Surface connect流程分析-CSDN博客]]
 
-### Surface lockCanvas流程分析
+### \[\[Android13 Surface lockCanvas流程分析-CSDN博客]]
 
-### Surface unlockCanvasAndPost流程分析
+### \[\[Android13 Surface unlockCanvasAndPost流程分析-CSDN博客]]
 
-### Surface dequeueBuffer流程分析
+### \[\[Android13 Surface dequeueBuffer流程分析-CSDN博客]]
 
-### Surface queueBuffer流程分析
+### \[\[Android13 Surface queueBuffer流程分析-CSDN博客]]

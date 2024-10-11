@@ -10,7 +10,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T09:39:12.990Z
-lastmod: 2024-09-26T07:04:10.460Z
+lastmod: 2024-10-09T08:50:35.835Z
 ---
 Surface是Android中用于表示一个图像缓冲区的类，Surface是在SurfaceControl创建时创建的，代码如下：
 
@@ -160,6 +160,6 @@ BufferQueueLayer::BufferQueueLayer(const LayerCreationArgs& args)
 : BufferLayer(args) {}
 ```
 
-#### BufferQueueLayer onFirstRef
+#### \[\[Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客]]
 
 它的构造函数中其实没做什么事情，但是别忘了这个类终极父类是RefBase，BufferQueueLayer被new出来的时候会走进它的onFirstRef()方法里面：

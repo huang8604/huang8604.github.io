@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T10:26:26.391Z
-lastmod: 2024-09-26T07:24:51.000Z
+lastmod: 2024-10-09T08:54:28.729Z
 ---
 BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。
 
@@ -211,7 +211,7 @@ BufferQueueConsumer::BufferQueueConsumer(const sp<BufferQueueCore>& core) :
 
 ## new MonitoredProducer
 
-步骤2：为生产者对象创建一个MonitoredProducer，这个类完全就是生产者的[封装类](https://so.csdn.net/so/search?q=%E5%B0%81%E8%A3%85%E7%B1%BB\&spm=1001.2101.3001.7020)，它里面的所有函数几乎都是通过传递进去的producer来完成的，MonitoredProducer类定义如下：
+步骤2：为生产者对象创建一个MonitoredProducer，这个类完全就是生产者的封装类，它里面的所有函数几乎都是通过传递进去的producer来完成的，MonitoredProducer类定义如下：
 
 ```cpp
 //frameworks/native/services/surfaceflinger/MonitoredProducer.cpp
@@ -277,7 +277,7 @@ private:
 
 ## new BufferLayerConsumer
 
-步骤3：为生产者对象创建一个BufferLayerConsumer，这个类完全就是消费者的封装类，BufferLayerConsumer[类定义](https://so.csdn.net/so/search?q=%E7%B1%BB%E5%AE%9A%E4%B9%89\&spm=1001.2101.3001.7020)如下：
+步骤3：为生产者对象创建一个BufferLayerConsumer，这个类完全就是消费者的封装类，BufferLayerConsumer类定义如下：
 
 ```cpp
 //frameworks/native/services/surfaceflinger/BufferLayerConsumer.cpp

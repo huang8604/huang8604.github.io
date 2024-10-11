@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T05:55:39.573Z
-lastmod: 2024-09-27T09:36:24.617Z
+lastmod: 2024-10-09T09:04:30.760Z
 ---
 SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：
 
@@ -234,7 +234,7 @@ status_t BnSurfaceComposerClient::onTransact(uint32_t code, const Parcel& data, 
 
 调用Client的createSurface函数：
 
-[Android13 Surface创建流程分析](Android13%20Surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90)
+[Android13 Surface创建流程分析-CSDN博客](/Android13%20Surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
 
 ## new SurfaceControl
 

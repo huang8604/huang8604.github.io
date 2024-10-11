@@ -8,7 +8,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T08:38:34.333Z
-lastmod: 2024-09-26T08:56:35.781Z
+lastmod: 2024-10-09T09:14:03.019Z
 ---
 BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。
 
@@ -402,4 +402,4 @@ void BufferQueueLayer::ContentsChangedListener::onFrameAvailable(const BufferIte
 
 调用BufferQueueLayer的onFrameAvailable方法，通知图像或视频帧已经可用并准备好显示：
 
-[Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客](/Android13%20BufferQueueLayer%20onFrameAvailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)]
+[Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客](/Android13%20BufferQueueLayer%20onFrameAvailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
