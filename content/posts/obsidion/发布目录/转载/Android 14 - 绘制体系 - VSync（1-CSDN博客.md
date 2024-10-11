@@ -9,11 +9,11 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/temp7695/article/details/139250674#comments_34337980
 date: 2024-10-11T10:44:05.601Z
-lastmod: 2024-10-11T10:49:34.271Z
+lastmod: 2024-10-11T10:53:11.867Z
 ---
 ## **整体框架**
 
-![](https://i-blog.csdnimg.cn/blog_migrate/9afdc3f232e3341d72d4e5dac1d1a0d6.png)
+![8f55ed8ba868727305f113ae9a9235bf\_MD5](https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png)
 
 **VsyncConfiguration**：一些基本参数的配置类，比如PhaseOffsets、WorkDuration等。
 
@@ -41,7 +41,7 @@ Android 13以后，VSYNC架构变化之一是给SF使用的VSYNC-sf信号，不�
 
 #### **屏幕刷新率**
 
-![](https://i-blog.csdnimg.cn/blog_migrate/f905bba3fdc6099b4ee8e2b84b7f7bff.png)
+![f42fd1df37f94a423ebfcb64649d0fef\_MD5](https://picgo.myjojo.fun:666/i/2024/10/11/67090386ae80a.png)
 
 ColorMode：设备支持的ColorMode；可根据系统设置或应用自身设定的颜色模式最终决定使用那个ColorMode。
 
@@ -55,7 +55,7 @@ displayManagerPolicy：当前采用的帧率管理策略。primaryRanges代表�
 
 ### **主要组件的初始化**
 
-![](https://i-blog.csdnimg.cn/blog_migrate/3d93204da6f3abadccc201e66b14a0fe.png)
+![c7507518965bd5c02954542624ba4d5d\_MD5](https://picgo.myjojo.fun:666/i/2024/10/11/67090386ac7ba.png)
 
 #### **SurfaceFlinger的初始化**
 
