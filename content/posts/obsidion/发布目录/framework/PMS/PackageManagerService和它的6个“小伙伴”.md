@@ -1,7 +1,6 @@
 ---
 title: PackageManagerService和它的6个“小伙伴”
-author:
-  - "[[牛晓伟]]"
+author: 牛晓伟
 created: 2024-10-11
 tags:
   - clippings
@@ -10,7 +9,7 @@ tags:
 collections: PMS
 source: https://mp.weixin.qq.com/s/6o5wUN6H6x7ZHVuLoCHMPA
 date: 2024-10-11T09:13:38.141Z
-lastmod: 2024-10-11T09:28:47.436Z
+lastmod: 2024-10-11T09:40:11.614Z
 ---
 **前言**
 
