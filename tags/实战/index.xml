@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>实战 - 标签 - 文韬的文档</title><link>https://huang8604.github.io/tags/%E5%AE%9E%E6%88%98/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.136.2 &amp; FixIt v0.3.13</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Wed, 18 Sep 2024 10:23:15 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/tags/%E5%AE%9E%E6%88%98/index.xml" rel="self" type="application/rss+xml"/><item><title>增加语言方案</title><link>https://huang8604.github.io/posts/%E5%A2%9E%E5%8A%A0%E8%AF%AD%E8%A8%80%E6%96%B9%E6%A1%88/</link><pubDate>Sun, 15 Sep 2024 14:48:47 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%A2%9E%E5%8A%A0%E8%AF%AD%E8%A8%80%E6%96%B9%E6%A1%88/</guid><description>&lt;h2 id="问题描述" class="heading-element">&lt;span>【问题描述】&lt;/span>
+ &lt;a href="#%e9%97%ae%e9%a2%98%e6%8f%8f%e8%bf%b0" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>客户需求,要求日文可以在平假字和汉字之间切换.&lt;/p></description></item><item><title>Archer&amp;ArcherIS AP签名方案总结</title><link>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</link><pubDate>Sun, 15 Sep 2024 14:46:51 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">style: nestedList # TOC style (nestedList|inlineFirstLevel)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maxLevel: 0 # Include headings up to the speficied level
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">includeLinks: true # Make headings clickable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">debugInConsole: false # Print debug info in Obsidian console&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="关于ap端-hsm签名的配置说明" class="heading-element">&lt;span>关于AP端 HSM签名的配置说明&lt;/span>
+ &lt;a href="#%e5%85%b3%e4%ba%8eap%e7%ab%af-hsm%e7%ad%be%e5%90%8d%e7%9a%84%e9%85%8d%e7%bd%ae%e8%af%b4%e6%98%8e" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>Archer 项目签名使用的加密狗来自YubiHSM&lt;br>
+具体的一些操作说明需要到官网寻找：&lt;br>
+&lt;a href="https://developers.yubico.com/YubiHSM2/"target="_blank" rel="external nofollow noopener noreferrer">YubiHSM2&lt;/a>&lt;/p></description></item><item><title>adsp wristdown 流程与实现</title><link>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</link><pubDate>Sun, 31 Mar 2024 02:00:33 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>#Peppermill #算法研究&lt;/p>
+&lt;p>目前 落腕灭屏算法大致在 framework 层实现。&lt;br>
+目前算法的思路：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="#%E8%BF%90%E5%8A%A8%E6%A3%80%E6%B5%8B">#运动检测&lt;/a>，通过一些特征值，来判断是否是一个运动段落。&lt;/li>
+&lt;li>符合的运动检测后，我们来判断是否是落腕的动作。&lt;/li>
+&lt;li>符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="背景介绍" class="heading-element">&lt;span>背景介绍&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af%e4%bb%8b%e7%bb%8d" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。&lt;br>
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP&lt;/p></description></item></channel></rss>
