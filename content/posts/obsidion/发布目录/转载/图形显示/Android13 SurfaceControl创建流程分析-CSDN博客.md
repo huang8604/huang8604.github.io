@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T05:55:39.573Z
-lastmod: 2024-10-09T09:04:30.760Z
+lastmod: 2024-10-09T09:24:09.000Z
 ---
 SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：
 

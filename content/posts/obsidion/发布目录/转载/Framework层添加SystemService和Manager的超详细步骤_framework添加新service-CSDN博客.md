@@ -9,7 +9,7 @@ collections:
   - PMS
   - Framework
 date: 2024-09-20T02:17:25.314Z
-lastmod: 2024-09-25T07:25:00.600Z
+lastmod: 2024-09-25T07:54:21.000Z
 ---
 本文适用于Android 12中增加系统服务。
 

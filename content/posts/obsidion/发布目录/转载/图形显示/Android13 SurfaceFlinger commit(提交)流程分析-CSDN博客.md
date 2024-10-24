@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-09-26T09:05:04.109Z
-lastmod: 2024-09-27T03:07:57.960Z
+lastmod: 2024-09-27T03:15:39.000Z
 ---
 SurfaceFlinger的commit方法用于将应用程序的绘制结果提交到屏幕上显示。
 

@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-09-27T02:50:31.553Z
-lastmod: 2024-09-27T03:04:40.124Z
+lastmod: 2024-09-27T03:15:39.000Z
 ---
 BufferQueueLayer的updateTexImage方法用于将当前图形缓冲区的内容更新到纹理中，代码如下：
 

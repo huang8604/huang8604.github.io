@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138467476?spm=1001.2014.3001.5502
 date: 2024-09-27T03:23:47.462Z
-lastmod: 2024-09-27T03:24:27.685Z
+lastmod: 2024-09-27T03:27:07.000Z
 ---
 BufferQueueLayer的onLayerDisplayed方法在BufferQueueLayer被显示时调用，代码如下：
 

@@ -8,7 +8,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T07:18:32.230Z
-lastmod: 2024-09-26T07:41:14.498Z
+lastmod: 2024-09-26T07:48:34.000Z
 ---
 BufferQueueProducer的dequeueBuffer方法是Android系统中用于从BufferQueue中获取可用的缓冲区的方法。BufferQueue是一个用于在不同线程之间传递图像数据的队列，它通常用于图像渲染和视频编解码等场景。
 

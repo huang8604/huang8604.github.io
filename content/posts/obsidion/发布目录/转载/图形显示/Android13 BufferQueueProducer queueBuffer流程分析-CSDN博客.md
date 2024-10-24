@@ -8,7 +8,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T08:38:34.333Z
-lastmod: 2024-10-09T09:14:03.019Z
+lastmod: 2024-10-09T09:24:09.000Z
 ---
 BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。
 

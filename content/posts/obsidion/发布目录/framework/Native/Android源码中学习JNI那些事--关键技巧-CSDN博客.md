@@ -9,7 +9,7 @@ tags:
 collections: Native
 source: https://blog.csdn.net/learnframework/article/details/122123616
 date: 2024-10-11T07:27:01.024Z
-lastmod: 2024-10-11T09:03:04.974Z
+lastmod: 2024-10-11T09:12:33.000Z
 ---
 **“JNI开发中请问如果想要一个纯native线程中执行的native方法需要调用到Java层应该要怎么做？”**\
 大家注意这个问题哈，是纯native线程和方法，即没有我们正常jni调用的env环境的，正常的如果jni方法是由java层调用到jni一般都是自带了JNIEnv变量如下：\

@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T07:11:19.404Z
-lastmod: 2024-09-26T07:24:09.726Z
+lastmod: 2024-09-26T07:24:51.000Z
 ---
 Surface::dequeueBuffer是Android系统中Surface类的一个方法，用于从Surface中获取一个可用的Buffer。它通常在图形渲染或视频播放等场景中使用。
 

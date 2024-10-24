@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T07:05:42.974Z
-lastmod: 2024-10-09T09:07:00.669Z
+lastmod: 2024-10-09T09:24:09.000Z
 ---
 Surface的lockCanvas用于获取Canvas对象，以便进行绘图操作，代码如下：
 

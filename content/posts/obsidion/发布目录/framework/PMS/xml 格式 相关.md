@@ -7,7 +7,7 @@ collections:
   - PMS
 title: xml 格式 相关
 date: 2024-09-23T09:36:59.649Z
-lastmod: 2024-09-23T09:48:26.299Z
+lastmod: 2024-09-23T09:49:11.000Z
 ---
 #### 背景：
 

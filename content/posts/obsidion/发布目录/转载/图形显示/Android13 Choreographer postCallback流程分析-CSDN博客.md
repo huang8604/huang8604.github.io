@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138469697?spm=1001.2014.3001.5502
 date: 2024-09-27T07:26:16.136Z
-lastmod: 2024-09-27T07:28:35.202Z
+lastmod: 2024-09-27T07:51:08.000Z
 ---
 Choreographer的postCallback()方法用于将一个任务添加到Choreographer的任务队列中，以便在下一帧绘制之前执行，代码如下：
 

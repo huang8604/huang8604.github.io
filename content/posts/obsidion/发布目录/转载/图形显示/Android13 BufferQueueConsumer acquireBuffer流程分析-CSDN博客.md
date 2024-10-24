@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138468857?spm=1001.2014.3001.5502
 date: 2024-09-27T02:57:14.084Z
-lastmod: 2024-09-27T02:57:46.559Z
+lastmod: 2024-09-27T03:15:39.000Z
 ---
 BufferQueueConsumer的acquireBuffer方法的主要作用是从BufferQueue中获取一个可用的图像缓冲区，并返回一个GraphicBuffer对象。它可以用于在应用程序中进行图像处理、渲染或显示等操作。
 

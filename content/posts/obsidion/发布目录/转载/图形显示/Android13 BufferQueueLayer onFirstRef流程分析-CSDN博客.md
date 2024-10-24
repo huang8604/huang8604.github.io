@@ -9,7 +9,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-25T10:26:26.391Z
-lastmod: 2024-10-09T08:54:28.729Z
+lastmod: 2024-10-09T09:24:09.000Z
 ---
 BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。
 

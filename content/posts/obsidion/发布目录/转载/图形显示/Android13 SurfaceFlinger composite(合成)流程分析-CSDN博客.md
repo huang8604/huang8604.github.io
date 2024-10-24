@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138465549
 date: 2024-09-27T03:09:19.293Z
-lastmod: 2024-09-27T03:26:10.829Z
+lastmod: 2024-09-27T03:27:07.000Z
 ---
 SurfaceFlinger的composite方法，用于将多个窗口的图像进行合成，主要负责对相关要进行上帧的layer进行，识别排序好，然后合成，有hwc合成的会构建对应OutputLayer传递hwc，GPU合成则直接合成，再传递到hwc中，它主要完成以下几个步骤：
 

@@ -8,7 +8,7 @@ tags:
   - blog
 collections: 图形显示
 date: 2024-09-26T08:55:52.545Z
-lastmod: 2024-09-26T09:01:48.235Z
+lastmod: 2024-09-26T09:16:16.000Z
 ---
 BufferQueueLayer的onFrameAvailable方法用于通知图像或视频帧已经可用并准备好显示，代码如下：
 

@@ -8,7 +8,7 @@ tags:
 collections:
   - 图形显示
 date: 2024-09-26T08:40:51.516Z
-lastmod: 2024-09-26T08:48:44.993Z
+lastmod: 2024-09-26T08:55:50.000Z
 ---
 Surface::queueBuffer是Android系统中Surface类的一个成员函数，用于将图像数据放入Surface的缓冲区中。它的调用地方主要包括以下几个：
 
