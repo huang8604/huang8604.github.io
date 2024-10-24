@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/learnframework/article/details/129432374
 date: 2024-10-23T09:21:04.212Z
-lastmod: 2024-10-24T07:59:00.598Z
+lastmod: 2024-10-24T09:48:03.667Z
 ---
 ### 背景：
 
@@ -65,3 +65,62 @@ adb pull /data/misc/wmtrace\
 ![97c33e018d89713d5ba4402d0e779a01\_MD5](https://picgo.myjojo.fun:666/i/2024/10/23/6718c0397639c.png)
 
 然后就可以相当于对着录屏的每一帧图像看对应的surfaceflinger中各个layer的信息，相当于每一帧我们都可以又对应的dumpsys数据分析
+
+### 4、原因寻找及解决办法
+
+上面已经分析了bugreport的原理，实际是借助dumpstate来实现获取高权限root的，那么问题来了，为啥wmtrace相关文件夹呢？这个问题就得看dumpstate相关源码了：
+
+frameworks/native/cmds/dumpstate/dumpstate.cpp\
+看到了如下的代码：
+
+```cpp
+#define PSTORE_LAST_KMSG "/sys/fs/pstore/console-ramoops"
+#define ALT_PSTORE_LAST_KMSG "/sys/fs/pstore/console-ramoops-0"
+#define BLK_DEV_SYS_DIR "/sys/block"
+
+#define RECOVERY_DIR "/cache/recovery"
+#define RECOVERY_DATA_DIR "/data/misc/recovery"
+#define UPDATE_ENGINE_LOG_DIR "/data/misc/update_engine_log"
+#define LOGPERSIST_DATA_DIR "/data/misc/logd"
+#define PREREBOOT_DATA_DIR "/data/misc/prereboot"
+#define PROFILE_DATA_DIR_CUR "/data/misc/profiles/cur"
+#define PROFILE_DATA_DIR_REF "/data/misc/profiles/ref"
+#define XFRM_STAT_PROC_FILE "/proc/net/xfrm_stat"
+#define WLUTIL "/vendor/xbin/wlutil"
+#define WMTRACE_DATA_DIR "/data/misc/wmtrace"
+#define OTA_METADATA_DIR "/metadata/ota"
+#define SNAPSHOTCTL_LOG_DIR "/data/misc/snapshotctl_log"
+#define LINKERCONFIG_DIR "/linkerconfig"
+#define PACKAGE_DEX_USE_LIST "/data/system/package-dex-usage.list"
+#define SYSTEM_TRACE_SNAPSHOT "/data/misc/perfetto-traces/bugreport/systrace.pftrace"
+#define CGROUPFS_DIR "/sys/fs/cgroup"
+```
+
+可以看到有列出一个个的data相关目录，有RECOVERY\_DATA\_DIR和WMTRACE\_DATA\_DIR，这里重点看看WMTRACE\_DATA\_DIR为啥没有被导出看看是否有相关的限制条件：
+
+看到了如下的代码，这里有一个条件就是!PropertiesHelper::IsUserBuild()\
+即只有在非user手机才可以导出WMTRACE\_DATA\_DIR目录
+
+```cpp
+    /* Add window and surface trace files. */
+    if (!PropertiesHelper::IsUserBuild()) {
+        ds.AddDir(WMTRACE_DATA_DIR, false);
+    }
+```
+
+修改方案探索：\
+1、直接删除 if (!PropertiesHelper::IsUserBuild()) 条件（比较暴力不安全）
+
+```cpp
+   //if (!PropertiesHelper::IsUserBuild()) {
+        ds.AddDir(WMTRACE_DATA_DIR, false);
+  //  }
+```
+
+2、可以加一个或条件，加入自己的暗门（建议这种），比如自己也搞一个prop，可以通过adb shell改变的prop
+
+```cpp
+   if (!PropertiesHelper::IsUserBuild() || isEnableProp（）) {
+        ds.AddDir(WMTRACE_DATA_DIR, false);
+    }
+```
