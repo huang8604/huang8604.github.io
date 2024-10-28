@@ -9,11 +9,11 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/learnframework/article/details/129432374
 date: 2024-10-23T09:21:04.212Z
-lastmod: 2024-10-24T09:48:03.667Z
+lastmod: 2024-10-25T07:27:48.131Z
 ---
 ### 背景：
 
-设想一下，假如我们又如下场景，一个闪黑一瞬间的问题，正常我们看到黑屏冻屏问题，是不是时刻想到是要来dumpsys [SurfaceFlinger](https://so.csdn.net/so/search?q=SurfaceFlinger\&spm=1001.2101.3001.7020)和dumpsys window windows相关的信息来辅助我们分析问题，但奈何这个是个瞬时问题。。。我们dumpsys很难抓住那一瞬间，而且即使抓到了黑一瞬间的，我们有时候分析也要又黑屏前一帧后一帧相关等才可以分析进一步原因。
+设想一下，假如我们又如下场景，一个闪黑一瞬间的问题，正常我们看到黑屏冻屏问题，是不是时刻想到是要来dumpsys SurfaceFlinger和dumpsys window windows相关的信息来辅助我们分析问题，但奈何这个是个瞬时问题。。。我们dumpsys很难抓住那一瞬间，而且即使抓到了黑一瞬间的，我们有时候分析也要又黑屏前一帧后一帧相关等才可以分析进一步原因。
 
 所以在开发过程中，经常会遇到各种各样的窗口问题，比如动画异常、窗口异常、闪屏、闪黑、黑屏、错位显示…
 
