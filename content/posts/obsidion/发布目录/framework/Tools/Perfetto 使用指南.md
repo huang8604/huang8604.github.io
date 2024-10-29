@@ -10,7 +10,7 @@ tags:
 collections: 工具
 source: https://mp.weixin.qq.com/s/ad-exk3ZCWPME6JbustR_w
 date: 2024-10-18T07:26:04.273Z
-lastmod: 2024-10-21T09:20:26.099Z
+lastmod: 2024-10-29T09:22:22.968Z
 ---
 ## 1. Perfetto 是什么？
 
@@ -74,7 +74,7 @@ Perfetto 也提供了图形化的工具来抓取 Trace。
 
 打开后，第一步，完成基本的设置：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/671213b7ae95e.png)
+![14be9842a24628a0f3f6a6580e1aba4a\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/671213b7ae95e.png)
 
 * 左侧 tab 栏，选择 Record new trace 选项。
 
@@ -90,11 +90,11 @@ Perfetto 也提供了图形化的工具来抓取 Trace。
 
 第二步，配置我们要抓取的内容：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/671213fc924af.png)
+![4168204c70695e02a742eb4785e754b3\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/671213fc924af.png)
 
 箭头指向的内容全部选中，这部分主要是 App 相关的内容。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712145dc5501.png)
+![82e01b3a7264c8ac5038fdd9d7bab939\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712145dc5501.png)
 
 把调用栈选上，这对我们分析代码很有帮助。
 
@@ -104,7 +104,7 @@ Perfetto 也提供了图形化的工具来抓取 Trace。
 
 在使用 Perfetto UI 抓取时，当我们配置好以后。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712147cedee9.png)
+![d4dffdfeb318a54a093ccbb6b8135f5c\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712147cedee9.png)
 
 进入到 `Recording command`，然后把右侧两个 `EOF` 之间的内容复制下来，保存在 config.pbtx 配置文件中。
 
@@ -124,7 +124,7 @@ Perfetto 也提供了图形化的工具来抓取 Trace。
 
 使用浏览器打开 https://ui.perfetto.dev/，界面如下：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712154a372e3.png)
+![f8eeeade087c9011666e787e05601681\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712154a372e3.png)
 
 可以把 trace 文件直接拖到浏览器中，也可以通过左上角的 `Open trace file` 打开 trace 文件。
 
@@ -132,7 +132,7 @@ Perfetto 也提供了图形化的工具来抓取 Trace。
 
 Perfetto Trace 界面大致可分为 4 个区域：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121568a29b5.png)
+![f431e40b92dd06021a9e5056464e17bc\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121568a29b5.png)
 
 * 操作区，主要用到 Current Trace 下的几个选项：
 
@@ -156,11 +156,11 @@ Trace 内容区中主要有以下一些元素：
 
 ### 3.2.1 slice，片段
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121645cbafe.png)
+![8334ab145a6a4ccb13646715fe1a7fe6\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121645cbafe.png)
 
 鼠标单击后会有一个黑框包围住，信息区会显示相关信息：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121653b7038.png)
+![531a7006d369ce8deba539bc8bca19c3\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121653b7038.png)
 
 slice 代表了一段代码的执行过程，起于 `Trace.traceBegin \  `，终于 `Trace.traceEnd \ ATRACE_END`
 
@@ -178,33 +178,33 @@ slice 代表了一段代码的执行过程，起于 `Trace.traceBegin \  `，终
 在Running状态就代表着处于[cpu](https://so.csdn.net/so/search?q=cpu\&spm=1001.2101.3001.7020)上的运行中\
 状态作用：看某个方法是否耗时，可以通过测量Running时间长短判断，也可以进行竞品对比看看cpu能力如何，或者前后对比各个大小核cpu影响方法的耗时
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f40bc95b39e23763774903f53faed994.png)
+![26035b00bc9bc4bb3e9658df3a3f8f42\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a936d4558.png)
 
 ##### 浅绿色 : 可运行（Runnable）
 
 代表线程可以运行但当前没有真正运行中，需要等待 cpu 调度，这个时间长短代表着cpu调度快慢\
 **重要作用：点击Runnable这个块，下面信息会显示当前线程唤醒者是谁，即可以清楚知道整个线程之间唤醒逻辑。**
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/6824e22af3bf4fb67c705fdf02f06812.png)
+![b16cdfc5d92701ed3ad9e618f68a816e\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a9383d0f3.png)
 
 ##### 白色/无色: 睡眠中（Sleeping）
 
 代表当前线程没有工作可以做，等待[事件驱动](https://so.csdn.net/so/search?q=事件驱动\&spm=1001.2101.3001.7020)干货，比如looper就是大部分时间睡眠，小部分时间有消息后处理消息
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/5702bf40deaa372f6282abd928bb848c.png)
+![520824c7d42e49c3c06c60ae7aebd66b\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93ba652f.png)
 
 ##### 橙色Uninterruptible Sleep (IO)
 
 代表不可以中断的休眠状态，一般线程在[IO操作](https://so.csdn.net/so/search?q=IO操作\&spm=1001.2101.3001.7020)上阻塞了\
 不可中断状态实际上是系统对进程和硬件设备的一种保护机制。比如，当一个进程向磁盘读写数据时，为了保证数据的一致性，在得到磁盘回复前，它是不能被其他进程或者中断打断的。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/761190976692541af6f3744df0a767ec.png)
+![545576891abf020bad7bd16d051c95c8\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93cd6442.png)
 
 ##### 紫红色Uninterruptible Sleep (Non IO)
 
 不可中断的休眠状态，非IO导致，在等内核锁。通常是低内存导致等待、各种各样的内核锁。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/cedea580a540e6093209c9153860d4b2.png)
+![7b2def33d51543a87ab926f359e0443a\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93c2c532.png)
 
 Uninterruptible情况都可以点击后看到blocked方法是哪个
 
@@ -216,9 +216,9 @@ Blocked function   jbd2_log_wait_commit
 
 用于记录一些关键数据。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121780e45eb.png)
+![96a000924935d095ee6aaf7efd29576c\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121780e45eb.png)
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712185cba4e3.png)
+![fecfd5f864712f49a4e1b12904dc6c63\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712185cba4e3.png)
 
 对应于代码中的 `Trace.traceCounter/ATRACE_INT`：
 
@@ -230,29 +230,29 @@ Blocked function   jbd2_log_wait_commit
 
 用于展示 cpu 的调度情况。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712188122854.png)
+![9a7921b120e22cd98620b4a8bbfec902\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712188122854.png)
 
 ### 3.2.4 thread\_state，线程状态
 
 点击片段上方线程调度信息片段(Running)，可以看到线程当前运行在哪个CPU上。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/6712189c122fb.png)
+![71cb37357dd944ef0727f3b304d56339\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/6712189c122fb.png)
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/671218b219c23.png)
+![1855f4b4fc05bda7df0b4eca44eb2a40\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/671218b219c23.png)
 
 点击信息区中的 `Running on CPU 7` 旁边的斜箭头：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121b18e7ebc.png)
+![85f359462dfb6ed688bad374e631aca9\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121b18e7ebc.png)
 
 可以在 CPU 调度中看到该运行片段。
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121b248d8ec.png)
+![164ea040fd0a573aca7e17d486dc9d70\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121b248d8ec.png)
 
 再次点击斜箭头，可以回到原来位置。
 
 这里的 thread\_state 实际是我们的主线程，由用户点击屏幕唤醒运行，实际很多线程都是由其他线程/进程唤醒的，比如在 CPU 调度中选择一个 Slice：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121b57a58f3.png)
+![6d28a7173a13532d4c5bcf438682d7a8\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121b57a58f3.png)
 
 这里的意思是当前 thread 由 P（Process）`/system/bin/surfaceflinger [584]` 中的 T（Thread）`app [689]` 唤醒。
 
@@ -278,21 +278,21 @@ SHIFT + 鼠标 可以拖动
 
 标记以后，会出现两个小三角：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121d3198f40.png)
+![a39994dcc7880ce89c75dc8f5b1f1ff8\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121d3198f40.png)
 
 点击小三角后，信息区会出现一个 remove 按键：
 
-![image.png](https://picgo.myjojo.fun:666/i/2024/10/18/67121d4397b76.png)
+![0d5aa3ecaff5b4ae5586642e819cfe2d\_MD5](https://picgo.myjojo.fun:666/i/2024/10/18/67121d4397b76.png)
 
 点击即可取消。
 
 ##### 3.4 跨进程通讯的发起端与接受端跳转
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/28d74252c0306ebb5385ce267f485b17.png)
+![b18ce5a621a2d8b948b44b536a0e428c\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93d5ae91.png)
 
 发起端如下，也可以直接点击跳转到接收端
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/12470f0e94a4c8d9e8ba2cf4e214157e.png#pic_center)
+![e63b2f2ff4e66ff2b51414f4572f6ff9\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93c11c4d.png)
 
 ## 4. 如何添加trace Log
 
@@ -622,11 +622,11 @@ __END_DECLS
 
 调用如下：
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/02e8386284bad8d169d74d52b4661000.png#pic_center)
+![f41d5bab5ad75815f82682d93be190be\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93b6639d.png)
 
 效果如下：
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/717391eeb7b12a52dc1d7c701d910739.png#pic_center)
+![b762eb06df9418207b5208ae07ebf7b0\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93adec33.png)
 
 #### 4.2.3 trace相关实战使用：
 
@@ -677,11 +677,11 @@ ATRACE\_CALL\
 ATRACE\_NAME\
 一般针对整个方法或者单独作用域，ATRACE\_CALL和ATRACE\_NAME本质没有区别，只是把名字变成了function的name
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b5e1abed78b6e3fd1f0c15c5271d78b0.png#pic_center)
+![2fd48ec7a226024f796c4c848f61b39f\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93b8bc0a.png)
 
 具体效果如下：
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/97901c3c17dc635597e7b327de5d073a.png#pic_center)
+![e8251e04016f6f68000afbd66587e411\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93a5a949.png)
 
 优点：只需要一个调用既可以实现tag打印，自动跟随作用域进行tag的结束\
 缺点：需要自己熟练掌握好作用域，没有可以手动控制的tag结束的点
@@ -713,11 +713,11 @@ GraphicBuffer::GraphicBuffer()
 ATRACE\_BEGIN(name);\
 ATRACE\_END();
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/548fc513e6373c016cdda700696c4b39.png)![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/598996ed531907b026911f938457def1.png#pic_center)
+![a888b7da3d14319a6175179e79f8cab9\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93ad7d83.png)![197ff0830a077cc075b59917cf894bb4\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93c82d24.png)
 
 执行后效果如下：
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/48003eb1378e63243751a1045612e2ac.png#pic_center)
+![a947d73a381cd5c0c3a4a81f214b54d8\_MD5](https://picgo.myjojo.fun:666/i/2024/10/29/6720a93a3c766.png)
 
 ### 4.3 java端的trace打印
 
