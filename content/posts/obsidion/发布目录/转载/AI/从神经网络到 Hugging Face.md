@@ -1,8 +1,5 @@
 ---
 title: 从神经网络到 Hugging Face
-author:
-  - "[[hutusi]]"
-created: 2024-10-28
 tags:
   - clippings
   - 转载
@@ -11,7 +8,7 @@ collections:
   - AI
 source: https://hutusi.com/articles/the-history-of-neural-networks
 date: 2024-10-28T09:19:57.094Z
-lastmod: 2024-10-28T09:21:22.664Z
+lastmod: 2024-10-29T08:05:28.125Z
 ---
 ## 神经网络和深度学习简史
 
