@@ -11,7 +11,7 @@ collections:
   - 总结文章
 source: https://blog.csdn.net/liuning1985622/article/details/138464728
 date: 2024-09-27T03:29:57.493Z
-lastmod: 2024-09-29T06:49:56.000Z
+lastmod: 2024-10-29T09:03:53.160Z
 ---
 ## 一、SurfaceFlinger介绍
 
@@ -692,7 +692,7 @@ class FrameTracer {}
 
 ### SurfaceFlinger启动流程分析
 
-[发布目录/转载/图形显示/Android13 SurfaceFlinger启动流程分析-CSDN博客|Android13 SurfaceFlinger启动流程分析-CSDN博客](%E5%8F%91%E5%B8%83%E7%9B%AE%E5%BD%95/%E8%BD%AC%E8%BD%BD/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/Android13%20SurfaceFlinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2%7CAndroid13%20SurfaceFlinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
+[Android13 SurfaceFlinger启动流程分析-CSDN博客|Android13 SurfaceFlinger启动流程分析-CSDN博客](Android13%20SurfaceFlinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2%7CAndroid13%20SurfaceFlinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
 
 ### SurfaceFlinger commit(提交)流程分析
 
@@ -708,7 +708,7 @@ class FrameTracer {}
 
 ### SurfaceFlinger onComposerHalVsync流程分析
 
-[发布目录/转载/图形显示/Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客|Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客](%E5%8F%91%E5%B8%83%E7%9B%AE%E5%BD%95/%E8%BD%AC%E8%BD%BD/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/Android13%20SurfaceFlinger%20onComposerHalVsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2%7CAndroid13%20SurfaceFlinger%20onComposerHalVsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
+[Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客|Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客](Android13%20SurfaceFlinger%20onComposerHalVsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2%7CAndroid13%20SurfaceFlinger%20onComposerHalVsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2)
 
 ### SurfaceFlinger onComposerHalHotplug流程分析
 
