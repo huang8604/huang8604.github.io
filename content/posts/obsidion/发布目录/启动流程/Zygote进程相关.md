@@ -7,8 +7,8 @@ categories:
 collections:
   - 开机启动
 title: Zygote进程相关
-date: 2024-08-21T10:20:51.000Z
-lastmod: 2024-09-19T07:36:20.000Z
+date: 2024-11-06T06:57:58.914Z
+lastmod: 2024-11-05T01:34:05.533Z
 ---
 [【Android Framework系列】第3章 Zygote进程相关\_android zygote进程-CSDN博客](https://blog.csdn.net/u010687761/article/details/131404918)\
 1 Zygote简介

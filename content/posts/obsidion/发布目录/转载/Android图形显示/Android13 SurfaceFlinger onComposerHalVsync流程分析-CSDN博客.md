@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138466084
-date: 2024-09-27T07:12:57.466Z
-lastmod: 2024-09-27T07:51:08.000Z
+date: 2024-11-06T06:57:52.369Z
+lastmod: 2024-11-05T01:33:58.592Z
 ---
 onComposerHalVsync是一个Android系统中的一个回调函数，用于在垂直同步（Vsync）事件发生时通知应用程序。Vsync是指显示器刷新的时间点，它通常以固定的频率发生，比如60Hz。应用程序可以通过注册onComposerHalVsync回调函数来获取Vsync事件的通知。
 

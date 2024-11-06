@@ -7,8 +7,8 @@ tags:
   - blog
 collections:
   - 图形显示
-date: 2024-09-26T06:49:46.173Z
-lastmod: 2024-10-09T09:24:09.000Z
+date: 2024-11-06T06:57:53.133Z
+lastmod: 2024-11-05T01:33:59.449Z
 ---
 Surface的connect方法用于建立与BufferQueueCore[Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客#new BufferQueueCore](Android13%20BufferQueueLayer%20onFirstRef%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2#new%20BufferQueueCore)连接，代码如下：
 

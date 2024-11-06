@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/temp7695/article/details/139205476
-date: 2024-10-11T10:34:54.473Z
-lastmod: 2024-10-24T02:47:10.317Z
+date: 2024-11-06T06:57:53.165Z
+lastmod: 2024-11-05T01:33:59.458Z
 ---
 从Android 12开始，Android的绘制系统有结构性变化， 在绘制的生产消费者模式中，新增BLASTBufferQueue，客户端进程自行进行queue的生产和消费，随后通过Transation提交到SurfaceFlinger，如此可以使得各进程将缓存提交到SufrfaceFlinger后合并到同一事务后同步提交，在同一帧生效。实际上，从Android12到Android14整个绘制系统在各个环节也都有了或大或小的调整，比如Android13发布了1.3版本的Vulkan, Android14新增了TextureView，等等。本文基于Android14。1
 

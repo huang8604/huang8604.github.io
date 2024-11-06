@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138468880?spm=1001.2014.3001.5502
-date: 2024-09-27T03:01:31.527Z
-lastmod: 2024-09-27T03:15:39.000Z
+date: 2024-11-06T06:57:52.386Z
+lastmod: 2024-11-05T01:33:58.615Z
 ---
 BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。
 

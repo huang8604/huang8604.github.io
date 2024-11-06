@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138466304
-date: 2024-09-27T07:23:49.037Z
-lastmod: 2024-09-27T07:51:09.000Z
+date: 2024-11-06T06:57:52.822Z
+lastmod: 2024-11-05T01:33:59.123Z
 ---
 EventThread的threadMain方法无限循环处理pendingEvents,对Vsync类型的Event分发到消费者，通过往消费者的FD写数据，通知APP有Vsync信号到来。pendingEvents中的消息处理完了，分发线程等待mCondition的通知，EventThread的threadMain方法代码如下：
 

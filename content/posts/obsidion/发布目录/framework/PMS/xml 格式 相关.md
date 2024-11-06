@@ -6,8 +6,8 @@ tags:
 collections:
   - PMS
 title: xml 格式 相关
-date: 2024-09-23T09:36:59.649Z
-lastmod: 2024-09-23T09:49:11.000Z
+date: 2024-11-06T06:57:57.872Z
+lastmod: 2024-11-05T01:34:04.407Z
 ---
 #### 背景：
 

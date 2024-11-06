@@ -7,8 +7,8 @@ tags:
   - blog
 collections:
   - 图形显示
-date: 2024-09-26T07:38:59.373Z
-lastmod: 2024-09-26T07:48:34.000Z
+date: 2024-11-06T06:57:53.177Z
+lastmod: 2024-11-05T01:33:59.398Z
 ---
 GraphicBuffer用于管理图形缓存数据的类，GraphicBuffer的构造方法如下：
 

@@ -7,8 +7,8 @@ tags:
 collections:
   - AI
 source: https://hutusi.com/articles/the-history-of-neural-networks
-date: 2024-10-28T09:19:57.094Z
-lastmod: 2024-10-29T08:05:28.125Z
+date: 2024-11-06T06:57:57.696Z
+lastmod: 2024-11-05T01:34:04.159Z
 ---
 ## 神经网络和深度学习简史
 

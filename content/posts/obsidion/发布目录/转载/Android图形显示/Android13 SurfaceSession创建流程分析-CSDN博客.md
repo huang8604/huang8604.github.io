@@ -8,8 +8,8 @@ tags:
   - blog
 collections:
   - 图形显示
-date: 2024-09-26T06:38:40.489Z
-lastmod: 2024-09-30T06:24:48.000Z
+date: 2024-11-06T06:57:53.011Z
+lastmod: 2024-11-05T01:33:59.290Z
 ---
 SurfaceSession是Android系统中与图形表面相关的一个关键类，它提供了与SurfaceFlinger服务通信以创建和管理图形表面连接的API，SurfaceSession在WindowManagerService的addWindow时创建，构造方法如下：
 

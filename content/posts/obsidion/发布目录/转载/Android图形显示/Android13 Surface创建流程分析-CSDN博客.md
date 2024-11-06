@@ -9,8 +9,8 @@ tags:
   - 转载
 collections:
   - 图形显示
-date: 2024-09-25T09:39:12.990Z
-lastmod: 2024-10-09T08:52:06.000Z
+date: 2024-11-06T06:57:53.284Z
+lastmod: 2024-11-05T01:33:59.613Z
 ---
 Surface是Android中用于表示一个图像缓冲区的类，Surface是在SurfaceControl创建时创建的，代码如下：
 

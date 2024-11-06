@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138466237?spm=1001.2014.3001.5502
-date: 2024-09-27T08:00:17.350Z
-lastmod: 2024-09-27T08:37:00.000Z
+date: 2024-11-06T06:57:52.172Z
+lastmod: 2024-11-05T01:33:58.450Z
 ---
 onComposerHalRefresh方法是SurfaceFlinger中的一个函数。该方法的作用是在Composer [HAL](https://so.csdn.net/so/search?q=HAL\&spm=1001.2101.3001.7020)刷新时被调用，用于更新显示内容。onComposerHalRefresh方法会在SurfaceFlinger接收到Composer HAL刷新事件时被调用。Composer HAL是硬件抽象层的一部分，负责与硬件显示设备进行通信。当Composer HAL完成一次刷新操作后，会通知SurfaceFlinger进行相应的处理。
 

@@ -7,8 +7,8 @@ tags:
   - 转载
   - blog
 collections: 图形显示
-date: 2024-09-26T09:00:49.006Z
-lastmod: 2024-09-27T03:27:07.000Z
+date: 2024-11-06T06:57:52.531Z
+lastmod: 2024-11-05T01:33:58.776Z
 ---
 SurfaceFlinger的onLayerUpdate方法用于在图形层更新时进行相应的处理，代码如下：
 

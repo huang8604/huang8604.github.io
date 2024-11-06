@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: https://blog.csdn.net/liuning1985622/article/details/138466158?spm=1001.2014.3001.5502
-date: 2024-09-27T07:54:43.705Z
-lastmod: 2024-09-27T08:37:00.000Z
+date: 2024-11-06T06:57:52.215Z
+lastmod: 2024-11-05T01:33:58.443Z
 ---
 onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。
 

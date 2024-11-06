@@ -4,8 +4,8 @@ tags:
   - blog
 categories: ubuntu
 title: dataview 使用技巧
-date: 2024-03-31T02:00:36.531Z
-lastmod: 2024-09-18T02:38:13.000Z
+date: 2024-11-06T06:57:56.758Z
+lastmod: 2024-11-05T01:34:01.871Z
 ---
 \#obsidian
 

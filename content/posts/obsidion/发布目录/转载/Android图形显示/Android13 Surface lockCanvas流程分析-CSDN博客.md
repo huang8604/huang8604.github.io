@@ -8,8 +8,8 @@ tags:
   - blog
 collections:
   - 图形显示
-date: 2024-09-26T07:05:42.974Z
-lastmod: 2024-10-09T09:24:09.000Z
+date: 2024-11-06T06:57:52.920Z
+lastmod: 2024-11-05T01:33:59.261Z
 ---
 Surface的lockCanvas用于获取Canvas对象，以便进行绘图操作，代码如下：
 
