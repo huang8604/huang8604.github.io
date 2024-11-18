@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Android - 分类 - 文韬的文档</title><link>https://huang8604.github.io/categories/android/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.138.0 &amp; FixIt v0.3.15</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Thu, 19 Sep 2024 07:36:20 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/categories/android/index.xml" rel="self" type="application/rss+xml"/><item><title>Android 记录系统空间的高通答疑</title><link>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</link><pubDate>Mon, 16 Sep 2024 04:41:19 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>&lt;a class="lightgallery" href="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=large" data-thumbnail="/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=small" data-sub-html="&lt;h2>Case_ 05784001 ~ Customer Engineering Community.pdf&lt;/h2>">&lt;img loading="lazy" src="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf" alt="Case_ 05784001 ~ Customer Engineering Community.pdf" srcset="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=small, https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=medium 1.5x, https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=large 2x" data-title="Case_ 05784001 ~ Customer Engineering Community.pdf" class="suffix-invalid suffix-invalid__small suffix-invalid__large" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p>
+&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=small, https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p>
+&lt;div class="details admonition note open disabled">
+ &lt;div class="details-summary admonition-title">&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true">&lt;/i>高通回复容量疑问&lt;/div>
+ &lt;div class="details-content">
+ &lt;div class="admonition-content">&lt;p>&lt;/div>
+ &lt;/div>
+&lt;/div>&lt;p>case中提到的resize/recovery，就是我们之前提到的恢复出厂设置后userdata拓展到剩余空间，16G变32G的动作。&lt;br>
+按高通的回复截图，resize/recovery之前 ui上面显示的总空间/已用空间大小没有任何参考意义（参考截图第四段落最后一行。这里提到的不可信大小就是之前你们看到的下载软件后开机，系统占用16G，总容量32G）&lt;br>
+高通认为resize之后，此时UI上显示的存储空间数据是可信的（参考截图倒数第三行，这里提到的可信大小就是你们了解的恢复出厂设置后系统占用32G，总容量64G。我们和高通在case上沟通时提供的机器数据是基于128G的，所以高通在引用数据时写的是128G）&lt;br>
+另外，目前PNC560我们已修改为下载软件后开机时自动拓展，无需再次恢复出厂设置了，所以用户是看不到16G系统占用这个resize之前的数据的。&lt;/p></description></item><item><title>CTS 在内网机器如何测试</title><link>https://huang8604.github.io/posts/cts-%E5%9C%A8%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95/</link><pubDate>Mon, 16 Sep 2024 04:39:38 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/cts-%E5%9C%A8%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><category domain="https://huang8604.github.io/categories/ubuntu/">Ubuntu</category><description>&lt;p>新版本的CTS工具，需要连接外网才能够测试，以往的版本是不需要的。&lt;/p>
+&lt;p>根据出错log，和源码&lt;/p>
+&lt;p>&lt;a href="https://cs.android.com/android/platform/superproject/&amp;#43;/master:tools/tradefederation/core/clearcut_client/com/android/tradefed/clearcut/ClearcutClient.java;drc=111c872ed55b5aed61fb905df39122913293d81d;l=133"target="_blank" rel="external nofollow noopener noreferrer">Site Unreachable&lt;/a>&lt;/p>
+&lt;h6 id="disable_clearcut_key" class="heading-element">&lt;span>DISABLE_CLEARCUT_KEY&lt;/span>
+ &lt;a href="#disable_clearcut_key" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h6>&lt;p>出错log&lt;/p></description></item><item><title>AMS -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor</title><link>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</link><pubDate>Mon, 16 Sep 2024 04:32:47 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</guid><category domain="https://huang8604.github.io/categories/ams/">AMS</category><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor 的关系&lt;/p></description></item><item><title>Archer&amp;ArcherIS AP签名方案总结</title><link>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</link><pubDate>Sun, 15 Sep 2024 14:46:51 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">style: nestedList # TOC style (nestedList|inlineFirstLevel)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maxLevel: 0 # Include headings up to the speficied level
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">includeLinks: true # Make headings clickable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">debugInConsole: false # Print debug info in Obsidian console&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="关于ap端-hsm签名的配置说明" class="heading-element">&lt;span>关于AP端 HSM签名的配置说明&lt;/span>
+ &lt;a href="#%e5%85%b3%e4%ba%8eap%e7%ab%af-hsm%e7%ad%be%e5%90%8d%e7%9a%84%e9%85%8d%e7%bd%ae%e8%af%b4%e6%98%8e" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>Archer 项目签名使用的加密狗来自YubiHSM&lt;br>
+具体的一些操作说明需要到官网寻找：&lt;br>
+&lt;a href="https://developers.yubico.com/YubiHSM2/"target="_blank" rel="external nofollow noopener noreferrer">YubiHSM2&lt;/a>&lt;/p></description></item><item><title>开机优化</title><link>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 04 Sep 2024 10:40:51 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E4%BC%98%E5%8C%96/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=small, https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;br>
+根据开机的阶段，有一些优化开机速度的空间&lt;/p>
+&lt;h4 id="1-bootloader阶段" class="heading-element">&lt;span>1. bootloader阶段&lt;/span>
+ &lt;a href="#1-bootloader%e9%98%b6%e6%ae%b5" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>这边涉及的系统的稳定性，能修改的地方不多。&lt;br>
+最多的是去处log，对性能提升不明显，并且对后期问题的分析有比较大的影响。&lt;/p></description></item><item><title>启动流程分析</title><link>https://huang8604.github.io/posts/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</link><pubDate>Wed, 04 Sep 2024 10:40:51 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;h4 id="开机流程" class="heading-element">&lt;span>开机流程&lt;/span>
+ &lt;a href="#%e5%bc%80%e6%9c%ba%e6%b5%81%e7%a8%8b" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;h5 id="bootloader-引导系统" class="heading-element">&lt;span>bootloader 引导系统&lt;/span>
+ &lt;a href="#bootloader-%e5%bc%95%e5%af%bc%e7%b3%bb%e7%bb%9f" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;h5 id="内核启动-idle" class="heading-element">&lt;span>内核启动 idle&lt;/span>
+ &lt;a href="#%e5%86%85%e6%a0%b8%e5%90%af%e5%8a%a8-idle" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=small, https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>自动开关机脚本</title><link>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/</link><pubDate>Wed, 29 May 2024 08:55:42 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><category domain="https://huang8604.github.io/categories/ubuntu/">Ubuntu</category><description>&lt;p>reboot_test.sh&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#Navy add for reboot/factory-reset test&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#adb reboot&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#adb reboot factory-reset&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#默认开关机测试次数&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#开关机设备ID号&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">deviceId&lt;/span>&lt;span class="o">=&lt;/span>null
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#开关机间隔时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">rebootInterval&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$#&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">elif&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$#&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">2&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">deviceId&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">i&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$i&lt;/span> -le &lt;span class="nv">$rebootNum&lt;/span> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[[&lt;/span> &lt;span class="nv">$deviceId&lt;/span> &lt;span class="o">=&lt;/span>~ &lt;span class="s2">&amp;#34;null&amp;#34;&lt;/span> &lt;span class="o">]]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;reboot test num&amp;#34;&lt;/span> &lt;span class="nv">$i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb reboot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;reboot &amp;#34;&lt;/span>&lt;span class="nv">$deviceId&lt;/span>&lt;span class="s2">&amp;#34; test num &amp;#34;&lt;/span>&lt;span class="nv">$i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb -s &lt;span class="nv">$deviceId&lt;/span> reboot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sleep &lt;span class="nv">$rebootInterval&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">let&lt;/span> i++
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">done&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>adsp wristdown 流程与实现</title><link>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</link><pubDate>Sun, 31 Mar 2024 02:00:33 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>#Peppermill #算法研究&lt;/p>
+&lt;p>目前 落腕灭屏算法大致在 framework 层实现。&lt;br>
+目前算法的思路：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="#%E8%BF%90%E5%8A%A8%E6%A3%80%E6%B5%8B">#运动检测&lt;/a>，通过一些特征值，来判断是否是一个运动段落。&lt;/li>
+&lt;li>符合的运动检测后，我们来判断是否是落腕的动作。&lt;/li>
+&lt;li>符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="背景介绍" class="heading-element">&lt;span>背景介绍&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af%e4%bb%8b%e7%bb%8d" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。&lt;br>
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP&lt;/p></description></item></channel></rss>
