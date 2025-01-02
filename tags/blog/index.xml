@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog - 标签 - 文韬的文档</title><link>https://huang8604.github.io/tags/blog/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.140.2 &amp; FixIt v0.3.16</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Thu, 02 Jan 2025 09:46:42 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>SD 卡 存储 挂载相关</title><link>https://huang8604.github.io/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/</link><pubDate>Thu, 02 Jan 2025 09:33:48 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/</guid><description>&lt;p>背景：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>测试步骤:&lt;/strong>&lt;/p>
+&lt;p>1、插入sd卡&lt;br>
+2、观察sd卡名字 （Samsung）&lt;br>
+3、格式化sd卡&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>实测结果:&lt;/strong>&lt;/p>
+&lt;p>格式化SDcard后 名字变成Android&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>预期结果:&lt;/strong>&lt;/p></description></item><item><title>MT-Photos</title><link>https://huang8604.github.io/posts/mt-photos/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/mt-photos/</guid><category domain="https://huang8604.github.io/categories/%E7%94%9F%E6%B4%BB/">生活</category><description>&lt;h4 id="fpr-内网穿透" class="heading-element">&lt;span>FPR 内网穿透&lt;/span>
+ &lt;a href="#fpr-%e5%86%85%e7%bd%91%e7%a9%bf%e9%80%8f" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>需要内网的机器的强大的CPU 给AI识别提供助力&lt;br>
+借用了腾讯云内网穿透来联通&lt;/p></description></item><item><title>Zygote进程相关</title><link>https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/</guid><category domain="https://huang8604.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</category><description>&lt;h2 id="1-zygote简介" class="heading-element">&lt;span>&lt;a href="https://blog.csdn.net/u010687761/article/details/131404918"target="_blank" rel="external nofollow noopener noreferrer">【Android Framework系列】第3章 Zygote进程相关_android zygote进程-CSDN博客&lt;/a>&lt;br>
+1 Zygote简介&lt;/span>
+ &lt;a href="#1-zygote%e7%ae%80%e4%bb%8b" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>Zygote是Android中最重要的一个进程，&lt;code>Zygote进程和Init进程、SystemServer进程是Android最重要的三大进程&lt;/code>。&lt;strong>Zygote是Android系统创建新进程的核心进程，负责启动Dalvik虚拟机，加载一些必要的系统资源和系统类，启动system_server进程，随后进入等待处理app应用请求。&lt;/strong>&lt;br>
+在Android系统中，应用程序进程都是由Zygote进程孵化出来的，而Zygote进程是由Init进程启动的。Zygote进程在启动时会创建一个Dalvik虚拟机实例，每当它孵化一个新的应用程序进程时，都会将这个Dalvik虚拟机实例复制到新的应用程序进程里面去，从而使得每一个应用程序进程都有一个独立的Dalvik虚拟机实例。&lt;/p></description></item><item><title>开机优化</title><link>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E4%BC%98%E5%8C%96/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=small, https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/08/30/66d15ffcd3583.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;br>
+根据开机的阶段，有一些优化开机速度的空间&lt;/p>
+&lt;h4 id="1-bootloader阶段" class="heading-element">&lt;span>1. bootloader阶段&lt;/span>
+ &lt;a href="#1-bootloader%e9%98%b6%e6%ae%b5" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>这边涉及的系统的稳定性，能修改的地方不多。&lt;br>
+最多的是去处log，对性能提升不明显，并且对后期问题的分析有比较大的影响。&lt;/p></description></item><item><title>启动流程分析</title><link>https://huang8604.github.io/posts/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;h4 id="开机流程" class="heading-element">&lt;span>开机流程&lt;/span>
+ &lt;a href="#%e5%bc%80%e6%9c%ba%e6%b5%81%e7%a8%8b" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;h5 id="bootloader-引导系统" class="heading-element">&lt;span>bootloader 引导系统&lt;/span>
+ &lt;a href="#bootloader-%e5%bc%95%e5%af%bc%e7%b3%bb%e7%bb%9f" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;h5 id="内核启动-idle" class="heading-element">&lt;span>内核启动 idle&lt;/span>
+ &lt;a href="#%e5%86%85%e6%a0%b8%e5%90%af%e5%8a%a8-idle" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=small, https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>投屏记录</title><link>https://huang8604.github.io/posts/%E6%8A%95%E5%B1%8F%E8%AE%B0%E5%BD%95/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E6%8A%95%E5%B1%8F%E8%AE%B0%E5%BD%95/</guid><description>&lt;p>git clone &amp;ndash;recursive &lt;a href="https://github.com/huang8604/huang8604.github.io.git"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/huang8604/huang8604.github.io.git&lt;/a>&lt;/p>
+&lt;h4 id="录屏传输" class="heading-element">&lt;span>录屏传输&lt;/span>
+ &lt;a href="#%e5%bd%95%e5%b1%8f%e4%bc%a0%e8%be%93" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;h5 id="录屏方法" class="heading-element">&lt;span>录屏方法&lt;/span>
+ &lt;a href="#%e5%bd%95%e5%b1%8f%e6%96%b9%e6%b3%95" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png?size=small" data-sub-html="&lt;h2>1726128089259.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png" alt="1726128089259.png" srcset="https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png?size=small, https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/09/12/66e29fd7e5a89.png?size=large 2x" data-title="1726128089259.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>网络博客配置方案</title><link>https://huang8604.github.io/posts/%E7%BD%91%E7%BB%9C%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E7%BD%91%E7%BB%9C%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/</guid><category domain="https://huang8604.github.io/categories/%E7%94%9F%E6%B4%BB/">生活</category><description>&lt;h4 id="1--在github上配置静态页面" class="heading-element">&lt;span>1 . 在github上配置静态页面&lt;/span>
+ &lt;a href="#1--%e5%9c%a8github%e4%b8%8a%e9%85%8d%e7%bd%ae%e9%9d%99%e6%80%81%e9%a1%b5%e9%9d%a2" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>参考下面地址：&lt;br>
+&lt;a href="https://github.com/CaiJimmy/hugo-theme-stack"target="_blank" rel="external nofollow noopener noreferrer">GitHub - CaiJimmy/hugo-theme-stack: Card-style Hugo theme designed for bloggers&lt;/a>&lt;/p></description></item><item><title>网络博客配置方案</title><link>https://huang8604.github.io/posts/%E7%BD%91%E7%BB%9C%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E7%BD%91%E7%BB%9C%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/</guid><description>&lt;h4 id="1--在github上配置静态页面" class="heading-element">&lt;span>1 . 在github上配置静态页面&lt;/span>
+ &lt;a href="#1--%e5%9c%a8github%e4%b8%8a%e9%85%8d%e7%bd%ae%e9%9d%99%e6%80%81%e9%a1%b5%e9%9d%a2" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>参考下面地址：&lt;br>
+&lt;a href="https://github.com/CaiJimmy/hugo-theme-stack"target="_blank" rel="external nofollow noopener noreferrer">GitHub - CaiJimmy/hugo-theme-stack: Card-style Hugo theme designed for bloggers&lt;/a>&lt;/p></description></item><item><title>增加语言方案</title><link>https://huang8604.github.io/posts/%E5%A2%9E%E5%8A%A0%E8%AF%AD%E8%A8%80%E6%96%B9%E6%A1%88/</link><pubDate>Wed, 06 Nov 2024 06:57:59 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%A2%9E%E5%8A%A0%E8%AF%AD%E8%A8%80%E6%96%B9%E6%A1%88/</guid><description>&lt;h2 id="问题描述" class="heading-element">&lt;span>【问题描述】&lt;/span>
+ &lt;a href="#%e9%97%ae%e9%a2%98%e6%8f%8f%e8%bf%b0" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>客户需求,要求日文可以在平假字和汉字之间切换.&lt;/p></description></item><item><title>「置顶」博客文章目录</title><link>https://huang8604.github.io/posts/%E7%BD%AE%E9%A1%B6%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E7%9B%AE%E5%BD%95/</link><pubDate>Wed, 06 Nov 2024 06:57:58 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E7%BD%AE%E9%A1%B6%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E7%9B%AE%E5%BD%95/</guid><description>&lt;p>本博客内容主要集中在 Android 开发和优化相关的话题，包括一些性能工具的使用、Android App 优化知识、Android Framework 知识讲解，性能理论知识讲解等，这里整理了一份目录供大家参考，大家可以挑感兴趣的部分来看。这里不仅仅包含博客中的内容，一些我在 &lt;a href="https://www.zhihu.com/people/gracker"target="_blank" rel="external nofollow noopener noreferrer">知乎&lt;/a> 或者 &lt;a href="https://t.zsxq.com/mIimiey"target="_blank" rel="external nofollow noopener noreferrer">知识星球 - The Performance&lt;/a> 的回答也会放到这里，不过这个目录里面放的都是我原创的博客，另外还收集了一些优秀文章，我也会不定期更新 &lt;a href="https://androidperformance.com/2018/05/07/Android-performance-optimization-skills-and-tools/"target="_blank" rel="external nofollow noopener noreferrer">Android 性能优化必知必会&lt;/a>。&lt;/p></description></item><item><title>CTS 在内网机器如何测试</title><link>https://huang8604.github.io/posts/cts-%E5%9C%A8%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95/</link><pubDate>Wed, 06 Nov 2024 06:57:58 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/cts-%E5%9C%A8%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><category domain="https://huang8604.github.io/categories/ubuntu/">Ubuntu</category><description>&lt;p>新版本的CTS工具，需要连接外网才能够测试，以往的版本是不需要的。&lt;/p>
+&lt;p>根据出错log，和源码&lt;/p>
+&lt;p>&lt;a href="https://cs.android.com/android/platform/superproject/&amp;#43;/master:tools/tradefederation/core/clearcut_client/com/android/tradefed/clearcut/ClearcutClient.java;drc=111c872ed55b5aed61fb905df39122913293d81d;l=133"target="_blank" rel="external nofollow noopener noreferrer">Site Unreachable&lt;/a>&lt;/p>
+&lt;h6 id="disable_clearcut_key" class="heading-element">&lt;span>DISABLE_CLEARCUT_KEY&lt;/span>
+ &lt;a href="#disable_clearcut_key" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h6>&lt;p>出错log&lt;/p></description></item><item><title>Zygote进程相关</title><link>https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/</link><pubDate>Wed, 06 Nov 2024 06:57:58 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/</guid><category domain="https://huang8604.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</category><description>&lt;h2 id="1-zygote简介" class="heading-element">&lt;span>&lt;a href="https://blog.csdn.net/u010687761/article/details/131404918"target="_blank" rel="external nofollow noopener noreferrer">【Android Framework系列】第3章 Zygote进程相关_android zygote进程-CSDN博客&lt;/a>&lt;br>
+1 Zygote简介&lt;/span>
+ &lt;a href="#1-zygote%e7%ae%80%e4%bb%8b" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>Zygote是Android中最重要的一个进程，&lt;code>Zygote进程和Init进程、SystemServer进程是Android最重要的三大进程&lt;/code>。&lt;strong>Zygote是Android系统创建新进程的核心进程，负责启动Dalvik虚拟机，加载一些必要的系统资源和系统类，启动system_server进程，随后进入等待处理app应用请求。&lt;/strong>&lt;br>
+在Android系统中，应用程序进程都是由Zygote进程孵化出来的，而Zygote进程是由Init进程启动的。Zygote进程在启动时会创建一个Dalvik虚拟机实例，每当它孵化一个新的应用程序进程时，都会将这个Dalvik虚拟机实例复制到新的应用程序进程里面去，从而使得每一个应用程序进程都有一个独立的Dalvik虚拟机实例。&lt;/p></description></item><item><title>双屏动画</title><link>https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/</link><pubDate>Wed, 06 Nov 2024 06:57:58 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/</guid><description>&lt;h2 id="目标" class="heading-element">&lt;span>目标：&lt;/span>
+ &lt;a href="#%e7%9b%ae%e6%a0%87" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif?size=small" data-sub-html="&lt;h2>45d40ecaa001304584a749db64e73c80_MD5&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif" alt="45d40ecaa001304584a749db64e73c80_MD5" srcset="https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif?size=small, https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif?size=large 2x" data-title="45d40ecaa001304584a749db64e73c80_MD5" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>自动开关机脚本</title><link>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/</link><pubDate>Wed, 06 Nov 2024 06:57:58 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><category domain="https://huang8604.github.io/categories/ubuntu/">Ubuntu</category><description>&lt;p>reboot_test.sh&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#Navy add for reboot/factory-reset test&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#adb reboot&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#adb reboot factory-reset&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#默认开关机测试次数&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#开关机设备ID号&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">deviceId&lt;/span>&lt;span class="o">=&lt;/span>null
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#开关机间隔时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">rebootInterval&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$#&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">elif&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$#&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">2&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">rebootNum&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">deviceId&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">i&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="nv">$i&lt;/span> -le &lt;span class="nv">$rebootNum&lt;/span> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[[&lt;/span> &lt;span class="nv">$deviceId&lt;/span> &lt;span class="o">=&lt;/span>~ &lt;span class="s2">&amp;#34;null&amp;#34;&lt;/span> &lt;span class="o">]]&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;reboot test num&amp;#34;&lt;/span> &lt;span class="nv">$i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb reboot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;reboot &amp;#34;&lt;/span>&lt;span class="nv">$deviceId&lt;/span>&lt;span class="s2">&amp;#34; test num &amp;#34;&lt;/span>&lt;span class="nv">$i&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb -s &lt;span class="nv">$deviceId&lt;/span> reboot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sleep &lt;span class="nv">$rebootInterval&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">let&lt;/span> i++
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">done&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>APP 启动过程</title><link>https://huang8604.github.io/posts/app-%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</link><pubDate>Wed, 06 Nov 2024 06:57:57 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/app-%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</guid><category domain="https://huang8604.github.io/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">学习总结</category><category domain="https://huang8604.github.io/categories/ams/">AMS</category><description>&lt;h3 id="ams中activity栈管理" class="heading-element">&lt;span>AMS中Activity栈管理&lt;/span>
+ &lt;a href="#ams%e4%b8%adactivity%e6%a0%88%e7%ae%a1%e7%90%86" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;h3 id="wms中app的添加过程" class="heading-element">&lt;span>WMS中app的添加过程&lt;/span>
+ &lt;a href="#wms%e4%b8%adapp%e7%9a%84%e6%b7%bb%e5%8a%a0%e8%bf%87%e7%a8%8b" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;h4 id="windows-层级树" class="heading-element">&lt;span>windows 层级树&lt;/span>
+ &lt;a href="#windows-%e5%b1%82%e7%ba%a7%e6%a0%91" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png?size=small" data-sub-html="&lt;h2>1725347707811.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png" alt="1725347707811.png" srcset="https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png?size=small, https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/09/03/66d6b7785aa4c.png?size=large 2x" data-title="1725347707811.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>xml 格式 相关</title><link>https://huang8604.github.io/posts/xml-%E6%A0%BC%E5%BC%8F-%E7%9B%B8%E5%85%B3/</link><pubDate>Wed, 06 Nov 2024 06:57:57 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/xml-%E6%A0%BC%E5%BC%8F-%E7%9B%B8%E5%85%B3/</guid><description>&lt;h4 id="背景" class="heading-element">&lt;span>背景：&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>Android12高版本以后系统生成的很多data路径下的xml都变成了二进制类型&lt;/p></description></item><item><title>从神经网络到 Hugging Face</title><link>https://huang8604.github.io/posts/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%B0-hugging-face/</link><pubDate>Wed, 06 Nov 2024 06:57:57 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%B0-hugging-face/</guid><description>&lt;h2 id="神经网络和深度学习简史" class="heading-element">&lt;span>神经网络和深度学习简史&lt;/span>
+ &lt;a href="#%e7%a5%9e%e7%bb%8f%e7%bd%91%e7%bb%9c%e5%92%8c%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0%e7%ae%80%e5%8f%b2" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>March 17, 2024&lt;/p></description></item><item><title>adsp wristdown 流程与实现</title><link>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>#Peppermill #算法研究&lt;/p>
+&lt;p>目前 落腕灭屏算法大致在 framework 层实现。&lt;br>
+目前算法的思路：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="#%E8%BF%90%E5%8A%A8%E6%A3%80%E6%B5%8B">#运动检测&lt;/a>，通过一些特征值，来判断是否是一个运动段落。&lt;/li>
+&lt;li>符合的运动检测后，我们来判断是否是落腕的动作。&lt;/li>
+&lt;li>符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。&lt;/li>
+&lt;/ol>
+&lt;h4 id="背景介绍" class="heading-element">&lt;span>背景介绍&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af%e4%bb%8b%e7%bb%8d" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h4>&lt;p>早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。&lt;br>
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP&lt;/p></description></item><item><title>Android - 深入浅出理解SeLinux-CSDN博客</title><link>https://huang8604.github.io/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>官方文档：&lt;/p>
+&lt;p>&lt;a href="https://source.android.com/docs/security/features/selinux" title="https://source.android.com/docs/security/features/selinux"target="_blank" rel="external nofollow noopener noreferrer">https://source.android.com/docs/security/features/selinux&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf" title="https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf"target="_blank" rel="external nofollow noopener noreferrer">https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://opensource.com/business/13/11/selinux-policy-guide" title="Your visual how-to guide for SELinux policy enforcement | Opensource.com"target="_blank" rel="external nofollow noopener noreferrer">Your visual how-to guide for SELinux policy enforcement | Opensource.com&lt;/a>&lt;/p>
+&lt;p>SeLinux（Security-Enhanced Linux）是一个标签系统（labeling system）。每个进程都有一个label（称为process label），每个文件系统所涵盖的文件/目录、网络端口、设备等对象也有一个lable（称为Object label）。SeLinux通过编写规则来控制一个process label对一个Object label的访问，这个规则称之为策略（Policy）。SeLinux的这种安全机制称为Mandatory Access Control (MAC)，是在内核层实现的。&lt;/p></description></item><item><title>Android 记录系统空间的高通答疑</title><link>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>&lt;a class="lightgallery" href="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=large" data-thumbnail="/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=small" data-sub-html="&lt;h2>Case_ 05784001 ~ Customer Engineering Community.pdf&lt;/h2>">&lt;img loading="lazy" src="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf" alt="Case_ 05784001 ~ Customer Engineering Community.pdf" srcset="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=small, https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=medium 1.5x, https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf?size=large 2x" data-title="Case_ 05784001 ~ Customer Engineering Community.pdf" class="suffix-invalid suffix-invalid__small suffix-invalid__large" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p>
+&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=small" data-sub-html="&lt;h2>image.png&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png" alt="image.png" srcset="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=small, https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png?size=large 2x" data-title="image.png" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p>
+&lt;div class="details admonition note open disabled">
+ &lt;div class="details-summary admonition-title">&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true">&lt;/i>高通回复容量疑问&lt;/div>
+ &lt;div class="details-content">
+ &lt;div class="admonition-content">&lt;/div>
+ &lt;/div>
+&lt;/div>&lt;p>case中提到的resize/recovery，就是我们之前提到的恢复出厂设置后userdata拓展到剩余空间，16G变32G的动作。&lt;br>
+按高通的回复截图，resize/recovery之前 ui上面显示的总空间/已用空间大小没有任何参考意义（参考截图第四段落最后一行。这里提到的不可信大小就是之前你们看到的下载软件后开机，系统占用16G，总容量32G）&lt;br>
+高通认为resize之后，此时UI上显示的存储空间数据是可信的（参考截图倒数第三行，这里提到的可信大小就是你们了解的恢复出厂设置后系统占用32G，总容量64G。我们和高通在case上沟通时提供的机器数据是基于128G的，所以高通在引用数据时写的是128G）&lt;br>
+另外，目前PNC560我们已修改为下载软件后开机时自动拓展，无需再次恢复出厂设置了，所以用户是看不到16G系统占用这个resize之前的数据的。&lt;/p></description></item><item><title>android 原生安全音量逻辑设计</title><link>https://huang8604.github.io/posts/android-%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E9%9F%B3%E9%87%8F%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E9%9F%B3%E9%87%8F%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/</guid><description>&lt;p>****## 前言&lt;/p>
+&lt;p>接到一个开发需求，需要定制化开发一个安全音量功能；此前有了解过为了符合欧盟等有关国家和地区的规定，原生Android是有自带一个安全音量功能的，想要定制则先要了解这个功能原先长什么样子，下面我们就从一个系统工程师的角度出发去探寻一下，原生Android的安全音量功能是如何实现的。&lt;/p></description></item><item><title>Android系统状态栏定制</title><link>https://huang8604.github.io/posts/android%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A0%8F%E5%AE%9A%E5%88%B6/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><guid>https://huang8604.github.io/posts/android%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A0%8F%E5%AE%9A%E5%88%B6/</guid><description>&lt;h3 id="背景" class="heading-element">&lt;span>背景&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>项目中为了适应产品形态需要对Android系统状态栏系统图标以及时钟和电池等做客制化，满足不同用户群体的视觉特性，那在定制过程中需要注意哪些事项？图标icon是否可以任意大小？状态栏多颜色模式下图标如何适配？复杂状态图标如何调整逻辑？&lt;/p></description></item><item><title>Archer&amp;ArcherIS AP签名方案总结</title><link>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/archerarcheris-ap%E7%AD%BE%E5%90%8D%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">style: nestedList # TOC style (nestedList|inlineFirstLevel)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maxLevel: 0 # Include headings up to the speficied level
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">includeLinks: true # Make headings clickable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">debugInConsole: false # Print debug info in Obsidian console&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="关于ap端-hsm签名的配置说明" class="heading-element">&lt;span>关于AP端 HSM签名的配置说明&lt;/span>
+ &lt;a href="#%e5%85%b3%e4%ba%8eap%e7%ab%af-hsm%e7%ad%be%e5%90%8d%e7%9a%84%e9%85%8d%e7%bd%ae%e8%af%b4%e6%98%8e" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>Archer 项目签名使用的加密狗来自YubiHSM&lt;br>
+具体的一些操作说明需要到官网寻找：&lt;br>
+&lt;a href="https://developers.yubico.com/YubiHSM2/"target="_blank" rel="external nofollow noopener noreferrer">YubiHSM2&lt;/a>&lt;/p></description></item><item><title>dataview 使用技巧</title><link>https://huang8604.github.io/posts/dataview-%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/dataview-%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/</guid><category domain="https://huang8604.github.io/categories/ubuntu/">Ubuntu</category><description>&lt;p>#obsidian&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">style: nestedList # TOC style (nestedList|inlineFirstLevel)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maxLevel: 0 # Include headings up to the speficied level
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">includeLinks: true # Make headings clickable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">debugInConsole: false # Print debug info in Obsidian console&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="dateview-可以用来生成目录" class="heading-element">&lt;span>dateview 可以用来生成目录&lt;/span>
+ &lt;a href="#dateview-%e5%8f%af%e4%bb%a5%e7%94%a8%e6%9d%a5%e7%94%9f%e6%88%90%e7%9b%ae%e5%bd%95" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>节选：&lt;a href="https://new.qq.com/rain/a/20210818A05T0100"target="_blank" rel="external nofollow noopener noreferrer">快速聚合 Obsidian 笔记，试试用 Dataview 生成目录&lt;/a>&lt;/p></description></item><item><title>Perfetto 使用指南</title><link>https://huang8604.github.io/posts/perfetto-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><guid>https://huang8604.github.io/posts/perfetto-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</guid><description>&lt;h2 id="1-perfetto-是什么" class="heading-element">&lt;span>1. Perfetto 是什么？&lt;/span>
+ &lt;a href="#1-perfetto-%e6%98%af%e4%bb%80%e4%b9%88" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>Perfetto 是 google 从 Android10 开始引入的一个全新的平台级跟踪分析工具。它可以记录 Android 系统运行过程中的关键数据，并通过图形化的形式展示这些数据。Perfetto 不仅可用于系统级的性能分析，也是我们学习系统源码流程的好帮手。&lt;/p></description></item><item><title>【Android 12】认识窗口_android 窗口模式 窗口层级-CSDN博客</title><link>https://huang8604.github.io/posts/%E8%AE%A4%E8%AF%86%E7%AA%97%E5%8F%A3-%E7%AA%97%E5%8F%A3%E6%A8%A1%E5%BC%8F-%E7%AA%97%E5%8F%A3%E5%B1%82%E7%BA%A7android-12-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%AE%A4%E8%AF%86%E7%AA%97%E5%8F%A3-%E7%AA%97%E5%8F%A3%E6%A8%A1%E5%BC%8F-%E7%AA%97%E5%8F%A3%E5%B1%82%E7%BA%A7android-12-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>该文章为窗口层级结构系列文章的总结，重新回看这方面内容的时候我自己也有了一些新的感悟，希望通过本次总结能让大家再次对窗口有一个全面的认识。&lt;/p>
+&lt;p>一般来说，屏幕上最起码包含三个窗口，StatusBar窗口、Activity窗口以及NavigationBar窗口：&lt;/p></description></item><item><title>Android 14 - 绘制体系 - VSync（1）-CSDN博客</title><link>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-vsync1-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-vsync1-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 id="整体框架" class="heading-element">&lt;span>&lt;strong>整体框架&lt;/strong>&lt;/span>
+ &lt;a href="#%e6%95%b4%e4%bd%93%e6%a1%86%e6%9e%b6" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png?size=small" data-sub-html="&lt;h2>8f55ed8ba868727305f113ae9a9235bf_MD5&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png" alt="8f55ed8ba868727305f113ae9a9235bf_MD5" srcset="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png?size=small, https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png?size=large 2x" data-title="8f55ed8ba868727305f113ae9a9235bf_MD5" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>Android Surface-CSDN博客</title><link>https://huang8604.github.io/posts/android-surface-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-surface-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 id="一surface介绍" class="heading-element">&lt;span>一、Surface介绍&lt;/span>
+ &lt;a href="#%e4%b8%80surface%e4%bb%8b%e7%bb%8d" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>在Android系统中，Surface是一种用于图形和视频渲染的抽象概念，它可以用来将应用程序绘制的图形或视频显示在屏幕上。一个Surface代表一个屏幕表面，可以是整个屏幕或者应用程序UI的一个独立窗口。&lt;/p></description></item><item><title>android车机手机黑屏闪黑终结者-Winscope工具使用介绍-CSDN博客</title><link>https://huang8604.github.io/posts/winscope%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/winscope%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 id="背景" class="heading-element">&lt;span>背景：&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>设想一下，假如我们又如下场景，一个闪黑一瞬间的问题，正常我们看到黑屏冻屏问题，是不是时刻想到是要来dumpsys SurfaceFlinger和dumpsys window windows相关的信息来辅助我们分析问题，但奈何这个是个瞬时问题。。。我们dumpsys很难抓住那一瞬间，而且即使抓到了黑一瞬间的，我们有时候分析也要又黑屏前一帧后一帧相关等才可以分析进一步原因。&lt;/p></description></item><item><title>winscope怎么实现user版本上导出方案设计探讨</title><link>https://huang8604.github.io/posts/winscope%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0user%E7%89%88%E6%9C%AC%E4%B8%8A%E5%AF%BC%E5%87%BA%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1%E6%8E%A2%E8%AE%A8-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/winscope%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0user%E7%89%88%E6%9C%AC%E4%B8%8A%E5%AF%BC%E5%87%BA%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1%E6%8E%A2%E8%AE%A8-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 id="背景" class="heading-element">&lt;span>背景&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>发现有一个问题，那就发现在user版本的手机设备上发现无法抓取相关的winscope，哪怕可以抓取也发现没办法导出来分析。&lt;/p></description></item><item><title>汇总binder相关一些常见面试题-安卓系统常见面试题-CSDN博客</title><link>https://huang8604.github.io/posts/%E6%B1%87%E6%80%BBbinder%E7%9B%B8%E5%85%B3%E4%B8%80%E4%BA%9B%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E6%B1%87%E6%80%BBbinder%E7%9B%B8%E5%85%B3%E4%B8%80%E4%BA%9B%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/</guid><description>&lt;h3 id="binder讨论的一些场景面试题" class="heading-element">&lt;span>binder讨论的一些场景面试题&lt;/span>
+ &lt;a href="#binder%e8%ae%a8%e8%ae%ba%e7%9a%84%e4%b8%80%e4%ba%9b%e5%9c%ba%e6%99%af%e9%9d%a2%e8%af%95%e9%a2%98" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;h5 id="问题1binder中有多个进程作为客户端通过servicemanager获取service的bpbinderbpbinder都会有一个handle那么多个进程获取同一个service对应的handle一样么" class="heading-element">&lt;span>问题1：binder中有多个进程作为客户端通过servicemanager获取service的bpbinder，bpbinder都会有一个handle，那么多个进程获取同一个service对应的handle一样么？&lt;/span>
+ &lt;a href="#%e9%97%ae%e9%a2%981binder%e4%b8%ad%e6%9c%89%e5%a4%9a%e4%b8%aa%e8%bf%9b%e7%a8%8b%e4%bd%9c%e4%b8%ba%e5%ae%a2%e6%88%b7%e7%ab%af%e9%80%9a%e8%bf%87servicemanager%e8%8e%b7%e5%8f%96service%e7%9a%84bpbinderbpbinder%e9%83%bd%e4%bc%9a%e6%9c%89%e4%b8%80%e4%b8%aahandle%e9%82%a3%e4%b9%88%e5%a4%9a%e4%b8%aa%e8%bf%9b%e7%a8%8b%e8%8e%b7%e5%8f%96%e5%90%8c%e4%b8%80%e4%b8%aaservice%e5%af%b9%e5%ba%94%e7%9a%84handle%e4%b8%80%e6%a0%b7%e4%b9%88" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h5>&lt;blockquote>
+&lt;p>是的，多个进程获取同一个服务对应的 &lt;code>BpBinder&lt;/code> 的 handle 是一样的。&lt;/p></description></item><item><title>Android 14 - 绘制体系 - 概览_blastbufferqueue-CSDN博客</title><link>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-%E6%A6%82%E8%A7%88_blastbufferqueue-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-%E6%A6%82%E8%A7%88_blastbufferqueue-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>从Android 12开始，Android的绘制系统有结构性变化， 在绘制的生产消费者模式中，新增BLASTBufferQueue，客户端进程自行进行queue的生产和消费，随后通过Transation提交到SurfaceFlinger，如此可以使得各进程将缓存提交到SufrfaceFlinger后合并到同一事务后同步提交，在同一帧生效。实际上，从Android12到Android14整个绘制系统在各个环节也都有了或大或小的调整，比如Android13发布了1.3版本的Vulkan, Android14新增了TextureView，等等。本文基于Android14。1&lt;/p></description></item><item><title>Android SurfaceFlinger-CSDN博客</title><link>https://huang8604.github.io/posts/android-surfaceflinger-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-surfaceflinger-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 id="一surfaceflinger介绍" class="heading-element">&lt;span>一、SurfaceFlinger介绍&lt;/span>
+ &lt;a href="#%e4%b8%80surfaceflinger%e4%bb%8b%e7%bb%8d" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>SurfaceFlinger是Android系统中的一个重要组件，它主要负责窗口管理与界面显示。具体来说，SurfaceFlinger作为系统的显示引擎，负责接收各应用程序发来的图像数据，并组合成一张完整的画面，并输出到显示屏上。SurfaceFlinger通过重绘整个屏幕或部分屏幕来更新UI界面。它还提供了多种硬件加速技术，如OpenGL ES、Vulkan等，使应用程序能够更快地渲染UI界面。&lt;/p></description></item><item><title>Android13 GraphicBuffer 创建流程-CSDN博客</title><link>https://huang8604.github.io/posts/android13-graphicbuffer-%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-graphicbuffer-%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>GraphicBuffer用于管理图形缓存数据的类，GraphicBuffer的构造方法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/native/libs/ui/GraphicBuffer.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="nc">GraphicBuffer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">:&lt;/span> &lt;span class="k">public&lt;/span> &lt;span class="n">ANativeObjectBase&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ANativeWindowBuffer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">RefBase&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="n">Flattenable&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	&lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">inWidth&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">inHeight&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">PixelFormat&lt;/span> &lt;span class="n">inFormat&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	 &lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">inLayerCount&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">uint64_t&lt;/span> &lt;span class="n">inUsage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">string&lt;/span> &lt;span class="n">requestorName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	 &lt;span class="o">:&lt;/span> &lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	 &lt;span class="n">mInitCheck&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">initWithSize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">inWidth&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">inHeight&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">inFormat&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">inLayerCount&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">inUsage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	 &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">move&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">requestorName&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">	&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>GraphicBuffer 的构造函数非常简单, 它只是调用了一个初始化函数 initWithSize：&lt;/p></description></item><item><title>Android13 Surface connect流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-connect%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-connect%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface的connect方法用于建立与BufferQueueCore&lt;a href="Android13%20BufferQueueLayer%20onFirstRef%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2#new%20BufferQueueCore">Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客#new BufferQueueCore&lt;/a>连接，代码如下：&lt;/p></description></item><item><title>Android13 SurfaceControl创建流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfacecontrol%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfacecontrol%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：&lt;/p></description></item><item><title>Android13 SurfaceFlinger启动流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>在Android13版本中，SurfaceFlinger是由Android.bp去启动init.rc文件，然后再解析文件去加载SurfaceFlinger。&lt;/p></description></item><item><title>Android13 SurfaceSession创建流程分析_android surfacesession-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfacesession%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfacesession%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>SurfaceSession是Android系统中与图形表面相关的一个关键类，它提供了与SurfaceFlinger服务通信以创建和管理图形表面连接的API，SurfaceSession在WindowManagerService的addWindow时创建，构造方法如下：&lt;/p></description></item><item><title>Android13 Surface创建流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface是Android中用于表示一个图像缓冲区的类，Surface是在SurfaceControl创建时创建的，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/native/services/surfaceflinger/Client.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="nc">Client&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="k">public&lt;/span> &lt;span class="n">BnSurfaceComposerClient&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">status_t&lt;/span> &lt;span class="n">Client&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">createSurface&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">const&lt;/span> &lt;span class="n">String8&lt;/span>&lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">w&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">h&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">PixelFormat&lt;/span> &lt;span class="n">format&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">uint32_t&lt;/span> &lt;span class="n">flags&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">IBinder&lt;/span>&lt;span class="o">&amp;gt;&amp;amp;&lt;/span> &lt;span class="n">parentHandle&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LayerMetadata&lt;/span> &lt;span class="n">metadata&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">IBinder&lt;/span>&lt;span class="o">&amp;gt;*&lt;/span> &lt;span class="n">handle&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">IGraphicBufferProducer&lt;/span>&lt;span class="o">&amp;gt;*&lt;/span> &lt;span class="n">gbp&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// We rely on createLayer to check permissions.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">createLayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">w&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">h&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">format&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">flags&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">move&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">metadata&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">handle&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">gbp&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">parentHandle&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="surfaceflinger-createlayer" class="heading-element">&lt;span>SurfaceFlinger createLayer&lt;/span>
+ &lt;a href="#surfaceflinger-createlayer" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>mFlinger是SurfaceFlinger，所以Client的具体实现还是依靠的SurfaceFlinger，并且注意，在应用层的Surface在SurfaceFlinger进程名叫Layer，它和应用层的Surface是一 一对应的关系，我们来看createLayer函数：&lt;/p></description></item><item><title>Android源码中学习JNI那些事--关键技巧-CSDN博客</title><link>https://huang8604.github.io/posts/android%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AD%A6%E4%B9%A0jni%E9%82%A3%E4%BA%9B%E4%BA%8B--%E5%85%B3%E9%94%AE%E6%8A%80%E5%B7%A7-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AD%A6%E4%B9%A0jni%E9%82%A3%E4%BA%9B%E4%BA%8B--%E5%85%B3%E9%94%AE%E6%8A%80%E5%B7%A7-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>&lt;strong>“JNI开发中请问如果想要一个纯native线程中执行的native方法需要调用到Java层应该要怎么做？”&lt;/strong>&lt;br>
+大家注意这个问题哈，是纯native线程和方法，即没有我们正常jni调用的env环境的，正常的如果jni方法是由java层调用到jni一般都是自带了JNIEnv变量如下：&lt;br>
+&lt;a class="lightgallery" href="https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png?size=large" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png?size=small" data-sub-html="&lt;h2>e3ba1293ffa2bac71e3590c27a0c643e_MD5&lt;/h2>">&lt;img loading="lazy" src="https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png" alt="e3ba1293ffa2bac71e3590c27a0c643e_MD5" srcset="https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png?size=small, https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png?size=medium 1.5x, https://picgo.myjojo.fun:666/i/2024/10/11/6708d3f6b3038.png?size=large 2x" data-title="e3ba1293ffa2bac71e3590c27a0c643e_MD5" style="background: url(/images/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;for(const i of ['style', 'data-title','onerror','onload']){this.removeAttribute(i);}"/>&lt;/a>&lt;/p></description></item><item><title>BLASTBufferQueue源码深入理解-CSDN博客</title><link>https://huang8604.github.io/posts/blastbufferqueue%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/blastbufferqueue%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 id="blastbufferqueue创建部分" class="heading-element">&lt;span>BLASTBufferQueue创建部分&lt;/span>
+ &lt;a href="#blastbufferqueue%e5%88%9b%e5%bb%ba%e9%83%a8%e5%88%86" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="n">BLASTBufferQueue&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">BLASTBufferQueue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">const&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">bool&lt;/span> &lt;span class="n">updateDestinationFrame&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">:&lt;/span> &lt;span class="n">mSurfaceControl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">nullptr&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mSize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mRequestedSize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mSize&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFormat&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">PIXEL_FORMAT_RGBA_8888&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mTransactionReadyCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">nullptr&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mSyncTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">nullptr&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mUpdateDestinationFrame&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">updateDestinationFrame&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//创建BufferQueue部分，并且会给mProducer，mConsumer进行赋值
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">createBufferQueue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">mProducer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">mConsumer&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//创建BLASTBufferItemConsumer部分
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">mBufferItemConsumer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">BLASTBufferItemConsumer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mConsumer&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">USAGE_HW_COMPOSER&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">GraphicBuffer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">USAGE_HW_TEXTURE&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">static&lt;/span> &lt;span class="kt">int32_t&lt;/span> &lt;span class="n">id&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">name&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34;#&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">to_string&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">auto&lt;/span> &lt;span class="n">consumerName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34;(BLAST Consumer)&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">to_string&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueuedBufferTrace&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;QueuedBuffer - &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">mName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s">&amp;#34;BLAST#&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">to_string&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">id&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mBufferItemConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String8&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">consumerName&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">c_str&lt;/span>&lt;span class="p">()));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mBufferItemConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setFrameAvailableListener&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mBufferItemConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setBufferFreedListener&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ComposerService&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">getComposerService&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getMaxAcquiredBufferCount&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">mMaxAcquiredBuffers&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mBufferItemConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setMaxAcquiredBufferCount&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mMaxAcquiredBuffers&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mCurrentMaxAcquiredBufferCount&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mMaxAcquiredBuffers&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mNumAcquired&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mNumFrameAvailable&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="bufferqueue部分" class="heading-element">&lt;span>BufferQueue部分&lt;/span>
+ &lt;a href="#bufferqueue%e9%83%a8%e5%88%86" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>下面来看看核心的方法createBufferQueue&lt;/p></description></item><item><title>PackageManagerService和它的6个“小伙伴”</title><link>https://huang8604.github.io/posts/packagemanagerservice%E5%92%8C%E5%AE%83%E7%9A%846%E4%B8%AA%E5%B0%8F%E4%BC%99%E4%BC%B4/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><guid>https://huang8604.github.io/posts/packagemanagerservice%E5%92%8C%E5%AE%83%E7%9A%846%E4%B8%AA%E5%B0%8F%E4%BC%99%E4%BC%B4/</guid><description>&lt;p>&lt;strong>前言&lt;/strong>&lt;/p>
+&lt;p>作为本系列文章的首篇文章，在开始之前我一直在思考，首篇文章应该写啥内容？才能让读者很容易明白&lt;strong>PackageManagerService&lt;/strong>是啥呢，如何为后面文章起到承上启下的作用呢。&lt;/p></description></item><item><title>Vsync之app层面深入分析 vsynceventdata-CSDN博客</title><link>https://huang8604.github.io/posts/vsync%E4%B9%8Bapp%E5%B1%82%E9%9D%A2%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90-vsynceventdata-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/vsync%E4%B9%8Bapp%E5%B1%82%E9%9D%A2%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90-vsynceventdata-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 id="背景" class="heading-element">&lt;span>背景&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>前面文章和视频课程都是直接从SurfaceFlinger层面开始讲解Vsync部分的，当然vsync的主要核心逻辑也确实在SurfaceFlinger，但是一般vsync都是由app层面发起请求的，这一部分也还是有必要带大家了解清楚&lt;/p></description></item><item><title>AMS -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor</title><link>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</guid><category domain="https://huang8604.github.io/categories/ams/">AMS</category><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p>ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor 的关系&lt;/p></description></item><item><title>Android13 BufferQueueConsumer acquireBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueConsumer的acquireBuffer方法的主要作用是从BufferQueue中获取一个可用的图像缓冲区，并返回一个GraphicBuffer对象。它可以用于在应用程序中进行图像处理、渲染或显示等操作。&lt;/p></description></item><item><title>Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。&lt;/p>
+&lt;p>当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。&lt;/p></description></item><item><title>Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。&lt;/p></description></item><item><title>Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueLayer的onFrameAvailable方法用于通知图像或视频帧已经可用并准备好显示，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SurfaceFlinger&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mFlinger&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">BufferLayerConsumer&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mConsumer&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">void&lt;/span> &lt;span class="n">BufferQueueLayer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">onFrameAvailable&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">const&lt;/span> &lt;span class="n">BufferItem&lt;/span>&lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">int32_t&lt;/span> &lt;span class="n">layerId&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getSequence&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">uint64_t&lt;/span> &lt;span class="n">bufferId&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mGraphicBuffer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getId&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mFrameTracer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">traceTimestamp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bufferId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">systemTime&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FrameTracer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">FrameEvent&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">QUEUE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mFrameTracer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">traceFence&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bufferId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">make_shared&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">FenceTime&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFence&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FrameTracer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">FrameEvent&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">ACQUIRE_FENCE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ATRACE_CALL&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Add this buffer from our internal queue tracker
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="c1">// Autolock scope
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">const&lt;/span> &lt;span class="n">nsecs_t&lt;/span> &lt;span class="n">presentTime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mIsAutoTimestamp&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mTimestamp&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">using&lt;/span> &lt;span class="n">LayerUpdateType&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">scheduler&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">LayerHistory&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">LayerUpdateType&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mScheduler&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">recordLayerHistory&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">presentTime&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">LayerUpdateType&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Buffer&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Mutex&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Autolock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Reset the frame number tracker when we receive the first buffer after
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// a frame number reset
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mLastFrameNumberReceived&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Ensure that callbacks are handled in order
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">mLastFrameNumberReceived&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">status_t&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mQueueItemCondition&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">waitRelative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ms2ns&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">NO_ERROR&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ALOGE&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;[%s] Timed out waiting on callback&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">getDebugName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">break&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">auto&lt;/span> &lt;span class="n">surfaceFrame&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createSurfaceFrameForBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mFrameTimelineInfo&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">systemTime&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">mName&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">push_back&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueuedFrames&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Wake up any pending callbacks
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">mLastFrameNumberReceived&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItemCondition&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">broadcast&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mInterceptor&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">saveBufferUpdate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mGraphicBuffer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getWidth&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mGraphicBuffer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getHeight&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onLayerUpdate&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onBufferAvailable&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上面方法主要处理如下：&lt;/p></description></item><item><title>Android13 BufferQueueLayer onLayerDisplayed流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onlayerdisplayed%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onlayerdisplayed%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueLayer的onLayerDisplayed方法在BufferQueueLayer被显示时调用，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SurfaceFlinger&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mFlinger&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">const&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">unique_ptr&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">FrameTracer&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mFrameTracer&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">void&lt;/span> &lt;span class="n">BufferQueueLayer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">onLayerDisplayed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ftl&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">SharedFuture&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">FenceResult&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">futureFenceResult&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="n">sp&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Fence&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">releaseFence&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">futureFenceResult&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">value_or&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Fence&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">NO_FENCE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setReleaseFence&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">releaseFence&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Prevent tracing the same release multiple times.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mPreviousFrameNumber&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">mPreviousReleasedFrameNumber&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mFrameTracer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">traceFence&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">getSequence&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">mPreviousBufferId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mPreviousFrameNumber&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">make_shared&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">FenceTime&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">releaseFence&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FrameTracer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">FrameEvent&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">RELEASE_FENCE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mPreviousReleasedFrameNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mPreviousFrameNumber&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="frametracer-tracefence" class="heading-element">&lt;span>FrameTracer traceFence&lt;/span>
+ &lt;a href="#frametracer-tracefence" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>调用FrameTracer的traceFence方法，用于分析和调试界面渲染的性能问题：&lt;/p></description></item><item><title>Android13 BufferQueueLayer updateTexImage流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-updateteximage%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-updateteximage%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueLayer的updateTexImage方法用于将当前图形缓冲区的内容更新到纹理中，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">status_t&lt;/span> &lt;span class="n">BufferQueueLayer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">updateTexImage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">bool&lt;/span>&lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">recomputeVisibleRegions&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nsecs_t&lt;/span> &lt;span class="n">latchTime&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">nsecs_t&lt;/span> &lt;span class="n">expectedPresentTime&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// This boolean is used to make sure that SurfaceFlinger&amp;#39;s shadow copy
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// of the buffer queue isn&amp;#39;t modified when the buffer queue is returning
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// BufferItem&amp;#39;s that weren&amp;#39;t actually queued. This can happen in shared
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// buffer mode.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kt">bool&lt;/span> &lt;span class="n">queuedBuffer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">false&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">int32_t&lt;/span> &lt;span class="n">layerId&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getSequence&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LayerRejecter&lt;/span> &lt;span class="nf">r&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mDrawingState&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">getDrawingState&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">recomputeVisibleRegions&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">getProducerStickyTransform&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mName&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">getTransformToDisplayInverse&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">isRemovedFromCurrentState&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">expectedPresentTime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// updateTexImage() below might drop the some buffers at the head of the queue if there is a
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// buffer behind them which is timely to be presented. However this buffer may not be signaled
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// yet. The code below makes sure that this wouldn&amp;#39;t happen by setting maxFrameNumber to the
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// last buffer that was signaled.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kt">uint64_t&lt;/span> &lt;span class="n">lastSignaledFrameNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mLastFrameNumberReceived&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Mutex&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Autolock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">size_t&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">bool&lt;/span> &lt;span class="n">fenceSignaled&lt;/span> &lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFenceTime&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getSignalTime&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">Fence&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">SIGNAL_TIME_PENDING&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">fenceSignaled&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">break&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lastSignaledFrameNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">uint64_t&lt;/span> &lt;span class="n">maxFrameNumberToAcquire&lt;/span> &lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">std&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">min&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mLastFrameNumberReceived&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">load&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">lastSignaledFrameNumber&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">bool&lt;/span> &lt;span class="n">autoRefresh&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">status_t&lt;/span> &lt;span class="n">updateResult&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">updateTexImage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">expectedPresentTime&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">autoRefresh&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">queuedBuffer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">maxFrameNumberToAcquire&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mDrawingState&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">autoRefresh&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">autoRefresh&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">updateResult&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">BufferQueue&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">PRESENT_LATER&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Producer doesn&amp;#39;t want buffer to be displayed yet. Signal a
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// layer update so we check again at the next opportunity.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// Producer 不希望显示缓冲区。 发出图层更新的信号，以便我们在下次有机会时再次检查。
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onLayerUpdate&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="c1">// (692) SurfaceFlinger onLayerUpdate流程分析 
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">BAD_VALUE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="nf">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">updateResult&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">BufferLayerConsumer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">BUFFER_REJECTED&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// If the buffer has been rejected, remove it from the shadow queue
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// and return early
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">queuedBuffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Mutex&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Autolock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueuedFrames&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mergeSurfaceDamage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mSurfaceDamage&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mTimeStats&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">removeTimeRecord&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">addSurfaceFrameDroppedForBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">erase&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueuedFrames&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">BAD_VALUE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="nf">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">updateResult&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">NO_ERROR&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">mUpdateTexImageFailed&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// This can occur if something goes wrong when trying to create the
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// EGLImage for this buffer. If this happens, the buffer has already
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// been released, so we need to clean up the queue and bug out
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// early.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">queuedBuffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Mutex&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Autolock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span>&lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">addSurfaceFrameDroppedForBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">clear&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueuedFrames&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mTimeStats&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onDestroy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mFrameTracer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onDestroy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Once we have hit this state, the shadow queue may no longer
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// correctly reflect the incoming BufferQueue&amp;#39;s contents, so even if
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// updateTexImage starts working, the only safe course of action is
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// to continue to ignore updates.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">mUpdateTexImageFailed&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">true&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">BAD_VALUE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">bool&lt;/span> &lt;span class="n">more_frames_pending&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">false&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">queuedBuffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Autolock scope
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">auto&lt;/span> &lt;span class="n">currentFrameNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getFrameNumber&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Mutex&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">Autolock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItemLock&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Remove any stale buffers that have been dropped during
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// updateTexImage
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueuedFrames&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">currentFrameNumber&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mConsumer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mergeSurfaceDamage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mSurfaceDamage&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mTimeStats&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">removeTimeRecord&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFrameNumber&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">addSurfaceFrameDroppedForBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">erase&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueuedFrames&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">uint64_t&lt;/span> &lt;span class="n">bufferID&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mGraphicBuffer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getId&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mTimeStats&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">setLatchTime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">currentFrameNumber&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">latchTime&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">mFrameTracer&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">traceTimestamp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layerId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bufferID&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">currentFrameNumber&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">latchTime&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FrameTracer&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">FrameEvent&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">LATCH&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">addSurfaceFramePresentedForBuffer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">surfaceFrame&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mFenceTime&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">getSignalTime&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">latchTime&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">erase&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mQueueItems&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">more_frames_pending&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">mQueuedFrames&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">fetch_sub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Decrement the queued-frames count. Signal another event if we
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// have more frames pending.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">//减少排队的帧计数。 如果我们有更多待处理的帧，则发出另一个事件的信号。
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">queuedBuffer&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">more_frames_pending&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">mDrawingState&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">autoRefresh&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mFlinger&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">onLayerUpdate&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="c1">// (692) SurfaceFlinger onLayerUpdate流程分析 | 知识管理 - PingCode 
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">NO_ERROR&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="bufferlayerconsumer-updateteximage" class="heading-element">&lt;span>BufferLayerConsumer updateTexImage&lt;/span>
+ &lt;a href="#bufferlayerconsumer-updateteximage" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>调用BufferLayerConsumer的updateTexImage方法：&lt;/p></description></item><item><title>Android13 BufferQueueProducer dequeueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueProducer的dequeueBuffer方法是Android系统中用于从BufferQueue中获取可用的缓冲区的方法。BufferQueue是一个用于在不同线程之间传递图像数据的队列，它通常用于图像渲染和视频编解码等场景。&lt;/p></description></item><item><title>Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。&lt;/p></description></item><item><title>Android13 Choreographer postCallback流程分析_choreographer.postcallback-CSDN博客</title><link>https://huang8604.github.io/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Choreographer的postCallback()方法用于将一个任务添加到Choreographer的任务队列中，以便在下一帧绘制之前执行，代码如下：&lt;/p></description></item><item><title>Android13 EventThread threadMain流程分析_eventthread::threadmain-CSDN博客</title><link>https://huang8604.github.io/posts/android13-eventthread-threadmain%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-eventthread-threadmain%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>EventThread的threadMain方法无限循环处理pendingEvents,对Vsync类型的Event分发到消费者，通过往消费者的FD写数据，通知APP有Vsync信号到来。pendingEvents中的消息处理完了，分发线程等待mCondition的通知，EventThread的threadMain方法代码如下：&lt;/p></description></item><item><title>Android13 Surface dequeueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface::dequeueBuffer是Android系统中Surface类的一个方法，用于从Surface中获取一个可用的Buffer。它通常在图形渲染或视频播放等场景中使用。&lt;/p></description></item><item><title>Android13 Surface lockCanvas流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-lockcanvas%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-lockcanvas%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface的lockCanvas用于获取Canvas对象，以便进行绘图操作，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/base/core/java/android/view/Surface.java&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Surface&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">implements&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Parcelable&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Canvas&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">lockCanvas&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Rect&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">inOutDirty&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">throws&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Surface&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">OutOfResourcesException&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IllegalArgumentException&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">synchronized&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mLock&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">checkNotReleasedLocked&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mLockedObject&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// Ideally, nativeLockCanvas() would throw in this situation and prevent the&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// double-lock, but that won&amp;#39;t happen if mNativeObject was updated. We can&amp;#39;t&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// abandon the old mLockedObject because it might still be in use, so instead&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// we just refuse to re-lock the Surface.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">throw&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IllegalArgumentException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Surface was already locked&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">mLockedObject&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">nativeLockCanvas&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mNativeObject&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">mCanvas&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">inOutDirty&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">return&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">mCanvas&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>调用nativeLockCanvas方法，nativeLockCanvas是一个Native方法在android_view_Surface.cpp中实现：&lt;/p></description></item><item><title>Android13 Surface queueBuffer流程分析_surface::queuebuffer-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface::queueBuffer是Android系统中Surface类的一个成员函数，用于将图像数据放入Surface的缓冲区中。它的调用地方主要包括以下几个：&lt;/p></description></item><item><title>Android13 Surface unlockCanvasAndPost流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-unlockcanvasandpost%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-unlockcanvasandpost%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>Surface的unlockCanvasAndPost用于解锁并提交Surface上的画布内容，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//frameworks/base/core/java/android/view/Surface.java&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Surface&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">implements&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Parcelable&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">unlockCanvasAndPost&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Canvas&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">canvas&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">synchronized&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mLock&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">checkNotReleasedLocked&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> 
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> 
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mHwuiContext&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">mHwuiContext&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">unlockAndPost&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">canvas&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">else&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">unlockSwCanvasAndPost&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">canvas&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>调用Surface的unlockSwCanvasAndPost方法：&lt;/p></description></item><item><title>Android13 SurfaceFlinger commit(提交)流程分析_surfaceflinger::commit-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-commit%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-commit%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>SurfaceFlinger的commit方法用于将应用程序的绘制结果提交到屏幕上显示。&lt;/p>
+&lt;p>主要就是处理app端发起的一系列transaction的事务请求，需要对这些请求进行识别是否当前帧处理，处理过程就是把事务中的属性取出，然后更新到Layer中，偶尔buffer更新的还需要进行相关的latchbuffer操作，SurfaceFlinger的commit代码如下：&lt;/p></description></item><item><title>Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>SurfaceFlinger的composite方法，用于将多个窗口的图像进行合成，主要负责对相关要进行上帧的layer进行，识别排序好，然后合成，有hwc合成的会构建对应OutputLayer传递hwc，GPU合成则直接合成，再传递到hwc中，它主要完成以下几个步骤：&lt;/p></description></item><item><title>Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。&lt;/p></description></item><item><title>Android13 SurfaceFlinger onComposerHalRefresh流程分析_android 13 surfaceflinge变化-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>onComposerHalRefresh方法是SurfaceFlinger中的一个函数。该方法的作用是在Composer &lt;a href="https://so.csdn.net/so/search?q=HAL%5c&amp;amp;spm=1001.2101.3001.7020"target="_blank" rel="external nofollow noopener noreferrer">HAL&lt;/a>刷新时被调用，用于更新显示内容。onComposerHalRefresh方法会在SurfaceFlinger接收到Composer HAL刷新事件时被调用。Composer HAL是硬件抽象层的一部分，负责与硬件显示设备进行通信。当Composer HAL完成一次刷新操作后，会通知SurfaceFlinger进行相应的处理。&lt;/p></description></item><item><title>Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>onComposerHalVsync是一个Android系统中的一个回调函数，用于在垂直同步（Vsync）事件发生时通知应用程序。Vsync是指显示器刷新的时间点，它通常以固定的频率发生，比如60Hz。应用程序可以通过注册onComposerHalVsync回调函数来获取Vsync事件的通知。&lt;/p></description></item><item><title>Android13 SurfaceFlinger onLayerUpdate流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>SurfaceFlinger的onLayerUpdate方法用于在图形层更新时进行相应的处理，代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">void&lt;/span> &lt;span class="n">SurfaceFlinger&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">onLayerUpdate&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">scheduleCommit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">FrameHint&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">kActive&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>调用SurfaceFlinger的scheduleCommit方法：&lt;/p></description></item><item><title>Android14 - WindowManagerService之客户端Activity布局-CSDN博客</title><link>https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 id="android14---windowmanagerservice之客户端activity布局" class="heading-element">&lt;span>&lt;strong>A&lt;strong>&lt;strong>n&lt;/strong>&lt;/strong>d&lt;strong>&lt;strong>r&lt;/strong>&lt;/strong>oi&lt;strong>&lt;strong>d&lt;/strong>&lt;/strong>1****4&lt;/strong> &lt;strong>-&lt;/strong> &lt;strong>WindowManagerService&lt;strong>&lt;strong>之客户端&lt;/strong>&lt;/strong>Activity****布局&lt;/strong>&lt;/span>
+ &lt;a href="#android14---windowmanagerservice%e4%b9%8b%e5%ae%a2%e6%88%b7%e7%ab%afactivity%e5%b8%83%e5%b1%80" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;h2 id="一主要角色" class="heading-element">&lt;span>&lt;strong>一&lt;/strong>**、&lt;strong>&lt;strong>主要&lt;/strong>&lt;/strong>角色**&lt;/span>
+ &lt;a href="#%e4%b8%80%e4%b8%bb%e8%a6%81%e8%a7%92%e8%89%b2" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例：&lt;/p></description></item><item><title>Android性能优化：getResources()与Binder交火导致的界面卡顿优化</title><link>https://huang8604.github.io/posts/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96getresources%E4%B8%8Ebinder%E4%BA%A4%E7%81%AB%E5%AF%BC%E8%87%B4%E7%9A%84%E7%95%8C%E9%9D%A2%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96getresources%E4%B8%8Ebinder%E4%BA%A4%E7%81%AB%E5%AF%BC%E8%87%B4%E7%9A%84%E7%95%8C%E9%9D%A2%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96/</guid><description>&lt;p>[TOC]&lt;/p>
+&lt;h2 id="背景" class="heading-element">&lt;span>背景&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h2>&lt;p>某轮测试发现，我们的设备运行一个第三方的App时，卡顿感非常明显：&lt;/p></description></item><item><title>Framework层添加SystemService和Manager的超详细步骤_framework添加新service-CSDN博客</title><link>https://huang8604.github.io/posts/framework%E5%B1%82%E6%B7%BB%E5%8A%A0systemservice%E5%92%8Cmanager%E7%9A%84%E8%B6%85%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4_framework%E6%B7%BB%E5%8A%A0%E6%96%B0service-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/framework%E5%B1%82%E6%B7%BB%E5%8A%A0systemservice%E5%92%8Cmanager%E7%9A%84%E8%B6%85%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4_framework%E6%B7%BB%E5%8A%A0%E6%96%B0service-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>本文适用于Android 12中增加系统服务。&lt;/p>
+&lt;p>&lt;strong>目录&lt;/strong>&lt;/p>
+&lt;p>&lt;a href="https://blog.csdn.net/lvyaer_1122/article/details/130139795?spm=1001.2014.3001.5502/#t0"target="_blank" rel="external nofollow noopener noreferrer">1.总体步骤&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://blog.csdn.net/lvyaer_1122/article/details/130139795?spm=1001.2014.3001.5502/#t1"target="_blank" rel="external nofollow noopener noreferrer">2、详细步骤&lt;/a>&lt;/p></description></item><item><title>SurfaceControl及SurfaceFlinger中的Layer创建过程深入剖析-CSDN博客</title><link>https://huang8604.github.io/posts/surfacecontrol%E5%8F%8Asurfaceflinger%E4%B8%AD%E7%9A%84layer%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/surfacecontrol%E5%8F%8Asurfaceflinger%E4%B8%AD%E7%9A%84layer%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 id="surfacecomposerclient创建" class="heading-element">&lt;span>SurfaceComposerClient创建&lt;/span>
+ &lt;a href="#surfacecomposerclient%e5%88%9b%e5%bb%ba" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>SurfaceComposerClient对象是在哪里创建的呢?是在SurfaceSession构造时候创建&lt;br>
+frameworks/base/core/&lt;a href="https://so.csdn.net/so/search?q=jni%5c&amp;amp;spm=1001.2101.3001.7020"target="_blank" rel="external nofollow noopener noreferrer">jni&lt;/a>/android_view_SurfaceSession.cpp&lt;/p></description></item><item><title>SurfaceControl之Transaction事物深入剖析-android framework实战开发-CSDN博客</title><link>https://huang8604.github.io/posts/surfacecontrol%E4%B9%8Btransaction%E4%BA%8B%E7%89%A9%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-android-framework%E5%AE%9E%E6%88%98%E5%BC%80%E5%8F%91-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/surfacecontrol%E4%B9%8Btransaction%E4%BA%8B%E7%89%A9%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-android-framework%E5%AE%9E%E6%88%98%E5%BC%80%E5%8F%91-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 id="背景" class="heading-element">&lt;span>背景&lt;/span>
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark">
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z">&lt;/path>&lt;/svg>
+ &lt;/a>
+&lt;/h3>&lt;p>前面已经讲解清楚了SurfaceControl整个创建过程，一般SurfaceControl都是一个静态图层的代表，但往往只有静态一个图层是没有意义的，即只是创建了一个图层其实啥也看不到，更多需要是SurfaceControl对应的Transaction,这个事务才是真正可以让SurfaceControl可以显示的关键所在，Transaction才是相当于一个个的动作让SurfaceControl静态东西可以动起来，接下来将详细分析一下Transaction。&lt;/p></description></item></channel></rss>
