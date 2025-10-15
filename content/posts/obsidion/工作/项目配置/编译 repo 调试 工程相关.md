@@ -4,7 +4,7 @@ tags:
   - 工具
 title: 编译 repo 调试 工程相关
 date: 2025-01-06T01:09:38.899Z
-lastmod: 2025-01-18T09:57:16.690Z
+lastmod: 2025-05-09T11:09:49.371Z
 ---
 ## REPO
 
@@ -20,6 +20,9 @@ push
 
 ```
 adb root; adb remount ; adb push out/target/product/qssi/system/framework/services.jar /system/framework/
+
+
+adb root; adb remount ;adb push out/target/product/qssi/system/framework/services.jar /system/framework/; adb push out/target/product/qssi/system/framework/services.jar.bprof /system/framework/;adb push out/target/product/qssi/system/framework/services.jar.prof /system/framework/ ;adb push out/target/product/qssi/system/framework/oat/arm64/services.art /system/framework/oat/arm64/ ;adb push out/target/product/qssi/system/framework/oat/arm64/services.odex /system/framework/oat/arm64/ ; adb push out/target/product/qssi/system/framework/oat/arm64/services.vdex /system/framework/oat/arm64/ ;
 ```
 
 ##### 编译SystemUI
@@ -64,5 +67,26 @@ adb reboot
 
 adb shell dumpsys battery set level 13
 adb shell dumpsys battery set temp 551
+
+```
+
+```
+
+ 2047  adb shell "pm install-create"
+ 2048  adb shell "pm install-write 2012419093 CtsSplitApp.apk /data/local/tmp/0_CtsSplitApp.apk"
+ 2049  adb push CtsSplitApp.apk  /data/local/tmp/0_CtsSplitApp.apk
+ 2050  adb shell "pm install-write 2012419093 CtsSplitApp.apk /data/local/tmp/0_CtsSplitApp.apk"
+ 2051  adb shell "pm install-commit 2021419093"
+ 2052  adb shell "pm install-commit 2012419093"
+ 2053  adb shell "pm list instrumentation"
+ 2054  adb shell "pm set-app-links-user-selection"
+ 2055  adb shell "pm list instrumentation"
+ 2056  adb shell "pm set-app-links-user-selection"
+
+```
+
+```
+
+repo forall -c "pwd;git clean -df;git checkout -f";repo sync -j4;
 
 ```
