@@ -1,8 +1,6 @@
 ---
 title: Android：光感自动调节亮度_高通 光感自动调节配置 xml-CSDN博客
-author:
-  - "[[成就一亿技术人!]]"
-  - "[[hope_wisdom 发出的红包]]"
+author: []
 created: 2025-06-30
 tags:
   - clippings
@@ -11,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://blog.csdn.net/liu_xinglfz/article/details/122996364
 date: 2025-06-30T11:21:48.938Z
-lastmod: 2025-07-16T01:48:27.000Z
+lastmod: 2025-10-23T07:55:51.259Z
 ---
 展锐光感自动调节亮度功能，光感数据上报对应的背光亮度设置，其实其他平台像 [MTK](https://so.csdn.net/so/search?q=MTK\&spm=1001.2101.3001.7020) ，高通也差不多，大同小异，主要是搜索关键字：config\_autoBrightnessLevels、config\_screenBrightnessBacklight，就会发现只是文件路径不太一样。
 
