@@ -1,0 +1,152 @@
+# ===========================================
+# PagesCMS 配置文件 - Hugo 博客
+# ===========================================
+
+# 媒体文件配置
+media:
+  input: static/images/  # 上传文件存储路径（相对于项目根目录）
+  output: /images      # 网站发布后的公共访问路径
+  #extensions: [jpg, jpeg, png, gif, svg, webp]     # 可显示的文件扩展名的文件
+  #categories: [jpg, jpeg, png, gif, svg, webp]     # 允许特定类型的文件
+
+# 内容配置
+content:
+  # ===========================================
+  # 博客文章集合
+  # ===========================================
+  - name: posts
+    label: 📝 博客文章
+    type: collection
+    path: content/posts
+    #filename: '{fields.title}.md'
+    subfolders: true
+    #exclude: [ _index.md ]     # 忽略文件
+    format: yaml-frontmatter
+    view:
+      fields: [ title, date, categories, tags ]
+      primary: title
+      sort: [ date, title ]
+      default:
+        #search: ''
+        sort: date
+        order: desc
+      layout: tree      # `list`平铺或`tree`树状列表
+      node:
+        filename: _index.md
+        hideDirs: nodes
+    fields:
+      # 基础字段
+      - name: title
+        label: 标题
+        type: string
+        required: true
+        description: 文章标题，建议简洁明了
+        options:
+          minlength: 2
+          maxlength: 100
+
+      - name: slug
+        label: URL 别名
+        type: string
+        required: false
+        pattern: { message: '只能包含小写字母、数字和连字符', regex: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }
+        description: 用于生成 URL 的别名，留空则自动生成
+
+      # 描述和摘要
+      - name: description
+        label: 文章描述
+        type: text
+        required: false
+        description: 用于 SEO 的页面描述，建议 120-160 字符
+
+      - name: summary
+        label: 文章摘要
+        type: text
+        required: false
+        description: 显示在文章列表的预览摘要
+
+      # 时间字段
+      - name: date
+        label: 发布日期
+        type: date
+        required: true
+        description: 文章发布日期
+        options:
+          format: yyyy-MM-dd'T'HH:mm:ssXXX
+          time: true
+          step: true
+
+      - name: lastmod
+        label: 最后修改时间
+        type: date
+        required: false
+        description: 留空则自动使用文件修改时间
+        options:
+          format: yyyy-MM-dd'T'HH:mm:ssXXX
+          time: true
+          step: true
+
+      # 状态字段
+      - name: draft
+        label: 草稿状态
+        type: boolean
+        default: false
+        description: 勾选后文章为草稿状态，不会在网站显示
+
+      # 分类和标签
+      - name: categories
+        label: 分类
+        type: string
+        list: true
+        required: false
+        description: 文章分类，可以添加多个
+
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+        required: false
+        description: 文章标签，用于细分主题
+
+      # 缩略图
+      - name: thumbnail
+        label: 文章缩略图
+        type: image
+        required: false
+        description: 文章封面图片
+
+      # 正文内容
+      - name: body
+        label: 正文内容
+        type: rich-text
+        required: true
+        description: 文章主要内容，支持 Markdown 语法的富文本编辑器
+
+  # ===========================================
+  # 关于页面
+  # ===========================================
+  - name: about
+    label: 📄 关于页面
+    type: file
+    path: content/about.md
+    format: yaml-frontmatter
+    fields:
+      - name: body
+        label: 页面内容
+        type: rich-text
+        required: true
+        description: 关于页面的主要内容
+  # ===========================================
+  # 友链页面
+  # ===========================================
+  - name: friends
+    label: 🔗 友链页面
+    type: file
+    path: content/friends.md
+    format: yaml-frontmatter
+    fields:
+      - name: body
+        label: 页面内容
+        type: rich-text
+        required: true
+        description: 友链页面内容
