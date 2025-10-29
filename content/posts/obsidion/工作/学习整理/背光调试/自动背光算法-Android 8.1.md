@@ -9,7 +9,7 @@ tags:
 collections: 图形显示
 source: https://segmentfault.com/a/1190000022874010?sort=newest
 date: 2025-08-21T07:29:37.936Z
-lastmod: 2025-10-23T07:56:56.596Z
+lastmod: 2025-10-23T08:23:27.000Z
 ---
 本文基于工作中自动背光笔记扩充了下，记录下自动背光算法。\
 基于Android 8.1, 代码可参看 [http://androidxref.com/8.1.0\_...](https://link.segmentfault.com/?enc=S%2FVnvVcbfiJWLu1xPNnWoQ%3D%3D.L2VvVVv78YDcKnviPVlOdjS3H7uSKqzygibjxQLrLdLb%2BAreqZCsVQ2EcdiTwPlq)\
