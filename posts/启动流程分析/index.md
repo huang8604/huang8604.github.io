@@ -1,0 +1,59 @@
+# 启动流程分析
+
+#### 开机流程
+
+##### bootloader 引导系统
+
+##### 内核启动 idle
+
+![image.png](https://picgo.myjojo.fun:666/i/2024/09/18/66ea3774e683c.png)
+
+![image.png](https://picgo.myjojo.fun:666/i/2024/09/18/66ea379e38abe.png)
+
+流程图
+
+![1726624693646.png](https://picgo.myjojo.fun:666/i/2024/09/18/66ea33a9dd269.png)
+
+#### Zygote 启动
+
+[Zygote进程相关](/Zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3)
+
+![image.png](https://picgo.myjojo.fun:666/i/2024/09/18/66ea382055e59.png)
+
+zygote的启动是在 init 进程启动后，解析init.rc文件创建的：
+
+```shell
+import /system/etc/init/hw/init.${ro.zygote}.rc
+#这个里面会根据平台的不同，选择32位，还是64位。
+    
+
+# system/core/rootdir/init.zygote64.rc
+ service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+     class main
+     priority -20
+     user root
+     group root readproc reserved_disk
+     socket zygote stream 660 root system
+     socket usap_pool_primary stream 660 root system
+     onrestart exec_background - system system -- /system/bin/vdc volume abort_fuse
+     onrestart write /sys/power/state on
+     # NOTE: If the wakelock name here is changed, then also
+     # update it in SystemSuspend.cpp
+     onrestart write /sys/power/wake_lock zygote_kwl
+     onrestart restart audioserver
+     onrestart restart cameraserver
+     onrestart restart media
+     onrestart restart media.tuner
+     onrestart restart netd
+     onrestart restart wificond
+     task_profiles ProcessCapacityHigh MaxPerformance
+     critical window=${zygote.critical_window.minute:-off} target=zygote-fatal
+
+```
+
+
+---
+
+> 作者: [wentao](https://github.com/huang8604)  
+> URL: https://huang8604.github.io/posts/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/  
+
