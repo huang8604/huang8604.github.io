@@ -7,8 +7,9 @@ description:
 tags:
   - clippings
   - blog
+  - 转载
 date: 2025-11-04T03:27:12.202Z
-lastmod: 2025-11-04T03:29:42.711Z
+lastmod: 2025-11-04T04:00:42.201Z
 ---
 文章详细阐述了Linux系统在启动过程中针对块设备的校验流程，涉及到VerifiedBoot.c和LinuxLoader.c等关键组件。通用块设备层处理I/O请求，包括扇区、块、段和数据页的概念。动态校验流程中，verity\_end\_io函数用于处理错误并触发工作队列进行校验。dm-verity用于保证数据完整性，通过创建哈希树并配置目标表来验证块设备上的数据。此外，文章还提到了init用户态流程和清除panic标识的方法。
 
