@@ -9,17 +9,20 @@ tags:
   - blog
   - 工具
 date: 2025-10-30T07:11:12.722Z
-lastmod: 2025-10-30T07:15:49.700Z
+lastmod: 2025-10-30T07:25:13.871Z
 ---
 ## 实用命令汇总
 
-| 任务               | 命令                                                              |
-| ---------------- | --------------------------------------------------------------- |
-| 多核压缩目录           | \`tar -cvf - /data                                              |
-| 多核解压文件           | \`pigz -dc -p 4 /backup/data.tar.gz                             |
-| 简写压缩命令           | `tar --use-compress-program="pigz -p 4" -cvf data.tar.gz /data` |
-| 简写解压命令           | `tar --use-compress-program="pigz -dp 4" -xvf data.tar.gz`      |
-| tar -cvf - /data | pigz -p 9 > /backup/backup.tar.gz1.                             |
+| 任务     | 命令                                                              |
+| ------ | --------------------------------------------------------------- |
+| 多核压缩目录 | \`tar -cvf - /data                                              |
+| 多核解压文件 | \`pigz -dc -p 4 /backup/data.tar.gz                             |
+| 简写压缩命令 | `tar --use-compress-program="pigz -p 4" -cvf data.tar.gz /data` |
+| 简写解压命令 | `tar --use-compress-program="pigz -dp 4" -xvf data.tar.gz`      |
+| 压缩命令   | tar -cvf - /data \| pigz -p \$(nproc)-2 > /backup/backup.tar.gz |
+| 解压     | pigz -dc -p \$(nproc)-2 /backup/backup.tar.gz \| tar -xvf -     |
+
+-p \$(nproc)-1
 
 ## 📘 Linux 下使用 tar 与 pigz 进行多核压缩
 
@@ -31,7 +34,7 @@ lastmod: 2025-10-30T07:15:49.700Z
 `tar` 与 `gzip` 常搭配使用形成命令：
 
 ```
-tar -czf backup.tar.gz /data1.
+tar -czf backup.tar.gz /data
 ```
 
 但这种方式的一个明显限制是：
@@ -62,7 +65,7 @@ tar -czf backup.tar.gz /data1.
 示例：
 
 ```
-tar -cvf - /data1.
+tar -cvf - /data
 ```
 
 这条命令不会生成文件，而是将归档内容输出到标准输出（stdout）。\
@@ -77,7 +80,7 @@ tar -cvf - /data1.
 示例：
 
 ```
-pigz -p 4 > backup.tar.gz1.
+pigz -p 4 > backup.tar.gz
 ```
 
 `-p 4` 表示使用 4 个线程进行压缩。\
@@ -90,7 +93,7 @@ pigz -p 4 > backup.tar.gz1.
 通过 Linux 管道（ `|` ）机制，可以让 `tar` 与 `pigz` 同时工作：
 
 ```
-tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
+tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz
 ```
 
 执行时的并行流程如下：
@@ -134,7 +137,7 @@ tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
 ### ✅ 方案一：tar + pigz（推荐）
 
 ```
-tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
+tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz
 ```
 
 说明：
@@ -159,13 +162,13 @@ tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
 许多 Linux 发行版的 `tar` 已支持直接使用 `pigz` 替代 `gzip` ：
 
 ```
-tar --use-compress-program="pigz -p 4" -cvf /backup/backup.tar.gz /data1.
+tar --use-compress-program="pigz -p 4" -cvf /backup/backup.tar.gz /data
 ```
 
 等价于：
 
 ```
-tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
+tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz
 ```
 
 优点：
@@ -181,13 +184,13 @@ tar -cvf - /data | pigz -p 4 > /backup/backup.tar.gz1.
 同样，解压时也可以利用多核：
 
 ```
-pigz -dc -p 4 /backup/backup.tar.gz | tar -xvf -1.
+pigz -dc -p 4 /backup/backup.tar.gz | tar -xvf -
 ```
 
 或者更简洁的形式：
 
 ```
-tar --use-compress-program="pigz -dp 4" -xvf /backup/backup.tar.gz1.
+tar --use-compress-program="pigz -dp 4" -xvf /backup/backup.tar.gz
 ```
 
 ***
