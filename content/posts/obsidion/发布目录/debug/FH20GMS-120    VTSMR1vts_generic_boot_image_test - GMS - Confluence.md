@@ -8,8 +8,8 @@ tags:
   - blog
 collections: 图形显示
 source: 
-date: 2025-10-29T01:50:17.708Z
-lastmod: 2025-10-29T01:56:09.881Z
+date: 2025-11-21T08:01:29.000Z
+lastmod: 2025-11-21T08:01:29.000Z
 ---
 ## FH20GMS-120 \[VTS]\[MR1]vts\_generic\_boot\_image\_test
 

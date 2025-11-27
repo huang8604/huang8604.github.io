@@ -60,9 +60,11 @@ min+   。
 
 用公式表示即为
 
+<div>
 $$
 \mathbf{z = y^{3^{-x}}*255, x\in[-1.0, 1.0], y\in[0.0, 1.0], z\in[min, 255]}
 $$
+</div>
 
 公式中3表示为gamma3.0,后面是3的-x次方,即$3^{-x}$
 
@@ -615,9 +617,11 @@ private void updateAutoBrightness(boolean sendUpdate) {
 
 对应的就是我们前面列的公式
 
+<div>
 $$
 \mathbf{z = y^{3^{-x}}*255, x\in[-1.0, 1.0], y\in[0.0, 1.0], z\in[min, 255]}
 $$
+</div>
 
 具体的就不分步讲了，可看下我的注释，这里只贴下Spline interpolate()代码\
 我们之前建模时讲了，创建spline可能是线性的，也可能是MonotoneCubicSpline，\

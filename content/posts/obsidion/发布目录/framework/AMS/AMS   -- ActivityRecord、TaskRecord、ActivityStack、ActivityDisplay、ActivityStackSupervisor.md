@@ -9,8 +9,8 @@ categories:
 collections:
   - AMS
 title: AMS   -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor
-date: 2024-11-06T06:57:52.085Z
-lastmod: 2024-11-05T01:33:58.435Z
+date: 2025-11-21T08:01:29.000Z
+lastmod: 2025-11-21T08:01:29.000Z
 ---
 ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor  的关系
 
