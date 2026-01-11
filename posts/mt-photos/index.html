@@ -1,0 +1,340 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>MT-Photos - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="FPR 内网穿透 需要内网的机器的强大的CPU 给AI识别提供助力
+借用了腾讯云内网穿透来联通
+"><meta name=keywords content='blog,网络配置'><meta itemprop=name content="MT-Photos"><meta itemprop=description content="FPR 内网穿透 需要内网的机器的强大的CPU 给AI识别提供助力
+借用了腾讯云内网穿透来联通"><meta itemprop=datePublished content="2024-11-06T06:57:59+00:00"><meta itemprop=dateModified content="2024-11-05T01:34:05+00:00"><meta itemprop=wordCount content="2174"><meta itemprop=keywords content="Blog,网络配置"><meta property="og:url" content="https://huang8604.github.io/posts/mt-photos/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="MT-Photos"><meta property="og:description" content="FPR 内网穿透 需要内网的机器的强大的CPU 给AI识别提供助力
+借用了腾讯云内网穿透来联通"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:59+00:00"><meta property="article:modified_time" content="2024-11-05T01:34:05+00:00"><meta property="article:tag" content="Blog"><meta property="article:tag" content="网络配置"><meta name=twitter:card content="summary"><meta name=twitter:title content="MT-Photos"><meta name=twitter:description content="FPR 内网穿透 需要内网的机器的强大的CPU 给AI识别提供助力
+借用了腾讯云内网穿透来联通"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/mt-photos/ title="MT-Photos - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/ title=Zygote进程相关><link rel=next type=text/html href=https://huang8604.github.io/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/ title="SD 卡 存储 挂载相关"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/mt-photos/index.md title="MT-Photos - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"MT-Photos","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/mt-photos\/"},"genre":"posts","keywords":"blog, 网络配置","wordcount":2174,"url":"https:\/\/huang8604.github.io\/posts\/mt-photos\/","datePublished":"2024-11-06T06:57:59+00:00","dateModified":"2024-11-05T01:34:05+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>MT-Photos</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/categories/%E7%94%9F%E6%B4%BB/ class=post-category title="分类 - 生活"><i class="fa-regular fa-folder fa-fw" aria-hidden=true></i> 生活</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:59"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:34:05"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="2174 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 2200 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 5 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><ul><li><ul><li><a href=#fpr-内网穿透>FPR 内网穿透</a><ul><li><a href=#一-下载-frp包>一 下载 frp包</a></li><li><a href=#二--服务端安装>二 服务端安装</a></li><li><a href=#三-服务端配置>三 服务端配置</a></li><li><a href=#四-访问frp控制面板>四 访问frp控制面板</a></li><li><a href=#五-客户端配置修改>五 客户端配置修改</a></li><li><a href=#六-客户端连接服务端>六 客户端连接服务端</a></li><li><a href=#七-mt-photo-ai>七 MT Photo AI</a></li><li><a href=#八-跑通整个链路>八 跑通整个链路</a></li><li><a href=#九--是否需要开机启动>九 是否需要开机启动</a><ul><li><a href=#91-设置云服务器端开机自启动>9.1 设置云服务器端开机自启动</a></li></ul></li><li><a href=#十复杂配置>十、复杂配置</a></li></ul></li><li><a href=#docker-配置>Docker 配置</a></li></ul></li></ul></li></ul></nav></div></div><div class=content id=content><h4 class=heading-element id=fpr-内网穿透><span>FPR 内网穿透</span>
+<a href=#fpr-%e5%86%85%e7%bd%91%e7%a9%bf%e9%80%8f class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>需要内网的机器的强大的CPU 给AI识别提供助力<br>借用了腾讯云内网穿透来联通</p><ol><li>腾讯云服务器运行的为<strong>服务端</strong>，</li><li>局域网内机子运行的为<strong>客户端</strong></li><li>NAS机器称为<strong>访问端</strong></li></ol><h5 class=heading-element id=一-下载-frp包><span>一 下载 frp包</span>
+<a href=#%e4%b8%80-%e4%b8%8b%e8%bd%bd-frp%e5%8c%85 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>按推荐linux下载了 0.37或者0.38 试验下来使用稳定</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>wget https://github.com/fatedier/frp/releases/download/v0.38.0/frp_0.38.0_linux_amd64.tar.gz</span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=二--服务端安装><span>二 服务端安装</span>
+<a href=#%e4%ba%8c--%e6%9c%8d%e5%8a%a1%e7%ab%af%e5%ae%89%e8%a3%85 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><ol><li>执行<code>tar -zxvf frp_0.38.0_linux_amd64.tar.gz</code>解压</li><li>执行 <code>cd frp_0.38.0_linux_amd64/</code>进入文件夹</li><li>修改配置文件<a href=#%E4%B8%89%20%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE>#三 服务端配置</a></li><li>sudo chmod 755 ./frps 赋予</li><li>启动运行 在安装好的目录内 执行<code>./frps -c ./frps.ini</code>前台启动命令</li></ol><p><em>后期可以ctrl+c 终止程序，再执行<code>nohup ./frps -c ./frps.ini &</code> 后台保持启动</em><br>_后期还可以设置自动运行<br>#TODO：</p><h5 class=heading-element id=三-服务端配置><span>三 服务端配置</span>
+<a href=#%e4%b8%89-%e6%9c%8d%e5%8a%a1%e7%ab%af%e9%85%8d%e7%bd%ae class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-python"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=p>[</span><span class=n>common</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>bind_addr</span><span class=o>=</span><span class=mf>0.0.0.0</span>
+</span></span><span class=line><span class=cl><span class=n>bind_port</span> <span class=o>=</span> <span class=mi>7000</span>
+</span></span><span class=line><span class=cl><span class=n>token</span><span class=o>=</span><span class=mi>12345678</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>dashboard_port</span> <span class=o>=</span> <span class=mi>7500</span>
+</span></span><span class=line><span class=cl><span class=n>dashboard_user</span> <span class=o>=</span> <span class=n>admin</span>
+</span></span><span class=line><span class=cl><span class=n>dashboard_pwd</span> <span class=o>=</span> <span class=n>admin123</span></span></span></code></pre></td></tr></table></div></div></div><div class="details admonition note open disabled"><div class="details-summary admonition-title"><i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden=true></i>配置说明：<br></div><div class=details-content><div class=admonition-content><p>&ldquo;bind_addr"是服务器本地IP，不改。<br>&ldquo;bind_port"是frp监听端口。<br>&ldquo;token"是验证token建议设置上。<br>&ldquo;dashboard_port"是frp面板端口。<br>&ldquo;dashboard_user"&ldquo;dashboard_pwd"是面板的账户密码。</p></div></div></div><p>token 建议复杂一些，屏蔽一些扫描访问</p><h5 class=heading-element id=四-访问frp控制面板><span>四 访问frp控制面板</span>
+<a href=#%e5%9b%9b-%e8%ae%bf%e9%97%aefrp%e6%8e%a7%e5%88%b6%e9%9d%a2%e6%9d%bf class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>面板仅供参考，可用可不用。访问 <strong>http://服务器ip:7500</strong></p><p>上面配置的7500端口，使用上面配置的用户名和密码 admin/admin123</p><h5 class=heading-element id=五-客户端配置修改><span>五 客户端配置修改</span>
+<a href=#%e4%ba%94-%e5%ae%a2%e6%88%b7%e7%ab%af%e9%85%8d%e7%bd%ae%e4%bf%ae%e6%94%b9 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>客户端与服务端下载同样的文件 frp_0.38.0_linux_amd64.tar.gz<br>创建文件夹，执行<code>tar -zxvf frp_0.38.0_linux_amd64.tar.gz</code>解压 然后进入，<br>编辑客户端配置"frpc.ini"文件</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-fallback"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[common]
+</span></span><span class=line><span class=cl>server_addr = 公网IP 腾讯服务器的地址
+</span></span><span class=line><span class=cl>server_port = 7000  上面服务端配置的端口
+</span></span><span class=line><span class=cl>token=1235678    相当于密码
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>[RDP]
+</span></span><span class=line><span class=cl>type = tcp
+</span></span><span class=line><span class=cl>local_ip = 127.0.0.1   本地回环地址
+</span></span><span class=line><span class=cl>local_port = 8060         局域网客户端的端口
+</span></span><span class=line><span class=cl>remote_port = 6000        服务端的端口，用于给访问端使用</span></span></code></pre></td></tr></table></div></div></div><div class="details admonition note open disabled"><div class="details-summary admonition-title"><i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden=true></i>说明：<br></div><div class=details-content><div class=admonition-content><p>客户端连接腾讯云的地址 公网IP 端口7000 token<br>访问端连接腾讯云的公网IP 6000 ，会frps转到 客户端的8060端口</p></div></div></div><h5 class=heading-element id=六-客户端连接服务端><span>六 客户端连接服务端</span>
+<a href=#%e5%85%ad-%e5%ae%a2%e6%88%b7%e7%ab%af%e8%bf%9e%e6%8e%a5%e6%9c%8d%e5%8a%a1%e7%ab%af class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>执行<code>./frpc -c ./frpc.ini</code>前台启动命令 连接服务端</p><p><em>后期可以ctrl+c 终止程序，再执行<code>nohup ./frpc -c ./frpc.ini &</code> 后台保持启动</em></p><h5 class=heading-element id=七-mt-photo-ai><span>七 MT Photo AI</span>
+<a href=#%e4%b8%83-mt-photo-ai class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>跑 ai的机器使用的ubuntu系统</p><ol><li>安装docker</li><li>下载镜像</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>sudo docker pull mtphotos/mt-photos-ai</span></span></code></pre></td></tr></table></div></div></div><ol start=3><li>运行脚本</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#API_AUTH_KEY自行设置</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>sudo docker run -i -p 8060:8000 -e <span class=nv>API_AUTH_KEY</span><span class=o>=</span>mt_photos_ai_extra_secret --name mt-photos-ai2 mtphotos/mt-photos-ai:latest</span></span></code></pre></td></tr></table></div></div></div><p>会监听 8060端口<br>可以使用下面命令来看看通不通</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>curl --location --request POST <span class=s1>&#39;http://127.0.0.1:8060/check&#39;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>--header <span class=s1>&#39;api-key: mt_photos_ai_extra_secret&#39;</span></span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=八-跑通整个链路><span>八 跑通整个链路</span>
+<a href=#%e5%85%ab-%e8%b7%91%e9%80%9a%e6%95%b4%e4%b8%aa%e9%93%be%e8%b7%af class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>MT Photo 调用 公网IP:6000 端口 api-key<br>FRPS 会去调用 客户端的 8060端口</p><h5 class=heading-element id=九--是否需要开机启动><span>九 是否需要开机启动</span>
+<a href=#%e4%b9%9d--%e6%98%af%e5%90%a6%e9%9c%80%e8%a6%81%e5%bc%80%e6%9c%ba%e5%90%af%e5%8a%a8 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>目前使用的功能是一个不常用的功能，FRPS连接没有识别来源所以计划随用隋开，不自动启动。</p><h6 class=heading-element id=91-设置云服务器端开机自启动><span>9.1 设置云服务器端开机自启动</span>
+<a href=#91-%e8%ae%be%e7%bd%ae%e4%ba%91%e6%9c%8d%e5%8a%a1%e5%99%a8%e7%ab%af%e5%bc%80%e6%9c%ba%e8%87%aa%e5%90%af%e5%8a%a8 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h6><ol><li>执行sudo vim /etc/systemd/system/frps.service创建服务，编辑如下</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>[</span>Unit<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>Description</span><span class=o>=</span>frps daemon
+</span></span><span class=line><span class=cl><span class=nv>After</span><span class=o>=</span>syslog.target  network.target
+</span></span><span class=line><span class=cl><span class=nv>Wants</span><span class=o>=</span>network.target
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>Service<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>Type</span><span class=o>=</span>simple
+</span></span><span class=line><span class=cl><span class=nv>ExecStart</span><span class=o>=</span>/etc/frps/frp_0.38.0_linux_amd64/frps -c /etc/frps/frp_0.38.0_linux_amd64/frps.ini		<span class=c1># 编辑的时候一定要删除注释 这里更改为自己安装frps的绝对路径</span>
+</span></span><span class=line><span class=cl><span class=nv>Restart</span><span class=o>=</span> always
+</span></span><span class=line><span class=cl><span class=nv>RestartSec</span><span class=o>=</span>1min
+</span></span><span class=line><span class=cl><span class=o>[</span>Install<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>WantedBy</span><span class=o>=</span>multi-user.target</span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><ol start=2><li>开启自启动<br>执行如下指令</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-bash"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1>#启动frps</span>
+</span></span><span class=line><span class=cl>systemctl daemon-reload
+</span></span><span class=line><span class=cl>systemctl start frps
+</span></span><span class=line><span class=cl><span class=c1>#设置为开机启动</span>
+</span></span><span class=line><span class=cl>systemctl <span class=nb>enable</span> frps</span></span></code></pre></td></tr></table></div></div></div><p>9.2 设置局域网机子frpc开机自启动</p><ol><li>执行sudo vim /etc/systemd/system/frpc.service创建服务，编辑如下</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>[</span>Unit<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>Description</span><span class=o>=</span>frpc daemon
+</span></span><span class=line><span class=cl><span class=nv>After</span><span class=o>=</span>syslog.target  network.target
+</span></span><span class=line><span class=cl><span class=nv>Wants</span><span class=o>=</span>network.target
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>Service<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>Type</span><span class=o>=</span>simple
+</span></span><span class=line><span class=cl><span class=nv>ExecStart</span><span class=o>=</span>/home/wentao/frps/frp_0.37.0_linux_amd64/frpc -c /home/wentao/frps/frp_0.37.0_linux_amd64/frpc.ini		
+</span></span><span class=line><span class=cl><span class=c1># 编辑的时候一定要删除注释 这里更改为自己安装frpc的绝对路径</span>
+</span></span><span class=line><span class=cl><span class=nv>Restart</span><span class=o>=</span> always
+</span></span><span class=line><span class=cl><span class=nv>RestartSec</span><span class=o>=</span>1min
+</span></span><span class=line><span class=cl><span class=o>[</span>Install<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>WantedBy</span><span class=o>=</span>multi-user.target</span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><ol start=2><li>开启自启动<br>执行如下指令</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1>#启动frpc</span>
+</span></span><span class=line><span class=cl>sudo systemctl daemon-reload
+</span></span><span class=line><span class=cl>sudo systemctl start frpc
+</span></span><span class=line><span class=cl><span class=c1>#设置为开机启动</span>
+</span></span><span class=line><span class=cl>sudo systemctl <span class=nb>enable</span> frpc</span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=十复杂配置><span>十、复杂配置</span>
+<a href=#%e5%8d%81%e5%a4%8d%e6%9d%82%e9%85%8d%e7%bd%ae class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p><strong>以下配置中密码和公网IP都使用XX进行了代替，复制使用时请注意修改</strong></p><ol><li>远程服务端frps.ini</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-python"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=p>[</span><span class=n>common</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=c1># frp监听的端口，默认是7000</span>
+</span></span><span class=line><span class=cl><span class=n>bind_port</span> <span class=o>=</span> <span class=mi>7000</span>
+</span></span><span class=line><span class=cl><span class=c1># 授权码,请自定义更改</span>
+</span></span><span class=line><span class=cl><span class=n>token</span> <span class=o>=</span> <span class=n>XXXXX</span>
+</span></span><span class=line><span class=cl><span class=c1># 这个token之后在客户端会用到</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># frp管理后台端口，请按自己需求更改</span>
+</span></span><span class=line><span class=cl><span class=n>dashboard_port</span> <span class=o>=</span> <span class=mi>7500</span>
+</span></span><span class=line><span class=cl><span class=c1># frp管理后台用户名和密码，请改成自己的</span>
+</span></span><span class=line><span class=cl><span class=n>dashboard_user</span> <span class=o>=</span> <span class=n>admin</span>
+</span></span><span class=line><span class=cl><span class=n>dashboard_pwd</span> <span class=o>=</span> <span class=n>XXXXX</span>
+</span></span><span class=line><span class=cl><span class=n>enable_prometheus</span> <span class=o>=</span> <span class=n>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># frp日志存放位置、日志等级及日志存储最大天数</span>
+</span></span><span class=line><span class=cl><span class=n>log_file</span> <span class=o>=</span> <span class=o>/</span><span class=n>var</span><span class=o>/</span><span class=n>log</span><span class=o>/</span><span class=n>frps</span><span class=o>.</span><span class=n>log</span>
+</span></span><span class=line><span class=cl><span class=n>log_level</span> <span class=o>=</span> <span class=n>info</span>
+</span></span><span class=line><span class=cl><span class=n>log_max_days</span> <span class=o>=</span> <span class=mi>7</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><ol start=2><li>客户端的frpc.ini文件</li></ol><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-python"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=p>[</span><span class=n>common</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=c1># 远程服务器ip，远程frp服务端口以及远程登录密码</span>
+</span></span><span class=line><span class=cl><span class=n>server_addr</span> <span class=o>=</span> <span class=mf>119.</span><span class=n>XX</span><span class=o>.</span><span class=n>XX</span><span class=mf>.119</span>
+</span></span><span class=line><span class=cl><span class=n>server_port</span> <span class=o>=</span> <span class=mi>7000</span>
+</span></span><span class=line><span class=cl><span class=n>token</span> <span class=o>=</span> <span class=n>XXXXX</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 日志存放位置、日志等级及日志存储最大天数</span>
+</span></span><span class=line><span class=cl><span class=n>log_file</span> <span class=o>=</span> <span class=o>/</span><span class=n>var</span><span class=o>/</span><span class=n>log</span><span class=o>/</span><span class=n>frpc</span><span class=o>.</span><span class=n>log</span>
+</span></span><span class=line><span class=cl><span class=n>log_level</span> <span class=o>=</span> <span class=n>info</span>
+</span></span><span class=line><span class=cl><span class=n>log_max_days</span> <span class=o>=</span> <span class=mi>7</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 将本地机的22端口映射至远程20022端口 中括号内[ssh]只作为标识，可自定义</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>ssh</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=n>tcp</span>
+</span></span><span class=line><span class=cl><span class=n>local_ip</span> <span class=o>=</span> <span class=mf>127.0.0.1</span>
+</span></span><span class=line><span class=cl><span class=n>local_port</span> <span class=o>=</span> <span class=mi>8060</span>
+</span></span><span class=line><span class=cl><span class=n>remote_port</span> <span class=o>=</span> <span class=mi>6000</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 将本机的5901端口映射至远程25901端口</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>vnc</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=n>tcp</span>
+</span></span><span class=line><span class=cl><span class=n>local_ip</span> <span class=o>=</span> <span class=mf>127.0.0.1</span>
+</span></span><span class=line><span class=cl><span class=n>local_port</span> <span class=o>=</span> <span class=mi>8000</span>
+</span></span><span class=line><span class=cl><span class=n>remote_port</span> <span class=o>=</span> <span class=mi>6001</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 将本机所在局域网内的192.168.0.129机子的5901端口映射至远程55901端口</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>tsj</span><span class=o>-</span><span class=n>vnc</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=n>tcp</span>
+</span></span><span class=line><span class=cl><span class=n>local_ip</span> <span class=o>=</span> <span class=mf>192.168.0.129</span>
+</span></span><span class=line><span class=cl><span class=n>local_port</span> <span class=o>=</span> <span class=mi>5901</span>
+</span></span><span class=line><span class=cl><span class=n>remote_port</span> <span class=o>=</span> <span class=mi>55901</span>
+</span></span><span class=line><span class=cl><span class=c1># 代理本机所在的内网，即若用户设置代理为公网IP+端口即可访问本机所在内网，使用的是socks5代理协议，plugin_user及后面的可设置可不设，但不设的风险较大</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>socks5_proxy</span><span class=p>]</span> 
+</span></span><span class=line><span class=cl><span class=nb>type</span> <span class=o>=</span> <span class=n>tcp</span>
+</span></span><span class=line><span class=cl><span class=n>remote_port</span> <span class=o>=</span> <span class=mi>7890</span>   
+</span></span><span class=line><span class=cl><span class=n>plugin</span> <span class=o>=</span> <span class=n>socks5</span>
+</span></span><span class=line><span class=cl><span class=n>plugin</span> <span class=o>=</span> <span class=n>socks5</span>
+</span></span><span class=line><span class=cl><span class=n>plugin_user</span> <span class=o>=</span> <span class=n>name</span>
+</span></span><span class=line><span class=cl><span class=n>plugin_passwd</span> <span class=o>=</span> <span class=n>password</span>
+</span></span><span class=line><span class=cl><span class=n>use_encryption</span> <span class=o>=</span> <span class=n>true</span>
+</span></span><span class=line><span class=cl><span class=n>use_compression</span> <span class=o>=</span> <span class=n>true</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><ol start=3><li>重启frp服务</li></ol><blockquote><p>服务端<br>sudo systemctl restart frps.service<br>客户端<br>sudo systemctl restart frpc.service</p></blockquote><h4 class=heading-element id=docker-配置><span>Docker 配置</span>
+<a href=#docker-%e9%85%8d%e7%bd%ae class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-yaml"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;3&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mtphotos</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mtphotos/mt-photos:1.30.2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>mt-photos</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=m>8063</span><span class=p>:</span><span class=m>8063</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/Container/mt_photos:/config</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/Public/mt_photos_upload:/upload</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/HomePhoto/Tao:/photos/Tao</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/HomePhoto/Zhu:/photos/Zhu</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/HomePhoto/Chao:/photos/Chao</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/HomePhoto/Juan:/photos/Juan</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/Media:/Multimedia</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/Media_Old_Family:/Multimedia_Old</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/share/Media_Small_Family:/Multimedia_Small</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>TZ=Asia/Shanghai</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>PUID=1000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>PGID=100</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>SCAN_INTERVAL=60</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mtphotos_ai</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mt-photos-deepface</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mtphotos_ai</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mtphotos/mt-photos-ai:onnx-latest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>mtphotos_ai</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=m>8060</span><span class=p>:</span><span class=m>8000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>API_AUTH_KEY=mt_photos_ai_extra_secret</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mt-photos-deepface</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mtphotos/mt-photos-deepface:noavx-latest</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>mt-photos-deepface</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=m>8066</span><span class=p>:</span><span class=m>8066</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>API_AUTH_KEY=mt_photos_ai_extra</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:34:05">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/mt-photos/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/mt-photos/ data-title=MT-Photos><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a><a href=/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/ class=post-tag title="标签 - 网络配置">网络配置</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/ class=post-nav-item rel=prev title=Zygote进程相关><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Zygote进程相关</a><a href=/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/ class=post-nav-item rel=next title="SD 卡 存储 挂载相关">SD 卡 存储 挂载相关<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><ul><li><ul><li><a href=#fpr-内网穿透>FPR 内网穿透</a><ul><li><a href=#一-下载-frp包>一 下载 frp包</a></li><li><a href=#二--服务端安装>二 服务端安装</a></li><li><a href=#三-服务端配置>三 服务端配置</a></li><li><a href=#四-访问frp控制面板>四 访问frp控制面板</a></li><li><a href=#五-客户端配置修改>五 客户端配置修改</a></li><li><a href=#六-客户端连接服务端>六 客户端连接服务端</a></li><li><a href=#七-mt-photo-ai>七 MT Photo AI</a></li><li><a href=#八-跑通整个链路>八 跑通整个链路</a></li><li><a href=#九--是否需要开机启动>九 是否需要开机启动</a><ul><li><a href=#91-设置云服务器端开机自启动>9.1 设置云服务器端开机自启动</a></li></ul></li><li><a href=#十复杂配置>十、复杂配置</a></li></ul></li><li><a href=#docker-配置>Docker 配置</a></li></ul></li></ul></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/50fe47d71b1c9be16c65d3e5f81ad2f1.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

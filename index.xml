@@ -1,0 +1,1344 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>文韬的文档</title><link>https://huang8604.github.io/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.154.4 &amp; FixIt v0.4.1</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Thu, 27 Nov 2025 02:36:48 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Gerrit 批量+1 Add reviewer</title><link>https://huang8604.github.io/posts/gerrit-%E6%89%B9%E9%87%8F-1-add-reviewer/</link><pubDate>Thu, 27 Nov 2025 02:36:48 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/gerrit-%E6%89%B9%E9%87%8F-1-add-reviewer/</guid><description>&lt;p&gt;很高兴能帮你解决问题！这段经历非常典型，涵盖了 &lt;strong&gt;Gerrit 命令行操作&lt;/strong&gt;、&lt;strong&gt;SSH 交互机制&lt;/strong&gt;以及 &lt;strong&gt;Shell 脚本编程&lt;/strong&gt;的几个核心坑点。&lt;/p&gt;
+&lt;p&gt;以下是整个过程的复盘与技术总结，方便你日后查阅：&lt;/p&gt;
+&lt;h3 class="heading-element" id="-最终可运行的完整命令"&gt;&lt;span&gt;🚀 最终可运行的完整命令&lt;/span&gt;
+ &lt;a href="#-%e6%9c%80%e7%bb%88%e5%8f%af%e8%bf%90%e8%a1%8c%e7%9a%84%e5%ae%8c%e6%95%b4%e5%91%bd%e4%bb%a4" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;username 替换自己的用户名,需要ssh提交公钥&lt;/p&gt;
+&lt;p&gt;提议通过下面查看是否可以&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh -p 29418 username@172.17.2.20 gerrit query &amp;#34;owner:self status:open&amp;#34; --format=JSON&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最终命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh -p 29418 username@172.17.2.20 gerrit query \
+ &amp;#34;owner:self status:open NOT label:Code-Review&amp;lt;=-1&amp;#34; \
+ --current-patch-set --format=JSON \
+| jq -r &amp;#39;select(.currentPatchSet) | &amp;#34;\(.id) \(.currentPatchSet.revision)&amp;#34;&amp;#39; \
+| while read -r changeId commitSha; do
+ echo &amp;#34;正在处理: $changeId&amp;#34;
+ 
+ # 1. 打分 (使用 Commit SHA 确保唯一定位)
+ ssh -n -p 29418 username@172.17.2.20 gerrit review --code-review &amp;#43;1 &amp;#34;$commitSha&amp;#34;
+ 
+ # 2. 加人 (使用 Change-Id 确保兼容性)
+ ssh -n -p 29418 username@172.17.2.20 gerrit set-reviewers \
+ -a xxx@AAA.com \
+ -a yyy@AAA.com \
+ -a zzz@AAA.com \
+ &amp;#34;$changeId&amp;#34;
+done&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 class="heading-element" id="-遇到的坑与解决方案-technical-retrospective"&gt;&lt;span&gt;💡 遇到的坑与解决方案 (Technical Retrospective)&lt;/span&gt;
+ &lt;a href="#-%e9%81%87%e5%88%b0%e7%9a%84%e5%9d%91%e4%b8%8e%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88-technical-retrospective" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;我们在调试过程中解决了以下三个主要技术障碍：&lt;/p&gt;
+&lt;h4 class="heading-element" id="1-查询语法的参数冲突"&gt;&lt;span&gt;1. 查询语法的参数冲突&lt;/span&gt;
+ &lt;a href="#1-%e6%9f%a5%e8%af%a2%e8%af%ad%e6%b3%95%e7%9a%84%e5%8f%82%e6%95%b0%e5%86%b2%e7%aa%81" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;问题&lt;/strong&gt;：使用 &lt;code&gt;-label:Code-Review&amp;lt;=-1&lt;/code&gt; 时报错 &lt;code&gt;fatal: is not a valid option&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;原因&lt;/strong&gt;：SSH 远程执行命令时，会将以 &lt;code&gt;-&lt;/code&gt; 开头的字符串误判为命令行选项（Options），而不是查询语句。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;✅ 解决&lt;/strong&gt;：将 &lt;code&gt;-&lt;/code&gt; 替换为大写的 &lt;strong&gt;&lt;code&gt;NOT&lt;/code&gt;&lt;/strong&gt; 关键字（Gerrit 查询语言支持），避免歧义。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class="heading-element" id="2-gerrit-版本兼容性与-id-定位"&gt;&lt;span&gt;2. Gerrit 版本兼容性与 ID 定位&lt;/span&gt;
+ &lt;a href="#2-gerrit-%e7%89%88%e6%9c%ac%e5%85%bc%e5%ae%b9%e6%80%a7%e4%b8%8e-id-%e5%ae%9a%e4%bd%8d" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;问题&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;Gerrit v2.16 的 &lt;code&gt;gerrit review&lt;/code&gt; 命令不支持同时加 Reviewer (&lt;code&gt;--reviewer&lt;/code&gt; 参数无效)。&lt;/li&gt;
+&lt;li&gt;使用数字 ID (如 &lt;code&gt;83376&lt;/code&gt;) 或 &lt;code&gt;ID,PatchSet&lt;/code&gt; 格式时，报 &lt;code&gt;no such change/patch set&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;原因&lt;/strong&gt;：旧版本 API 限制；且数字 ID 在某些情况下无法精准映射到当前的 Patch Set。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;✅ 解决&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;拆分动作&lt;/strong&gt;：将操作拆分为 &lt;code&gt;gerrit review&lt;/code&gt; (打分) 和 &lt;code&gt;gerrit set-reviewers&lt;/code&gt; (加人)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;精准定位&lt;/strong&gt;：打分时使用 &lt;strong&gt;Commit SHA&lt;/strong&gt;（物理唯一），加人时使用 &lt;strong&gt;Change-Id&lt;/strong&gt;（逻辑唯一）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class="heading-element" id="3-ssh-吞噬标准输入-the-ssh-loop-trap"&gt;&lt;span&gt;3. SSH 吞噬标准输入 (The SSH Loop Trap)&lt;/span&gt;
+ &lt;a href="#3-ssh-%e5%90%9e%e5%99%ac%e6%a0%87%e5%87%86%e8%be%93%e5%85%a5-the-ssh-loop-trap" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;问题&lt;/strong&gt;：脚本只处理了列表中的第一条记录就停止了。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;原因&lt;/strong&gt;：在 &lt;code&gt;while&lt;/code&gt; 循环内部执行 &lt;code&gt;ssh&lt;/code&gt; 时，SSH 默认会读取所有的 Standard Input (stdin)。这意味着循环里的第一个 &lt;code&gt;ssh&lt;/code&gt; 把管道里剩下的 Change 列表全“吃”光了，导致 &lt;code&gt;while&lt;/code&gt; 循环以为没有数据了。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;✅ 解决&lt;/strong&gt;：给循环内部的 &lt;code&gt;ssh&lt;/code&gt; 命令添加 &lt;strong&gt;&lt;code&gt;-n&lt;/code&gt;&lt;/strong&gt; 参数。这告诉 SSH：“不要读取标准输入，只管执行命令”。这样 stdin 里的数据就能保留给 &lt;code&gt;while&lt;/code&gt; 循环继续读取。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class="heading-element" id="4-数据解析部分-"&gt;&lt;span&gt;4. &lt;strong&gt;数据解析部分 (&lt;code&gt;| jq ...&lt;/code&gt;)&lt;/strong&gt;：&lt;/span&gt;
+ &lt;a href="#4-%e6%95%b0%e6%8d%ae%e8%a7%a3%e6%9e%90%e9%83%a8%e5%88%86-" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;问题&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;jq -r 'select(.number) | .number'&lt;/code&gt;：&lt;code&gt;gerrit query&lt;/code&gt; 最后会输出一行统计信息（stats），这行没有 &lt;code&gt;number&lt;/code&gt; 字段。这段代码会过滤掉统计行，只提取出变更编号 (Change Number)。&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;注意：如果没有安装 &lt;code&gt;jq&lt;/code&gt;，你需要先安装它 (如 &lt;code&gt;sudo apt-get install jq&lt;/code&gt; 或 &lt;code&gt;brew install jq&lt;/code&gt;)，或者使用复杂的 grep/awk 替换。&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 class="heading-element" id="-核心逻辑流程图"&gt;&lt;span&gt;📚 核心逻辑流程图&lt;/span&gt;
+ &lt;a href="#-%e6%a0%b8%e5%bf%83%e9%80%bb%e8%be%91%e6%b5%81%e7%a8%8b%e5%9b%be" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Query&lt;/strong&gt;: 筛选出 Owner 是你、Open 状态、且没有负分的提交。
+&lt;ul&gt;
+&lt;li&gt;参数 &lt;code&gt;--current-patch-set&lt;/code&gt; 拿到了关键的 Commit SHA。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Parse (jq)&lt;/strong&gt;: 提取出每一行的 &lt;code&gt;Change-Id&lt;/code&gt; (Ixxxx&amp;hellip;) 和 &lt;code&gt;Commit SHA&lt;/code&gt; (9e36&amp;hellip;)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Loop&lt;/strong&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Step A&lt;/strong&gt;: &lt;code&gt;ssh -n ... review&lt;/code&gt; -&amp;gt; 针对 SHA 打 +1。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Step B&lt;/strong&gt;: &lt;code&gt;ssh -n ... set-reviewers&lt;/code&gt; -&amp;gt; 针对 Change-Id 加人。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这条命令现在非常健壮，即使以后你要批量操作几百个提交，它也能稳定运行！&lt;/p&gt;</description></item><item><title>Android 记录系统空间的高通答疑</title><link>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</link><pubDate>Fri, 21 Nov 2025 08:04:10 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/</guid><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf" title="Case\_ 05784001 ~ Customer Engineering Community.pdf" data-thumbnail="/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf" data-sub-html="&lt;h2&gt;Case\_ 05784001 ~ Customer Engineering Community.pdf&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://huang8604.github.io/obsidion/Media/Case_%2005784001%20~%20Customer%20Engineering%20Community.pdf' alt="Case\_ 05784001 ~ Customer Engineering Community.pdf"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2024/05/23/664f083143580.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;高通回复容量疑问&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;case中提到的resize/recovery，就是我们之前提到的恢复出厂设置后userdata拓展到剩余空间，16G变32G的动作。&lt;br&gt;
+按高通的回复截图，resize/recovery之前 ui上面显示的总空间/已用空间大小没有任何参考意义（参考截图第四段落最后一行。这里提到的不可信大小就是之前你们看到的下载软件后开机，系统占用16G，总容量32G）&lt;br&gt;
+高通认为resize之后，此时UI上显示的存储空间数据是可信的（参考截图倒数第三行，这里提到的可信大小就是你们了解的恢复出厂设置后系统占用32G，总容量64G。我们和高通在case上沟通时提供的机器数据是基于128G的，所以高通在引用数据时写的是128G）&lt;br&gt;
+另外，目前PNC560我们已修改为下载软件后开机时自动拓展，无需再次恢复出厂设置了，所以用户是看不到16G系统占用这个resize之前的数据的。&lt;/p&gt;
+&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;高通的补充&lt;br&gt;&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;p&gt;New Comment from Qualcomm engineer: &amp;ldquo;Dear Customer,&lt;br&gt;
+我想你我都漏考虑了一点，所有ufs的实际容量都不是标称容量，大约相当于标称容量的93%左右（这一点在vendor提供的 specification文档中应该有写，你可以自行查阅或向vendor求证）&lt;br&gt;
+比如一个标称容量64G的Hynix UFS， 它的实际容量其实是59G&lt;br&gt;
+LUN0 的实际容量是 59 - 6 = 53G&lt;br&gt;
+userdata 理论上剩下的容量是 53 - 15 = 38G&lt;br&gt;
+并没有你说的那么夸张，而且我们的计算并没有考虑因为物理block对齐而没有被分配的部分空间，以及apt分区表（main + back）所占用的空间，这部分在partition.xml 和 操作系统中都是不可见的。&lt;/p&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;海能达疑问&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;h1 class="heading-element" id="我们把你给的说明482022-158-am反馈给客户了下面是客户的回复"&gt;&lt;span&gt;New Comment: &amp;ldquo;你好！&lt;br&gt;
+我们把你给的说明(4/8/2022 1:58 AM)反馈给客户了，下面是客户的回复：&lt;/span&gt;
+ &lt;a href="#%e6%88%91%e4%bb%ac%e6%8a%8a%e4%bd%a0%e7%bb%99%e7%9a%84%e8%af%b4%e6%98%8e482022-158-am%e5%8f%8d%e9%a6%88%e7%bb%99%e5%ae%a2%e6%88%b7%e4%ba%86%e4%b8%8b%e9%9d%a2%e6%98%af%e5%ae%a2%e6%88%b7%e7%9a%84%e5%9b%9e%e5%a4%8d" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;&lt;h1 class="heading-element" id="还有一个问题如果是显示问题这部分有办法调整么要不然每个用户都会有疑问的"&gt;&lt;span&gt;高通的回复有些绕口，我确认下是不是这样：&lt;br&gt;
+安卓12的固件大小超过了16G，当前软件的大小统计是按照2的幂数来取整，所以显示为32G，而实际上这32G中有10多G是空的；&lt;br&gt;
+我看了下个人手机安卓11的固件大小是在11G左右，再怎么增加功能，也不可能到32G吧？&lt;br&gt;
+还有一个问题，如果是显示问题，这部分有办法调整么？要不然每个用户都会有疑问的。&lt;/span&gt;
+ &lt;a href="#%e8%bf%98%e6%9c%89%e4%b8%80%e4%b8%aa%e9%97%ae%e9%a2%98%e5%a6%82%e6%9e%9c%e6%98%af%e6%98%be%e7%a4%ba%e9%97%ae%e9%a2%98%e8%bf%99%e9%83%a8%e5%88%86%e6%9c%89%e5%8a%9e%e6%b3%95%e8%b0%83%e6%95%b4%e4%b9%88%e8%a6%81%e4%b8%8d%e7%84%b6%e6%af%8f%e4%b8%aa%e7%94%a8%e6%88%b7%e9%83%bd%e4%bc%9a%e6%9c%89%e7%96%91%e9%97%ae%e7%9a%84" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;&lt;p&gt;这个些问题是否可以协助确认一下？&lt;br&gt;
+谢谢！&amp;rdquo;&lt;/p&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;高通回复客户答疑&lt;br&gt;&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;p&gt;&amp;ldquo;Dear Customer,&lt;br&gt;
+安卓12的固件大小超过了16G，当前软件的大小统计是按照2的幂数来取整，所以显示为32G，而实际上这32G中有10多G是空的；&lt;br&gt;
+--&amp;gt; 这个理解是正确的&lt;br&gt;
+我看了下个人手机安卓11的固件大小是在11G左右，再怎么增加功能，也不可能到32G吧？&lt;br&gt;
+--&amp;gt;&lt;br&gt;
+userdata分区是用来存放用户数据的，不是Android固件，你可以简单理解：android固件存放在userdata之外的分区中&lt;br&gt;
+从partition.xml可以看出 LUN0中除了usdata之外的分区占用大约14G，userdata分区初始空间15G&lt;br&gt;
+所以不存在“32G”的android固件&lt;br&gt;
+还有一个问题，如果是显示问题，这部分有办法调整么？要不然每个用户都会有疑问的。&lt;br&gt;
+--&amp;gt; 发布到终端用户手中的设备应该是已经resize过的，用户看到的storage空间大小应该是64G/128G,这已经不存在歧义了。&lt;/p&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;Title&lt;br&gt;&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;p&gt;文韬，占飞，&lt;br&gt;
+3 .已用空间是不准确的，是通过2的幂数对齐后减去可用空间 显示可用 64-33 = 31G, 使用手机已用空间： 59-6-33 =20G，里面包括已用的空间和未对齐的空间。&lt;/p&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;所以里面虚标了 总容量 虚标了 5G 还有LUN4 6G&lt;br&gt;
+我看了下QFIL读取出来的分区表，lun4里存放的主要是modem，dsp等分区，是属于下载镜像内容，是我们传统理解的系统容量一部分。虚标只能算5G吧。&lt;br&gt;
+倒是lun0中的backup分区是应用保护分区，这部分是算到系统里的，有5G。这个是比标准Android12占用多出来的。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我把qfil dump出来的分区表贴在附件里了，每个分区的num_partition_sectors去乘以4就是该分区的总字节数。占飞要不把每个分区大小用excel转换为字节数和对应的GB数，会比较直观，然后再加总一下，误差就比较清楚了。&lt;br&gt;
+另外我比较了64G和128G的机器，系统占用都是32G，似乎高通说的也没有什么问题，关键还是客户这边。&lt;/p&gt;
+&lt;div class="details admonition note open disabled"&gt;
+ &lt;div class="details-summary admonition-title"&gt;&lt;i class="icon fa-fw fa-solid fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;Title&lt;br&gt;&lt;/div&gt;
+ &lt;div class="details-content"&gt;
+ &lt;div class="admonition-content"&gt;&lt;p&gt;占飞，&lt;br&gt;
+我理了一下高通的回复。以我手里的pnc560的手机为例，我手里的是64G的手机。&lt;br&gt;
+在设置里面显示已使用31G，剩余33G的空间。&lt;br&gt;
+安装高通的说法和设置界面显示的规则：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;剩余可用空间33G是准确的，代表剩余的userdate 空间有33G。&lt;/li&gt;
+&lt;li&gt;总容量是不准确的，相当于标称的93%，大约59G 但系统会以2的幂数来取整&lt;/li&gt;
+&lt;li&gt;已用空间是不准确的，是通过2的幂数对齐后减去可用空间 显示可用 64-33 = 31G, 使用手机已用空间： 59-6-33 =20G，里面包括已用的空间和未对齐的空间。&lt;br&gt;
+所以里面虚标了 总容量 虚标了 5G 还有LUN4 6G&lt;/li&gt;
+&lt;/ol&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照目前的规则，可用空间肯定必须要准确无误的，那么在可用空间计算没有问题的情况下，已用空间只能是31G&lt;/p&gt;</description></item><item><title>AMS -- ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor</title><link>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</link><pubDate>Fri, 21 Nov 2025 08:01:29 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/ams--activityrecordtaskrecordactivitystackactivitydisplayactivitystacksupervisor/</guid><category domain="https://huang8604.github.io/categories/ams/">AMS</category><category domain="https://huang8604.github.io/categories/android/">Android</category><description>&lt;p&gt;ActivityRecord、TaskRecord、ActivityStack、ActivityDisplay、ActivityStackSupervisor 的关系&lt;/p&gt;
+&lt;h1 class="heading-element" id="activitymanagerservice-activity栈管理"&gt;&lt;span&gt;ActivityManagerService Activity栈管理&lt;/span&gt;
+ &lt;a href="#activitymanagerservice-activity%e6%a0%88%e7%ae%a1%e7%90%86" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h1&gt;&lt;h2 class="heading-element" id="activityrecord"&gt;&lt;span&gt;ActivityRecord&lt;/span&gt;
+ &lt;a href="#activityrecord" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;记录Activity的信息，并通过成员变量task指向TaskRecord。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;类型&lt;/th&gt;
+ &lt;th&gt;名称&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ProcessRecord&lt;/td&gt;
+ &lt;td&gt;app&lt;/td&gt;
+ &lt;td&gt;跑在哪个进程&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;TaskRecord&lt;/td&gt;
+ &lt;td&gt;task&lt;/td&gt;
+ &lt;td&gt;跑在哪个task&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityInfo&lt;/td&gt;
+ &lt;td&gt;info&lt;/td&gt;
+ &lt;td&gt;Activity信息&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;mActivityType&lt;/td&gt;
+ &lt;td&gt;Activity类型&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityState&lt;/td&gt;
+ &lt;td&gt;state&lt;/td&gt;
+ &lt;td&gt;Activity状态&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ApplicationInfo&lt;/td&gt;
+ &lt;td&gt;appInfo&lt;/td&gt;
+ &lt;td&gt;跑在哪个app&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ComponentName&lt;/td&gt;
+ &lt;td&gt;realActivity&lt;/td&gt;
+ &lt;td&gt;组件名&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;String&lt;/td&gt;
+ &lt;td&gt;packageName&lt;/td&gt;
+ &lt;td&gt;包名&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;String&lt;/td&gt;
+ &lt;td&gt;processName&lt;/td&gt;
+ &lt;td&gt;进程名&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;launchMode&lt;/td&gt;
+ &lt;td&gt;启动模式&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;userId&lt;/td&gt;
+ &lt;td&gt;该Activity运行在哪个用户Id&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 class="heading-element" id="taskrecord"&gt;&lt;span&gt;TaskRecord&lt;/span&gt;
+ &lt;a href="#taskrecord" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;描述Activity的Affinity所属的栈。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;类型&lt;/th&gt;
+ &lt;th&gt;名称&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityStack&lt;/td&gt;
+ &lt;td&gt;stack&lt;/td&gt;
+ &lt;td&gt;当前所属的stack&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ArrayList&lt;ActivityRecord&gt;&lt;/td&gt;
+ &lt;td&gt;mActivities&lt;/td&gt;
+ &lt;td&gt;当前task的所有Activity列表&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;taskId&lt;/td&gt;
+ &lt;td&gt;TaskRecord的Id&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;String&lt;/td&gt;
+ &lt;td&gt;affinity&lt;/td&gt;
+ &lt;td&gt;root activity的affinity，即该Task中第一个Activity&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;mCallingUid&lt;/td&gt;
+ &lt;td&gt;调用者的UserId&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;String&lt;/td&gt;
+ &lt;td&gt;mCallingPackage&lt;/td&gt;
+ &lt;td&gt;调用者的包名&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 class="heading-element" id="activitystack"&gt;&lt;span&gt;ActivityStack&lt;/span&gt;
+ &lt;a href="#activitystack" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;管理着TaskRecord，内部维护Activity所有状态、特殊状态的Activity和Activity相关的列表数据。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;类型&lt;/th&gt;
+ &lt;th&gt;名称&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ArrayList&lt;TaskRecord&gt;&lt;/td&gt;
+ &lt;td&gt;mTaskHistory&lt;/td&gt;
+ &lt;td&gt;保存所有的Task列表&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ArrayList&lt;ActivityStack&gt;&lt;/td&gt;
+ &lt;td&gt;mStacks&lt;/td&gt;
+ &lt;td&gt;所有的stack列表&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;mStackId&lt;/td&gt;
+ &lt;td&gt;ActivityStackvisor的mActivityContainers的key值Id&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;int&lt;/td&gt;
+ &lt;td&gt;mDisplayId&lt;/td&gt;
+ &lt;td&gt;ActivityStackSupervisor的mActivityDisplays的key值Id&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityRecord&lt;/td&gt;
+ &lt;td&gt;mPauseingActivity&lt;/td&gt;
+ &lt;td&gt;正在暂停的Activity&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityRecord&lt;/td&gt;
+ &lt;td&gt;mLastPausedActivity&lt;/td&gt;
+ &lt;td&gt;上一个已暂停的Activity&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityRecord&lt;/td&gt;
+ &lt;td&gt;mResumedActivity&lt;/td&gt;
+ &lt;td&gt;已经Resumed的Activity&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityRecord&lt;/td&gt;
+ &lt;td&gt;mLastStartedActivity&lt;/td&gt;
+ &lt;td&gt;最近一次启动的Activity&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 class="heading-element" id="activitystacksupervisor"&gt;&lt;span&gt;ActivityStackSupervisor&lt;/span&gt;
+ &lt;a href="#activitystacksupervisor" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;管理所有的ActivityStack。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;类型&lt;/th&gt;
+ &lt;th&gt;名称&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityStack&lt;/td&gt;
+ &lt;td&gt;mHomeStack&lt;/td&gt;
+ &lt;td&gt;桌面的stack&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityStack&lt;/td&gt;
+ &lt;td&gt;mFocusedStack&lt;/td&gt;
+ &lt;td&gt;当前聚焦的stack&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;ActivityStack&lt;/td&gt;
+ &lt;td&gt;mLastFocusedStack&lt;/td&gt;
+ &lt;td&gt;正在切换到聚焦的stack&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SparseArray&lt;ActivityDisplay&gt;&lt;/td&gt;
+ &lt;td&gt;mActivityDisplays&lt;/td&gt;
+ &lt;td&gt;displayId为key&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SparseArray&lt;ActivityContainer&gt;&lt;/td&gt;
+ &lt;td&gt;mActivityContainers&lt;/td&gt;
+ &lt;td&gt;mStackId为key&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 class="heading-element" id="activitydisplay"&gt;&lt;span&gt;ActivityDisplay&lt;/span&gt;
+ &lt;a href="#activitydisplay" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;表示一个屏幕，Android支持三种屏幕：主屏幕，外接屏幕（HDMI等），虚拟屏幕（投屏）一般地，对于没有分屏功能以及虚拟屏的情况下，ActivityStackSupervisor与ActivityDisplay都是系统唯一；&lt;em&gt;&lt;strong&gt;ActivityDisplay主要有Home Stack和App Stack这两个栈。&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 class="heading-element" id="记忆关系链"&gt;&lt;span&gt;记忆关系链&lt;/span&gt;
+ &lt;a href="#%e8%ae%b0%e5%bf%86%e5%85%b3%e7%b3%bb%e9%93%be" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;每个ActivityStack中可以有若干个TaskRecord对象；每个TaskRecord中可以有若干个ActivityRecord对象；每个ActivityRecord记录一个Activity信息。 正向关系链表：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;java
+
+ 代码解读
+复制代码ActivityStackSupervisor.mActivityDisplays
+-&amp;gt; ActivityDisplay.mStack
+-&amp;gt; ActivityStack.mTaskHistory
+-&amp;gt; TaskRecord.mActivities
+-&amp;gt; ActivityRecord&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;反向关系链&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;java
+
+ 代码解读
+复制代码ActivityRecord.task
+-&amp;gt; TaskRecord.mStack
+-&amp;gt; ActivityStack.mStackSupervisor
+-&amp;gt; ActivityStackSupervisor&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;ActivityStack.mDisplayId可以找到对应的ActivityDisplay，HOME_STACK_ID=0可以在ActivityStackSupervisor.mActivityDisplays找到桌面的ActivityStack。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb91a30eb.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb91a30eb.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb91a30eb.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb4e3cafe.webp" title="TaskRecord.webp" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb4e3cafe.webp" data-sub-html="&lt;h2&gt;TaskRecord.webp&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2024/09/16/66e7bb4e3cafe.webp' alt="TaskRecord.webp"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;引用：&lt;/p&gt;
+&lt;p&gt;作者：彭小铭&lt;br&gt;
+链接：https://juejin.cn/post/7267554771540049957&lt;br&gt;
+来源：稀土掘金&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger onComposerHalRefresh流程分析_android 13 surfaceflinge变化-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Fri, 21 Nov 2025 08:01:29 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;onComposerHalRefresh方法是SurfaceFlinger中的一个函数。该方法的作用是在Composer &lt;a href="https://so.csdn.net/so/search?q=HAL%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;HAL&lt;/a&gt;刷新时被调用，用于更新显示内容。onComposerHalRefresh方法会在SurfaceFlinger接收到Composer HAL刷新事件时被调用。Composer HAL是硬件抽象层的一部分，负责与硬件显示设备进行通信。当Composer HAL完成一次刷新操作后，会通知SurfaceFlinger进行相应的处理。&lt;/p&gt;
+&lt;p&gt;在onComposerHalRefresh方法中，SurfaceFlinger会执行一系列操作，包括更新屏幕上的图像内容、处理显示层的合成和混合等。通过这些操作，SurfaceFlinger能够将应用程序的图像内容正确地显示在屏幕上。&lt;/p&gt;
+&lt;p&gt;SurfaceFlinger的onComposerHalRefresh方法代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+void SurfaceFlinger::onComposerHalRefresh(hal::HWDisplayId) {
+ Mutex::Autolock lock(mStateLock);
+ scheduleComposite(FrameHint::kNone);
+}&lt;/code&gt;&lt;/pre&gt;&lt;h2 class="heading-element" id="surfaceflinger-schedulecomposite"&gt;&lt;span&gt;SurfaceFlinger scheduleComposite&lt;/span&gt;
+ &lt;a href="#surfaceflinger-schedulecomposite" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;调用SurfaceFlinger的scheduleComposite方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+void SurfaceFlinger::scheduleComposite(FrameHint hint) {
+ mMustComposite = true;
+ scheduleCommit(hint);
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;调用scheduleCommit方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+std::unique_ptr&amp;lt;scheduler::Scheduler&amp;gt; mScheduler;
+void SurfaceFlinger::scheduleCommit(FrameHint hint) {
+ if (hint == FrameHint::kActive) {
+ mScheduler-&amp;gt;resetIdleTimer();
+ }
+ mPowerAdvisor-&amp;gt;notifyDisplayUpdateImminent();
+ mScheduler-&amp;gt;scheduleFrame();
+}&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="messagequeue-scheduleframe"&gt;&lt;span&gt;MessageQueue scheduleFrame&lt;/span&gt;
+ &lt;a href="#messagequeue-scheduleframe" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;调用Scheduler的scheduleFrame方法，Scheduler继承MessageQueue，调用MessageQueue的scheduleFrame方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Scheduler/MessageQueue.cpp
+void MessageQueue::scheduleFrame() {
+ ATRACE_CALL();
+ 
+ 
+ {
+ std::lock_guard lock(mInjector.mutex);
+ if (CC_UNLIKELY(mInjector.connection)) {
+ ALOGD(&amp;#34;%s while injecting VSYNC&amp;#34;, __FUNCTION__);
+　//请求下一个 VSync 信号
+ mInjector.connection-&amp;gt;requestNextVsync();
+ return;
+ }
+ }
+ 
+ 
+ std::lock_guard lock(mVsync.mutex);
+ mVsync.scheduledFrameTime =
+ mVsync.registration-&amp;gt;schedule({.workDuration = mVsync.workDuration.get().count(),
+ .readyDuration = 0,
+ .earliestVsync = mVsync.lastCallbackTime.count()});
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;调用了VSyncCallbackRegistration的schedule方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Scheduler/VSyncCallbackRegistration.cpp
+std::reference_wrapper&amp;lt;VSyncDispatch&amp;gt; mDispatch;
+ScheduleResult VSyncCallbackRegistration::schedule(VSyncDispatch::ScheduleTiming scheduleTiming) {
+ if (!mValidToken) {
+ return std::nullopt;
+ }
+ return mDispatch.get().schedule(mToken, scheduleTiming);
+}&lt;/code&gt;&lt;/pre&gt;&lt;h4 class="heading-element" id="vsyncdispatchtimerqueue-schedule"&gt;&lt;span&gt;VSyncDispatchTimerQueue schedule&lt;/span&gt;
+ &lt;a href="#vsyncdispatchtimerqueue-schedule" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;p&gt;调用mDispatch(VSyncDispatch)的schedule方法，实际调用的是VSyncDispatchTimerQueue的schedule方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Scheduler/VSyncDispatchTimerQueue.cpp
+ScheduleResult VSyncDispatchTimerQueueEntry::schedule(VSyncDispatch::ScheduleTiming timing,
+ VSyncTracker&amp;amp; tracker, nsecs_t now) {
+ auto nextVsyncTime = tracker.nextAnticipatedVSyncTimeFrom(
+ std::max(timing.earliestVsync, now &amp;#43; timing.workDuration &amp;#43; timing.readyDuration));
+ auto nextWakeupTime = nextVsyncTime - timing.workDuration - timing.readyDuration;
+ 
+ 
+ bool const wouldSkipAVsyncTarget =
+ mArmedInfo &amp;amp;&amp;amp; (nextVsyncTime &amp;gt; (mArmedInfo-&amp;gt;mActualVsyncTime &amp;#43; mMinVsyncDistance));
+ bool const wouldSkipAWakeup =
+ mArmedInfo &amp;amp;&amp;amp; ((nextWakeupTime &amp;gt; (mArmedInfo-&amp;gt;mActualWakeupTime &amp;#43; mMinVsyncDistance)));
+ if (wouldSkipAVsyncTarget &amp;amp;&amp;amp; wouldSkipAWakeup) {
+ return getExpectedCallbackTime(nextVsyncTime, timing);
+ }
+ 
+ 
+ bool const alreadyDispatchedForVsync = mLastDispatchTime &amp;amp;&amp;amp;
+ ((*mLastDispatchTime &amp;#43; mMinVsyncDistance) &amp;gt;= nextVsyncTime &amp;amp;&amp;amp;
+ (*mLastDispatchTime - mMinVsyncDistance) &amp;lt;= nextVsyncTime);
+ if (alreadyDispatchedForVsync) {
+ nextVsyncTime =
+ tracker.nextAnticipatedVSyncTimeFrom(*mLastDispatchTime &amp;#43; mMinVsyncDistance);
+ nextWakeupTime = nextVsyncTime - timing.workDuration - timing.readyDuration;
+ }
+ // 如果计时器线程即将运行，通过回调计时器重新计算应用此工作更新，以避免取消即将触发的回调。
+ auto const nextReadyTime = nextVsyncTime - timing.readyDuration;
+ mScheduleTiming = timing;
+ mArmedInfo = {nextWakeupTime, nextVsyncTime, nextReadyTime};
+ return getExpectedCallbackTime(nextVsyncTime, timing);
+}&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>FH20GMS-120 [VTS][MR1]vts_generic_boot_image_test - GMS - Confluence</title><link>https://huang8604.github.io/posts/fh20gms-120-vtsmr1vts_generic_boot_image_test-gms-confluence/</link><pubDate>Fri, 21 Nov 2025 08:01:29 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/fh20gms-120-vtsmr1vts_generic_boot_image_test-gms-confluence/</guid><description>&lt;h2 class="heading-element" id="fh20gms-120-vtsmr1vts_generic_boot_image_test"&gt;&lt;span&gt;FH20GMS-120 [VTS][MR1]vts_generic_boot_image_test&lt;/span&gt;
+ &lt;a href="#fh20gms-120-vtsmr1vts_generic_boot_image_test" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;从报错信息来看ramdisk缺少 system/bin/e2fsck，但设备上是有这个bin文件的，如下：&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/10/29/690173ff685dc.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/10/29/690173ff685dc.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/10/29/690173ff685dc.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ramdisk（内存磁盘）是Android启动过程中的一个关键组件，它是一个临时根文件系统，在启动初期被加载到内存中，用于初始化系统并挂载真正的根文件系统。&lt;/p&gt;
+&lt;h2 class="heading-element" id="ramdisk的作用"&gt;&lt;span&gt;Ramdisk的作用&lt;/span&gt;
+ &lt;a href="#ramdisk%e7%9a%84%e4%bd%9c%e7%94%a8" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;初始化系统环境&lt;/strong&gt; ：
+&lt;ul&gt;
+&lt;li&gt;运行init进程，它是所有进程的父进程。&lt;/li&gt;
+&lt;li&gt;解析init.rc脚本，设置系统属性、创建设备节点、挂载文件系统等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;挂载必要的文件系统&lt;/strong&gt; ：
+&lt;ul&gt;
+&lt;li&gt;挂载system、vendor、data等分区。&lt;/li&gt;
+&lt;li&gt;设置文件系统的权限和SELinux安全上下文。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;启动关键系统服务&lt;/strong&gt; ：
+&lt;ul&gt;
+&lt;li&gt;启动守护进程（如ueventd、logd等）。&lt;/li&gt;
+&lt;li&gt;准备Android运行时环境。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;过渡到真正的根文件系统&lt;/strong&gt; ：
+&lt;ul&gt;
+&lt;li&gt;在Android系统中，ramdisk通常用于启动到recovery模式或作为boot镜像的一部分，在正常启动时，它会将控制权交给system分区。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 class="heading-element" id="ramdisk在android启动流程中的位置"&gt;&lt;span&gt;Ramdisk在Android启动流程中的位置&lt;/span&gt;
+ &lt;a href="#ramdisk%e5%9c%a8android%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b%e4%b8%ad%e7%9a%84%e4%bd%8d%e7%bd%ae" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Bootloader加载内核和ramdisk&lt;/strong&gt; ：Bootloader将内核和ramdisk镜像加载到内存中。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;内核启动&lt;/strong&gt; ：内核解压ramdisk并将其作为根文件系统挂载。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;init进程启动&lt;/strong&gt; ：ramdisk中的init程序开始执行，解析init.rc文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行启动脚本&lt;/strong&gt; ：根据init.rc中的命令，挂载系统分区、启动服务等。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;切换根文件系统&lt;/strong&gt; ：在某些配置中，ramdisk可能会被切换为system作为根文件系统（例如在system-as-root配置中）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 class="heading-element" id="ramdisk的内容"&gt;&lt;span&gt;Ramdisk的内容&lt;/span&gt;
+ &lt;a href="#ramdisk%e7%9a%84%e5%86%85%e5%ae%b9" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;一个典型的ramdisk包含以下内容：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;init&lt;/code&gt; ：初始化程序。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;init.rc&lt;/code&gt; ：初始化脚本。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;system/&lt;/code&gt; 、 &lt;code&gt;vendor/&lt;/code&gt; 、 &lt;code&gt;data/&lt;/code&gt; 等目录的挂载点。&lt;/li&gt;
+&lt;li&gt;一些必要的工具和库（如 &lt;code&gt;e2fsck&lt;/code&gt; 用于检查文件系统）。&lt;/li&gt;
+&lt;li&gt;安全策略文件（如SELinux策略）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 class="heading-element" id="调试ramdisk问题"&gt;&lt;span&gt;调试Ramdisk问题&lt;/span&gt;
+ &lt;a href="#%e8%b0%83%e8%af%95ramdisk%e9%97%ae%e9%a2%98" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;当遇到ramdisk相关的问题时（如缺少文件、多余文件等），可以：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;检查构建配置&lt;/strong&gt; ：确保构建类型（user/userdebug/eng）正确，并且没有意外包含调试文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;检查设备配置&lt;/strong&gt; ：在设备Makefile中，确保只包含了必要的包和文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;检查GKI要求&lt;/strong&gt; ：如果使用GKI，确保ramdisk符合通用内核映像的要求。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 class="heading-element" id="总结"&gt;&lt;span&gt;总结&lt;/span&gt;
+ &lt;a href="#%e6%80%bb%e7%bb%93" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;Ramdisk是Android启动过程中的一个临时根文件系统，它负责初始化系统并挂载真正的文件系统。确保ramdisk包含正确的文件和不包含多余的文件对于系统正常启动和通过测试（如GKI测试）至关重要。&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/10/29/6901744a5b4a4.png" title="d74ff1170c203a7a03ad4e03fdf1830a.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/10/29/6901744a5b4a4.png" data-sub-html="&lt;h2&gt;d74ff1170c203a7a03ad4e03fdf1830a.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/10/29/6901744a5b4a4.png' alt="d74ff1170c203a7a03ad4e03fdf1830a.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;参考附件文档，可以移除e2fsck，修改如下&lt;br&gt;
+&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/10/29/6901741f53a4c.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/10/29/6901741f53a4c.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/10/29/6901741f53a4c.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个问题就是google 利用手里gms的杠杆来撬动厂家按照指挥棒来运动. 通过修改VTS的条件,让厂家必须根据VTS的要求来做&lt;/p&gt;</description></item><item><title>avb校验相关与块校验原理</title><link>https://huang8604.github.io/posts/avb%E6%A0%A1%E9%AA%8C%E7%9B%B8%E5%85%B3%E4%B8%8E%E5%9D%97%E6%A0%A1%E9%AA%8C%E5%8E%9F%E7%90%86/</link><pubDate>Tue, 04 Nov 2025 03:27:12 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/avb%E6%A0%A1%E9%AA%8C%E7%9B%B8%E5%85%B3%E4%B8%8E%E5%9D%97%E6%A0%A1%E9%AA%8C%E5%8E%9F%E7%90%86/</guid><description>&lt;p&gt;文章详细阐述了Linux系统在启动过程中针对块设备的校验流程，涉及到VerifiedBoot.c和LinuxLoader.c等关键组件。通用块设备层处理I/O请求，包括扇区、块、段和数据页的概念。动态校验流程中，verity_end_io函数用于处理错误并触发工作队列进行校验。dm-verity用于保证数据完整性，通过创建哈希树并配置目标表来验证块设备上的数据。此外，文章还提到了init用户态流程和清除panic标识的方法。&lt;/p&gt;
+&lt;h3 class="heading-element" id="一启动校验流程"&gt;&lt;span&gt;一、启动校验流程&lt;/span&gt;
+ &lt;a href="#%e4%b8%80%e5%90%af%e5%8a%a8%e6%a0%a1%e9%aa%8c%e6%b5%81%e7%a8%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;edk2/QcomModulePkg/Library/avb/VerifiedBoot.c
+DEBUG ((EFI_D_ERROR, &amp;#34;LoadImageAndAuth failed %r\n&amp;#34;, Status)); in LoadImageAndAuth()
+
+edk2/QcomModulePkg/Application/LinuxLoader/LinuxLoader.c
+DEBUG ((EFI_D_ERROR, &amp;#34;LoadImageAndAuth failed: %r\n&amp;#34;, Status));
+
+BootLib/PartitionTableUpdate.c
+/QcomModulePkg/Library/avb/libavb/avb_slot_verify.c
+LinuxLoaderEntry
+ Status = GetRebootReason (&amp;amp;BootReason);
+ 校验启动原因
+ EnumeratePartitions()
+ FindPtnActiveSlot
+ UpdatePartitionEntries() ----- 加载avb分区
+ LoadImageAndAuth --------------- VerifiedBoot.c 
+ FindBootableSlot -------------- PartitionTableUpdate.c//error
+ GetBootPartitionEntry 
+ HandleActiveSlotUnbootable //一直返回错误
+ GetBootPartitionEntry // BootEntry 检测没过
+ GetActiveSlot //success
+ GetBootPartitionEntry ----- for()
+ LoadImageAndAuthVB2 --------------- VerifiedBoot.c 
+ avb_should_update_rollback
+ IsCurrentSlotBootable
+ avb_slot_verify ------------------ avb_slot_verify.c
+ load_and_verify_vbmeta
+ ops-&amp;gt;read_from_partition(ops, 
+ AvbReadFromPartition
+ &amp;#34;Load Image %a total time: %lu ms \n&amp;#34;
+ avb_vbmeta_image_verify
+ avb_rsa_verify
+ iavb_parse_key_data //Unexpected key length
+ avb_manage_hashtree_error_mode
+ avb_append_options //avb 根据resolved_hashtree_error_mode 设置verity_mode
+ cmdline_append_option //设置verity_mode到slot_data-&amp;gt;cmdline
+ avb_sub_cmdline
+ HandleActiveSlotUnbootable //当前槽置为unbootable
+ AppendVBCmdLine //cmdline赋值到VBCmdLine
+ DisplayVerifiedBootScreen
+ DisplayVerifiedBootMenu
+ BootLinux (&amp;amp;Info);
+ UpdateCmdLine
+ AddtoBootConfigList //gBS = SystemTable-&amp;gt;BootServices;这里会利用uefi boot服务记录map
+c12345678910111213141516171819202122232425262728293031323334353637383940414243&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="二通用块设备层对请求的处理"&gt;&lt;span&gt;二、通用块设备层对请求的处理&lt;/span&gt;
+ &lt;a href="#%e4%ba%8c%e9%80%9a%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87%e5%b1%82%e5%af%b9%e8%af%b7%e6%b1%82%e7%9a%84%e5%a4%84%e7%90%86" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;h4 class="heading-element" id="21-块设备概述"&gt;&lt;span&gt;2.1 块设备概述&lt;/span&gt;
+ &lt;a href="#21-%e5%9d%97%e8%ae%be%e5%a4%87%e6%a6%82%e8%bf%b0" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png" title="5e00f2e29c3ca54ef8bcc80bf046188f\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png" data-sub-html="&lt;h2&gt;5e00f2e29c3ca54ef8bcc80bf046188f\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png' alt="5e00f2e29c3ca54ef8bcc80bf046188f\_MD5"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png" title="acc3989c58db48303c93909ac34381b5\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png" data-sub-html="&lt;h2&gt;acc3989c58db48303c93909ac34381b5\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png' alt="acc3989c58db48303c93909ac34381b5\_MD5"&gt;&lt;/a&gt;&lt;br&gt;
+• 块设备的 &lt;a href="https://so.csdn.net/so/search?q=%E6%8E%A7%E5%88%B6%E5%99%A8%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;控制器&lt;/a&gt; 传输的固定数据单元大小称为扇区（sector）。因此I/O调度器&lt;br&gt;
+和块 &lt;a href="https://so.csdn.net/so/search?q=%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;设备驱动&lt;/a&gt; 必须以扇区为单位管理数据。&lt;br&gt;
+• &lt;a href="https://so.csdn.net/so/search?q=%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;虚拟文件系统&lt;/a&gt; 、映射层（mapping layer）管理磁盘数据的逻辑单元大小称为块&lt;br&gt;
+（block）。对于文件系统来说，块是最小的磁盘数据存储单元。&lt;br&gt;
+• 前面在分散/聚合DMA中，我们提到块设备驱动应该能够处理称为“段”的数据&lt;br&gt;
+单元；每个“段”是内存中的一页或页的一部分，“段”中的数据在磁盘上是&lt;br&gt;
+连续的。&lt;br&gt;
+• 磁盘缓冲区处理的数据单元大小为“页”，每个对应一个页帧。（注1）&lt;br&gt;
+• 通用块设备层粘合所有上层和底层的部分，这样它就知道扇区、块、段和数据&lt;br&gt;
+页。&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png" title="954834b855425f1c294027430bc33a92\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png" data-sub-html="&lt;h2&gt;954834b855425f1c294027430bc33a92\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png' alt="954834b855425f1c294027430bc33a92\_MD5"&gt;&lt;/a&gt;&lt;br&gt;
+bi_io_vecs指向一个bio_vec 结构体 数组，该结构体链表包含了一个特定I/O操作所需要&lt;br&gt;
+使用到的所有段（segment）。每个bio_vec结构都是一个形式为&amp;lt;page, offset, len&amp;gt;的向量，&lt;br&gt;
+它描述的是一个特定的段：段所在的物理页、块在物理页中的偏移量、从给定偏移量开始的&lt;br&gt;
+块长度。整个bio_io_vec结构体数组表示了一个完整的缓冲区。bio_vec结构体定义在文件&lt;br&gt;
+include/linux/bio.h中。&lt;/p&gt;
+&lt;p&gt;内核使用gendisk结构，定义在include/linux/genhd.h中，来表示一个独立的磁盘设备。&lt;br&gt;
+实际上内核还使用gendisk表示分区，但是驱动程序不需要了解这些。在gendisk结构中的许&lt;br&gt;
+多成员必须由驱动程序进行初始化。&lt;br&gt;
+物理磁盘通常被分成多个逻辑分区。每个块设备文件可以表示一个整个物理磁盘或者其&lt;br&gt;
+中的一个分区。如/dev/sda、/dev/sda1、/dev/sda2等。若一个物理磁盘有多个分区，则磁&lt;br&gt;
+盘的布局保存在hd_struct数据结构数组中，数组的地址由gendisk结构体中的part成员保存。&lt;br&gt;
+hd_struct数据结构的定义在文件include/linux/genhd.h中。&lt;br&gt;
+&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png" title="1fc10005749f6d7feb2679226952a87e\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png" data-sub-html="&lt;h2&gt;1fc10005749f6d7feb2679226952a87e\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png' alt="1fc10005749f6d7feb2679226952a87e\_MD5"&gt;&lt;/a&gt;&lt;br&gt;
+当内核在系统中发现一个新磁盘时，调用alloc_disk（）分配相关数据结构，如gendisk，&lt;br&gt;
+hd_struct等，然后调用add_disk（）将磁盘添加到系统中。注意：一旦调用了add_disk，&lt;br&gt;
+磁盘设备就被“激活“，表示可以使用，并随时会调用它们提供的方法。&lt;/p&gt;
+&lt;h4 class="heading-element" id="22向通用块设备层发送请求"&gt;&lt;span&gt;2.2向通用块设备层发送请求&lt;/span&gt;
+ &lt;a href="#22%e5%90%91%e9%80%9a%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87%e5%b1%82%e5%8f%91%e9%80%81%e8%af%b7%e6%b1%82" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;上层下发磁盘数据请求&lt;/li&gt;
+&lt;li&gt;通用块层申请bio结构，将请求的数据分段记录到bio中&lt;/li&gt;
+&lt;li&gt;如果请求的数据大于一个bio允许的最大数据量，则将请求分成多个bio&lt;/li&gt;
+&lt;li&gt;调用submit_bio提交bio请求&lt;/li&gt;
+&lt;li&gt;submit_bio函数经过层层调用，最终调用块设备请求队列中的make_request_fn成员函数将bio提交给I/O调度层进行处理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;generic_make_request函数将bio连接到current-&amp;gt;bio_list链表中，并调用__generic_make_request函数提交链表中所有的bio。&lt;br&gt;
+&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png" title="42e5e295f7c8fdf163477337556cd667\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png" data-sub-html="&lt;h2&gt;42e5e295f7c8fdf163477337556cd667\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png' alt="42e5e295f7c8fdf163477337556cd667\_MD5"&gt;&lt;/a&gt;&lt;br&gt;
+__generic_make_request函数最终会调用块设备的请求队列中的make_request_fn成员函数将bio请求发送给I/O调度层，至此对磁盘的数据请求离开通用块层，进入下一层——I/O调度层&lt;br&gt;
+&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png" title="8eb9347c4d3a718659464cbfdb6eb4ff\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png" data-sub-html="&lt;h2&gt;8eb9347c4d3a718659464cbfdb6eb4ff\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png' alt="8eb9347c4d3a718659464cbfdb6eb4ff\_MD5"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 class="heading-element" id="23-动态校验流程"&gt;&lt;span&gt;2.3 动态校验流程&lt;/span&gt;
+ &lt;a href="#23-%e5%8a%a8%e6%80%81%e6%a0%a1%e9%aa%8c%e6%b5%81%e7%a8%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;verity_map
+ bio-&amp;gt;bi_end_io = verity_end_io;
+
+verity_end_io
+ INIT_WORK(&amp;amp;io-&amp;gt;work, verity_work);
+ queue_work(io-&amp;gt;v-&amp;gt;verify_wq, &amp;amp;io-&amp;gt;work);
+
+verity_work
+ verity_finish_io
+ verity_verify_io
+ struct bio *bio = dm_bio_from_per_bio_data
+ for (b = 0; b &amp;lt; io-&amp;gt;n_blocks; b&amp;#43;&amp;#43;)
+ verity_fec_decode
+ DMWARN_LIMIT(&amp;#34;%s: FEC: recursion too deep&amp;#34;, v-&amp;gt;data_dev-&amp;gt;name);
+ verity_handle_err
+ DMERR_LIMIT(&amp;#34;%s: %s block %llu is corrupted&amp;#34;, v-&amp;gt;data_dev-&amp;gt;name,
+ type_str, block);
+
+__submit_bio
+ blk_mq_submit_bio
+ bio_endio ///kernel_platform/msm-kernel/block/bio.c
+ bio-&amp;gt;bi_end_io
+c12345678910111213141516171819202122&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;struct dm_verity_io {
+72 struct dm_verity *v;
+73 
+74 /* original value of bio-&amp;gt;bi_end_io */
+75 bio_end_io_t *orig_bi_end_io;
+76 
+77 sector_t block;
+78 unsigned n_blocks;
+79 
+80 struct bvec_iter iter;
+81 
+82 struct work_struct work;
+83 
+84 /*
+85 * Three variably-size fields follow this struct:
+86 *
+87 * u8 hash_req[v-&amp;gt;ahash_reqsize];
+88 * u8 real_digest[v-&amp;gt;digest_size];
+89 * u8 want_digest[v-&amp;gt;digest_size];
+90 *
+91 * To access them use: verity_io_hash_req(), verity_io_real_digest()
+92 * and verity_io_want_digest().
+93 */
+94 };
+c123456789101112131415161718192021222324&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;int verity_hash_for_block(struct dm_verity *v, struct dm_verity_io *io,
+335 sector_t block, u8 *digest, bool *is_zero)
+336 {
+337 int r = 0, i;
+339 if (likely(v-&amp;gt;levels)) {
+340 /*
+341 * First, we try to get the requested hash for
+342 * the current block. If the hash block itself is
+343 * verified, zero is returned. If it isn&amp;#39;t, this
+344 * function returns 1 and we fall back to whole
+345 * chain verification.
+346 */
+347 r = verity_verify_level(v, io, block, 0, true, digest);
+348 if (likely(r &amp;lt;= 0))
+349 goto out;
+350 }
+352 memcpy(digest, v-&amp;gt;root_digest, v-&amp;gt;digest_size);
+354 for (i = v-&amp;gt;levels - 1; i &amp;gt;= 0; i--) {
+355 r = verity_verify_level(v, io, block, i, false, digest);
+356 if (unlikely(r))
+357 goto out;
+358 }
+359 out:
+360 if (!r &amp;amp;&amp;amp; v-&amp;gt;zero_digest)
+361 *is_zero = !memcmp(v-&amp;gt;zero_digest, digest, v-&amp;gt;digest_size);
+362 else
+363 *is_zero = false;
+364 
+365 return r;
+366 }
+c123456789101112131415161718192021222324252627282930&lt;/code&gt;&lt;/pre&gt;&lt;h4 class="heading-element" id="24-核心校验数据"&gt;&lt;span&gt;2.4 核心校验数据&lt;/span&gt;
+ &lt;a href="#24-%e6%a0%b8%e5%bf%83%e6%a0%a1%e9%aa%8c%e6%95%b0%e6%8d%ae" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;struct dm_verity {
+35 struct dm_dev *data_dev;
+36 struct dm_dev *hash_dev;
+37 struct dm_target *ti;
+38 struct dm_bufio_client *bufio;
+39 char *alg_name;
+40 struct crypto_ahash *tfm;
+41 u8 *root_digest; /* digest of the root block */
+42 u8 *salt; /* salt: its size is salt_size */
+43 u8 *zero_digest; /* digest for a zero block */
+44 unsigned salt_size;
+45 sector_t data_start; /* data offset in 512-byte sectors */
+46 sector_t hash_start; /* hash start in blocks */
+47 sector_t data_blocks; /* the number of data blocks */
+48 sector_t hash_blocks; /* the number of hash blocks */
+49 unsigned char data_dev_block_bits; /* log2(data blocksize) */
+50 unsigned char hash_dev_block_bits; /* log2(hash blocksize) */
+51 unsigned char hash_per_block_bits; /* log2(hashes in hash block) */
+52 unsigned char levels; /* the number of tree levels */
+53 unsigned char version;
+54 unsigned digest_size; /* digest size for the current hash algorithm */
+55 unsigned int ahash_reqsize;/* the size of temporary space for crypto */
+56 int hash_failed; /* set to 1 if hash of any block failed */
+57 enum verity_mode mode; /* mode for handling verification errors */
+58 unsigned corrupted_errs;/* Number of errors for corrupted blocks */
+59
+60 struct workqueue_struct *verify_wq;
+61
+62 /* starting blocks for each tree level. 0 is the lowest level. */
+63 sector_t hash_level_block[DM_VERITY_MAX_LEVELS];
+64
+65 struct dm_verity_fec *fec; /* forward error correction */
+66 unsigned long *validated_blocks; /* bitset blocks validated */
+67
+68 char *signature_key_desc; /* signature keyring reference */
+69 };
+70
+c12345678910111213141516171819202122232425262728293031323334353637&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;[??? 3.809367] v-&amp;gt;hash_blocks = 662070?? （662070-656896=5174）
+[??? 3.812900] v-&amp;gt;data_dev_block_bits=12
+[??? 3.816608] v-&amp;gt;hash_dev_block_bits=12
+[??? 3.820279] v-&amp;gt;hash_per_block_bits=7?? (4096/32 = 128, 指一个4K块上有128个哈希值)
+[??? 3.823888] v-&amp;gt;levels=3
+[??? 3.826380] v-&amp;gt;version =1
+[??? 3.829033] v-&amp;gt;digest_size=32
+c1234567&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;数据块有656896X4X1024? (超过了2G)
+Level 0 :? 656896/128 = 5132个4k块
+Level 1 :? 5132/128= 41个4k块
+Level 2:? 40 /128 = 0，即1个4k块
+共 5132&amp;#43;41&amp;#43;1 = 5174 个块
+c12345&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;static void verity_hash_at_level(struct dm_verity *v, sector_t block, int level,
+193 sector_t *hash_block, unsigned *offset)
+194 {
+195 sector_t position = verity_position_at_level(v, block, level);
+196 unsigned idx;
+198 *hash_block = v-&amp;gt;hash_level_block[level] &amp;#43; (position &amp;gt;&amp;gt; v-&amp;gt;hash_per_block_bits);
+200 if (!offset)
+201 return;
+203 idx = position &amp;amp; ((1 &amp;lt;&amp;lt; v-&amp;gt;hash_per_block_bits) - 1);
+204 if (!v-&amp;gt;version)
+205 *offset = idx * v-&amp;gt;digest_size;
+206 else
+207 *offset = idx &amp;lt;&amp;lt; (v-&amp;gt;hash_dev_block_bits - v-&amp;gt;hash_per_block_bits);
+208 }
+
+static sector_t verity_position_at_level(struct dm_verity *v, sector_t block,
+92 int level)
+93 {
+94 return block &amp;gt;&amp;gt; (level * v-&amp;gt;hash_per_block_bits);
+95 }
+c1234567891011121314151617181920&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="三init用户态流程"&gt;&lt;span&gt;三、init用户态流程&lt;/span&gt;
+ &lt;a href="#%e4%b8%89init%e7%94%a8%e6%88%b7%e6%80%81%e6%b5%81%e7%a8%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;FirstStageMain
+ FirstStageMount::DoFirstStageMount
+ FirstStageMount::MountPartitions
+ FirstStageMount::MountPartition
+ FirstStageMountVBootV2::SetUpDmVerity
+ AvbHandle::LoadAndVerifyVbmeta
+ Failed to load offline vbmeta for
+c1234567&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="四-清除panic标识"&gt;&lt;span&gt;四 清除panic标识&lt;/span&gt;
+ &lt;a href="#%e5%9b%9b-%e6%b8%85%e9%99%a4panic%e6%a0%87%e8%af%86" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;adb shell
+reboot &amp;#34;dm-verity enforcing&amp;#34;
+reboot &amp;#34;dm-verity device corrupted&amp;#34;
+c123&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="五-dm-verity建立过程"&gt;&lt;span&gt;五 dm-verity建立过程&lt;/span&gt;
+ &lt;a href="#%e4%ba%94-dm-verity%e5%bb%ba%e7%ab%8b%e8%bf%87%e7%a8%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;在Device Mapper （DM）中使用dm-verity时，需要配置一个哈希树（hash tree），以便验证块设备上的数据的完整性。这通常通过在dmsetup命令中的目标表（target table）参数中指定相关参数来完成。以下是如何为dm-mapper中的dm-verity构建一个哈希树配置表的一般步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;创建源块设备&lt;/strong&gt; ：首先，你需要创建一个普通的块设备，通常是一个已经存在的块设备，例如硬盘分区或者一个镜像文件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;选择哈希算法&lt;/strong&gt; ：确定要使用的哈希算法。dm-verity支持多种哈希算法，包括SHA-256、SHA-1、SHA-512等。你需要选择一个适合你的需求的哈希算法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;生成哈希表&lt;/strong&gt; ：使用生成 哈希表 的工具，例如veritysetup工具，来为源块设备生成哈希表。这个哈希表包含了块设备中每个块的哈希值。通常，你可以运行以下命令来生成哈希表：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;veritysetup format /dev/source_device /dev/mapper/verity_device
+c1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中，/dev/source_device 是源块设备，/dev/mapper/verity_device 是dm-verity设备。这个命令将生成哈希表并将其存储在dm-verity设备上。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;配置dm-verity目标&lt;/strong&gt; ：使用dmsetup命令配置dm-verity目标。你需要提供哈希树的根哈希值、块大小、源块设备和dm-verity设备的名称。通常，配置表看起来像这样：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;dmsetup create verity_device --table &amp;#39;0 &amp;lt;block_size&amp;gt; verity &amp;lt;root_hash&amp;gt; /dev/source_device /dev/mapper/verity_device&amp;#39;
+c1&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中，&amp;lt;block_size&amp;gt; 是块的大小，&amp;lt;root_hash&amp;gt; 是哈希树的根哈希值。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;使用dm-verity设备&lt;/strong&gt; ：一旦dm-verity设备被创建，你可以像使用任何其他块设备一样使用它。数据将在读取时被验证，以确保其完整性。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这里的关键是生成哈希表并配置dm-verity目标，以便验证数据的完整性。哈希表是dm-verity验证数据完整性所必需的，因为它包含了源数据块的哈希值，用于验证数据是否被篡改。配置表指定了如何使用哈希表以及其他相关参数。配置表的格式取决于dm-verity目标的实现和你的需求，但通常是一个包含所需参数的文本字符串。&lt;/p&gt;
+&lt;p&gt;ubuntu 上dm-mapper相关信息：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;astro@astrox:~/code/test$ sudo lvdisplay --maps /dev/mapper/ubuntu--vg-ubuntu--lv
+ --- Logical volume ---
+ LV Path /dev/ubuntu-vg/ubuntu-lv
+ LV Name ubuntu-lv
+ VG Name ubuntu-vg
+ LV UUID fSgsCj-fCWR-JeiN-WWQL-xPdv-T1gZ-QO9f9M
+ LV Write Access read/write
+ LV Creation host, time ubuntu-server, 2023-05-09 09:07:38 &amp;#43;0000
+ LV Status available
+ # open 1
+ LV Size 49.25 GiB
+ Current LE 12608
+ Segments 1
+ Allocation inherit
+ Read ahead sectors auto
+ - currently set to 256
+ Block device 253:0
+
+ --- Segments ---
+ Logical extents 0 to 12607:
+ Type linear
+ Physical volume /dev/sda3
+ Physical extents 0 to 12607
+
+c123456789101112131415161718192021222324&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;参考：&lt;br&gt;
+&lt;a href="https://aliez22.github.io/posts/11537/" target="_blank" rel="external nofollow noopener noreferrer"&gt;https://aliez22.github.io/posts/11537/&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://www.shili8.cn/article/detail" target="_blank" rel="external nofollow noopener noreferrer"&gt;https://www.shili8.cn/article/detail&lt;/a&gt;_20000194464.html&lt;/p&gt;
+&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png" title="5e00f2e29c3ca54ef8bcc80bf046188f\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png" data-sub-html="&lt;h2&gt;5e00f2e29c3ca54ef8bcc80bf046188f\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a7e546.png' alt="5e00f2e29c3ca54ef8bcc80bf046188f\_MD5"&gt;&lt;/a&gt; &lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png" title="acc3989c58db48303c93909ac34381b5\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png" data-sub-html="&lt;h2&gt;acc3989c58db48303c93909ac34381b5\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5a748.png' alt="acc3989c58db48303c93909ac34381b5\_MD5"&gt;&lt;/a&gt; &lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png" title="954834b855425f1c294027430bc33a92\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png" data-sub-html="&lt;h2&gt;954834b855425f1c294027430bc33a92\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9b14c.png' alt="954834b855425f1c294027430bc33a92\_MD5"&gt;&lt;/a&gt; &lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png" title="1fc10005749f6d7feb2679226952a87e\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png" data-sub-html="&lt;h2&gt;1fc10005749f6d7feb2679226952a87e\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a5898c.png' alt="1fc10005749f6d7feb2679226952a87e\_MD5"&gt;&lt;/a&gt; &lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png" title="42e5e295f7c8fdf163477337556cd667\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png" data-sub-html="&lt;h2&gt;42e5e295f7c8fdf163477337556cd667\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a53dd6.png' alt="42e5e295f7c8fdf163477337556cd667\_MD5"&gt;&lt;/a&gt; &lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png" title="8eb9347c4d3a718659464cbfdb6eb4ff\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png" data-sub-html="&lt;h2&gt;8eb9347c4d3a718659464cbfdb6eb4ff\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/04/6909737a9cc7b.png' alt="8eb9347c4d3a718659464cbfdb6eb4ff\_MD5"&gt;&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Linux 下使用 tar 与 pigz 进行多核压缩</title><link>https://huang8604.github.io/posts/linux-%E4%B8%8B%E4%BD%BF%E7%94%A8-tar-%E4%B8%8E-pigz-%E8%BF%9B%E8%A1%8C%E5%A4%9A%E6%A0%B8%E5%8E%8B%E7%BC%A9/</link><pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/linux-%E4%B8%8B%E4%BD%BF%E7%94%A8-tar-%E4%B8%8E-pigz-%E8%BF%9B%E8%A1%8C%E5%A4%9A%E6%A0%B8%E5%8E%8B%E7%BC%A9/</guid><description>&lt;h2 class="heading-element" id="实用命令汇总"&gt;&lt;span&gt;实用命令汇总&lt;/span&gt;
+ &lt;a href="#%e5%ae%9e%e7%94%a8%e5%91%bd%e4%bb%a4%e6%b1%87%e6%80%bb" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;任务&lt;/th&gt;
+ &lt;th&gt;命令&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;多核压缩目录&lt;/td&gt;
+ &lt;td&gt;`tar -cvf - /data&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;多核解压文件&lt;/td&gt;
+ &lt;td&gt;`pigz -dc -p 4 /backup/data.tar.gz&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;简写压缩命令&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;tar --use-compress-program=&amp;quot;pigz -p 4&amp;quot; -cvf data.tar.gz /data&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;简写解压命令&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;tar --use-compress-program=&amp;quot;pigz -dp 4&amp;quot; -xvf data.tar.gz&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;压缩命令&lt;/td&gt;
+ &lt;td&gt;tar -cvf - /data | pigz -p $(nproc)-2 &amp;gt; /backup/backup.tar.gz&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;解压&lt;/td&gt;
+ &lt;td&gt;pigz -dc -p $(nproc)-2 /backup/backup.tar.gz | tar -xvf -&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-p $(nproc)-1&lt;/p&gt;
+&lt;h2 class="heading-element" id="-linux-下使用-tar-与-pigz-进行多核压缩"&gt;&lt;span&gt;📘 Linux 下使用 tar 与 pigz 进行多核压缩&lt;/span&gt;
+ &lt;a href="#-linux-%e4%b8%8b%e4%bd%bf%e7%94%a8-tar-%e4%b8%8e-pigz-%e8%bf%9b%e8%a1%8c%e5%a4%9a%e6%a0%b8%e5%8e%8b%e7%bc%a9" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;h2 class="heading-element" id="一概述"&gt;&lt;span&gt;一、概述&lt;/span&gt;
+ &lt;a href="#%e4%b8%80%e6%a6%82%e8%bf%b0" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;在 Linux 系统中， &lt;code&gt;tar&lt;/code&gt; 是最常用的归档（打包）工具之一，用于将多个文件或目录合并为一个文件。&lt;br&gt;
+而 &lt;code&gt;gzip&lt;/code&gt; 是常用的压缩工具，用于对文件内容进行压缩。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;tar&lt;/code&gt; 与 &lt;code&gt;gzip&lt;/code&gt; 常搭配使用形成命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar -czf backup.tar.gz /data&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但这种方式的一个明显限制是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ &lt;code&gt;tar&lt;/code&gt; 与 &lt;code&gt;gzip&lt;/code&gt; 均为单线程程序，只能使用一个 CPU 核心。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;当系统 CPU 较多、文件较大时（如 10GB 以上），这种单线程压缩会成为性能瓶颈。&lt;/p&gt;
+&lt;p&gt;为解决这一问题，推荐使用 &lt;code&gt;**pigz**&lt;/code&gt; &lt;strong&gt;（Parallel Implementation of GZip）&lt;/strong&gt; ，&lt;br&gt;
+它是 &lt;code&gt;gzip&lt;/code&gt; 的多线程版本，可以充分利用多核 CPU 进行压缩。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="二tar-与-pigz-的关系与工作方式"&gt;&lt;span&gt;二、tar 与 pigz 的关系与工作方式&lt;/span&gt;
+ &lt;a href="#%e4%ba%8ctar-%e4%b8%8e-pigz-%e7%9a%84%e5%85%b3%e7%b3%bb%e4%b8%8e%e5%b7%a5%e4%bd%9c%e6%96%b9%e5%bc%8f" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;tar&lt;/code&gt; 与 &lt;code&gt;pigz&lt;/code&gt; 实际是两个独立程序：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;程序&lt;/th&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;th&gt;是否多线程&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;tar&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;负责打包（将多个文件合并为一个数据流）&lt;/td&gt;
+ &lt;td&gt;❌ 单线程&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;pigz&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;负责压缩（将数据流压缩成 gzip 格式）&lt;/td&gt;
+ &lt;td&gt;✅ 多线程&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 class="heading-element" id="1-tar-的职责"&gt;&lt;span&gt;1️⃣ tar 的职责&lt;/span&gt;
+ &lt;a href="#1-tar-%e7%9a%84%e8%81%8c%e8%b4%a3" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;tar&lt;/code&gt; 的任务是读取文件系统中的数据，然后输出一个 &lt;strong&gt;未压缩的数据流&lt;/strong&gt; 。&lt;br&gt;
+这个过程几乎不涉及复杂计算，主要是 I/O 操作。&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar -cvf - /data&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这条命令不会生成文件，而是将归档内容输出到标准输出（stdout）。&lt;br&gt;
+&lt;code&gt;-&lt;/code&gt; 表示“写到标准输出”。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 class="heading-element" id="2-pigz-的职责"&gt;&lt;span&gt;2️⃣ pigz 的职责&lt;/span&gt;
+ &lt;a href="#2-pigz-%e7%9a%84%e8%81%8c%e8%b4%a3" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;pigz&lt;/code&gt; 从标准输入（stdin）接收数据流，并对其进行并行压缩。&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pigz -p 4 &amp;gt; backup.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;-p 4&lt;/code&gt; 表示使用 4 个线程进行压缩。&lt;br&gt;
+它会根据 CPU 核心数量自动划分压缩块并并行计算。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 class="heading-element" id="3-二者的组合流式管道压缩"&gt;&lt;span&gt;3️⃣ 二者的组合：流式管道压缩&lt;/span&gt;
+ &lt;a href="#3-%e4%ba%8c%e8%80%85%e7%9a%84%e7%bb%84%e5%90%88%e6%b5%81%e5%bc%8f%e7%ae%a1%e9%81%93%e5%8e%8b%e7%bc%a9" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;通过 Linux 管道（ &lt;code&gt;|&lt;/code&gt; ）机制，可以让 &lt;code&gt;tar&lt;/code&gt; 与 &lt;code&gt;pigz&lt;/code&gt; 同时工作：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar -cvf - /data | pigz -p 4 &amp;gt; /backup/backup.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;执行时的并行流程如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;┌────────────────────────┐ ┌────────────────────┐
+│ tar: 读取文件并打包流式输出 │ ---&amp;gt; │ pigz: 多线程压缩数据流 │
+└────────────────────────┘ └────────────────────┘
+ (单线程) (多线程)1.2.3.4.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;运行结果：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tar&lt;/code&gt; 依然是单线程；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pigz&lt;/code&gt; 使用 4 个 CPU 核；&lt;/li&gt;
+&lt;li&gt;管道机制保证两者边读边压缩、无须中间文件；&lt;/li&gt;
+&lt;li&gt;整体 CPU 利用率高、内存占用低、压缩速度显著提升。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="三为什么-tar-只能使用一个-cpu"&gt;&lt;span&gt;三、为什么 tar 只能使用一个 CPU？&lt;/span&gt;
+ &lt;a href="#%e4%b8%89%e4%b8%ba%e4%bb%80%e4%b9%88-tar-%e5%8f%aa%e8%83%bd%e4%bd%bf%e7%94%a8%e4%b8%80%e4%b8%aa-cpu" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;tar&lt;/code&gt; 是一种典型的“流式归档”工具，它顺序地遍历文件系统、读取文件并写入输出流。&lt;br&gt;
+这种顺序处理模式的核心特点是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每次只处理一个文件；&lt;/li&gt;
+&lt;li&gt;不进行复杂运算；&lt;/li&gt;
+&lt;li&gt;不具备数据块划分与并发处理机制；&lt;/li&gt;
+&lt;li&gt;并发读取文件还可能破坏归档的顺序一致性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;🧠 结论： &lt;code&gt;tar&lt;/code&gt; 的核心瓶颈不是 CPU，而是磁盘 I/O。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;即使机器有 8 核、16 核， &lt;code&gt;tar&lt;/code&gt; 自身仍然只使用 1 个核心。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="四如何使用多核进行压缩"&gt;&lt;span&gt;四、如何使用多核进行压缩&lt;/span&gt;
+ &lt;a href="#%e5%9b%9b%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8%e5%a4%9a%e6%a0%b8%e8%bf%9b%e8%a1%8c%e5%8e%8b%e7%bc%a9" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;h3 class="heading-element" id="-方案一tar--pigz推荐"&gt;&lt;span&gt;✅ 方案一：tar + pigz（推荐）&lt;/span&gt;
+ &lt;a href="#-%e6%96%b9%e6%a1%88%e4%b8%80tar--pigz%e6%8e%a8%e8%8d%90" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;tar -cvf - /data | pigz -p 4 &amp;gt; /backup/backup.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;含义&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-cvf -&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;打包并输出到标准输出&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;pigz -p 4&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;使用 4 个线程压缩&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;&amp;gt;&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;将压缩后的数据写入目标文件&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;性能特征：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tar&lt;/code&gt; 占用约 1 核；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pigz&lt;/code&gt; 占用 4 核；&lt;/li&gt;
+&lt;li&gt;总共利用 5 核；&lt;/li&gt;
+&lt;li&gt;压缩速度通常是单线程 gzip 的 3~5 倍。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 class="heading-element" id="-方案二tar-内置调用-pigz更简洁"&gt;&lt;span&gt;✅ 方案二：tar 内置调用 pigz（更简洁）&lt;/span&gt;
+ &lt;a href="#-%e6%96%b9%e6%a1%88%e4%ba%8ctar-%e5%86%85%e7%bd%ae%e8%b0%83%e7%94%a8-pigz%e6%9b%b4%e7%ae%80%e6%b4%81" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;许多 Linux 发行版的 &lt;code&gt;tar&lt;/code&gt; 已支持直接使用 &lt;code&gt;pigz&lt;/code&gt; 替代 &lt;code&gt;gzip&lt;/code&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar --use-compress-program=&amp;#34;pigz -p 4&amp;#34; -cvf /backup/backup.tar.gz /data&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;等价于：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar -cvf - /data | pigz -p 4 &amp;gt; /backup/backup.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;优点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;命令更简洁；&lt;/li&gt;
+&lt;li&gt;归档和压缩由 tar 管理；&lt;/li&gt;
+&lt;li&gt;同样支持多核。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 class="heading-element" id="-方案三解压时多核解压"&gt;&lt;span&gt;✅ 方案三：解压时多核解压&lt;/span&gt;
+ &lt;a href="#-%e6%96%b9%e6%a1%88%e4%b8%89%e8%a7%a3%e5%8e%8b%e6%97%b6%e5%a4%9a%e6%a0%b8%e8%a7%a3%e5%8e%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;同样，解压时也可以利用多核：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pigz -dc -p 4 /backup/backup.tar.gz | tar -xvf -&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或者更简洁的形式：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar --use-compress-program=&amp;#34;pigz -dp 4&amp;#34; -xvf /backup/backup.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 class="heading-element" id="五性能对比示例8-核-cpu"&gt;&lt;span&gt;五、性能对比示例（8 核 CPU）&lt;/span&gt;
+ &lt;a href="#%e4%ba%94%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94%e7%a4%ba%e4%be%8b8-%e6%a0%b8-cpu" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;工具&lt;/th&gt;
+ &lt;th&gt;压缩方式&lt;/th&gt;
+ &lt;th&gt;CPU使用&lt;/th&gt;
+ &lt;th&gt;压缩时间(18GB文件)&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;`tar&lt;/td&gt;
+ &lt;td&gt;gzip`&lt;/td&gt;
+ &lt;td&gt;单线程&lt;/td&gt;
+ &lt;td&gt;100% of 1 CPU&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;`tar&lt;/td&gt;
+ &lt;td&gt;pigz -p 4`&lt;/td&gt;
+ &lt;td&gt;多线程（4核）&lt;/td&gt;
+ &lt;td&gt;~400%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;`tar&lt;/td&gt;
+ &lt;td&gt;pigz -p 8`&lt;/td&gt;
+ &lt;td&gt;多线程（8核）&lt;/td&gt;
+ &lt;td&gt;~800%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;（实际速度取决于磁盘 I/O、文件类型、压缩比等因素）&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="六在生产环境中的最佳实践"&gt;&lt;span&gt;六、在生产环境中的最佳实践&lt;/span&gt;
+ &lt;a href="#%e5%85%ad%e5%9c%a8%e7%94%9f%e4%ba%a7%e7%8e%af%e5%a2%83%e4%b8%ad%e7%9a%84%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;场景&lt;/th&gt;
+ &lt;th&gt;推荐命令&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;4 核机器&lt;/td&gt;
+ &lt;td&gt;`tar -cvf - /data&lt;/td&gt;
+ &lt;td&gt;pigz -p 3 &amp;gt; /backup/data.tar.gz`&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;8 核机器&lt;/td&gt;
+ &lt;td&gt;`tar -cvf - /data&lt;/td&gt;
+ &lt;td&gt;pigz -p 6 &amp;gt; /backup/data.tar.gz`&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;自动检测 CPU&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;pigz -p $(($(nproc)-1))&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;自动使用除 1 外的全部 CPU&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="七总结"&gt;&lt;span&gt;七、总结&lt;/span&gt;
+ &lt;a href="#%e4%b8%83%e6%80%bb%e7%bb%93" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;项目&lt;/th&gt;
+ &lt;th&gt;tar&lt;/th&gt;
+ &lt;th&gt;gzip&lt;/th&gt;
+ &lt;th&gt;pigz&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;功能&lt;/td&gt;
+ &lt;td&gt;打包&lt;/td&gt;
+ &lt;td&gt;压缩&lt;/td&gt;
+ &lt;td&gt;多线程压缩&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;是否多线程&lt;/td&gt;
+ &lt;td&gt;❌&lt;/td&gt;
+ &lt;td&gt;❌&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;可替代 gzip&lt;/td&gt;
+ &lt;td&gt;❌&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;推荐用途&lt;/td&gt;
+ &lt;td&gt;打包文件&lt;/td&gt;
+ &lt;td&gt;兼容老系统压缩&lt;/td&gt;
+ &lt;td&gt;现代多核环境压缩&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;与 tar 配合方式&lt;/td&gt;
+ &lt;td&gt;输出到管道&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;tar -czf&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;`tar&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 class="heading-element" id="九结语"&gt;&lt;span&gt;九、结语&lt;/span&gt;
+ &lt;a href="#%e4%b9%9d%e7%bb%93%e8%af%ad" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tar&lt;/code&gt; 的瓶颈是 I/O，而非 CPU；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pigz&lt;/code&gt; 能显著提高压缩性能；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tar + pigz&lt;/code&gt; 的组合是大文件备份的业界最佳实践；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;合理控制线程数量（如 &lt;code&gt;-p 3&lt;/code&gt; 或 &lt;code&gt;-p $(nproc)-1&lt;/code&gt; ）可以在性能与系统稳定性间取得最佳平衡。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>学习英语打卡</title><link>https://huang8604.github.io/posts/%E5%AD%A6%E4%B9%A0%E8%8B%B1%E8%AF%AD%E6%89%93%E5%8D%A1/</link><pubDate>Thu, 23 Oct 2025 09:15:02 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%AD%A6%E4%B9%A0%E8%8B%B1%E8%AF%AD%E6%89%93%E5%8D%A1/</guid><description>&lt;p&gt;作为一种英语的使用工具,第一要听懂,第二要会说.第三要看懂&lt;/p&gt;
+&lt;h3 class="heading-element" id="背单词"&gt;&lt;span&gt;背单词&lt;/span&gt;
+ &lt;a href="#%e8%83%8c%e5%8d%95%e8%af%8d" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;万丈高楼平地起,背单词.4-6级日常足够.&lt;br&gt;
+百词斩用起来&lt;br&gt;
+&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/11/08/690e9f3ee8e8d.jpg" title="753ae8b37e4bc309fc84ecf8773473ba.jpg" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/11/08/690e9f3ee8e8d.jpg" data-sub-html="&lt;h2&gt;753ae8b37e4bc309fc84ecf8773473ba.jpg&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/11/08/690e9f3ee8e8d.jpg' alt="753ae8b37e4bc309fc84ecf8773473ba.jpg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 class="heading-element" id="听"&gt;&lt;span&gt;听&lt;/span&gt;
+ &lt;a href="#%e5%90%ac" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;走遍美国 多听&lt;/p&gt;
+&lt;h3 class="heading-element" id="说"&gt;&lt;span&gt;说&lt;/span&gt;
+ &lt;a href="#%e8%af%b4" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;AI Chart&lt;/p&gt;
+&lt;h3 class="heading-element" id="读"&gt;&lt;span&gt;读&lt;/span&gt;
+ &lt;a href="#%e8%af%bb" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;h3 class="heading-element" id="写"&gt;&lt;span&gt;写&lt;/span&gt;
+ &lt;a href="#%e5%86%99" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;英语规划&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;背单词 百词斩 &amp;ndash; 熟悉单词 100天&lt;br&gt;
+-&amp;ndash; 百词斩一轮后,使用墨墨背单词,加深记忆.&lt;br&gt;
+-&amp;ndash; 墨墨一轮后,继续使用墨墨背6级单词&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;听说 报百词斩的听说课&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;听走遍美国&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;写单词&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>总结 判断uwb服务启动问题</title><link>https://huang8604.github.io/posts/%E6%80%BB%E7%BB%93-%E5%88%A4%E6%96%ADuwb%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/</link><pubDate>Thu, 23 Oct 2025 04:06:12 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E6%80%BB%E7%BB%93-%E5%88%A4%E6%96%ADuwb%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/</guid><description>&lt;p&gt;有一个问题,就是配置了uwb,如果在没有uwb的机器上,会不停的启动uwb的服务.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;09-29 10:19:45.885 1 1 E init : Control message: Could not find &amp;#39;aidl/android.hardware.uwb.IUwb/default&amp;#39; for ctl.interface_start from pid: 441 (/system/bin/servicemanager)
+09-29 10:19:45.942 441 29301 W libc : Unable to set property &amp;#34;ctl.interface_start&amp;#34; to &amp;#34;aidl/android.hardware.uwb.IUwb/default&amp;#34;: PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+09-29 10:19:45.948 1725 4002 W ServiceManagerCppClient: Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;网络上的一个类似的方案:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+static bool HandleControlMessage(std::string_view message, const std::string&amp;amp; name,pid_t from_pid) {
+&amp;#43; if(&amp;#34;aidl/android.hardware.biometrics.fingerprint.IFingerprint/default&amp;#34; == name){
+&amp;#43; return true;
+&amp;#43; }
+
+std::string cmdline_path = StringPrintf(&amp;#34;proc/%d/cmdline&amp;#34;, from_pid);
+ std::string process_cmdline;
+ if (ReadFileToString(cmdline_path, &amp;amp;process_cmdline)) {
+ std::replace(process_cmdline.begin(), process_cmdline.end(), &amp;#39;\0&amp;#39;, &amp;#39; &amp;#39;);
+ process_cmdline = Trim(process_cmdline);
+ } else {
+ process_cmdline = &amp;#34;unknown process&amp;#34;;
+ }
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那么进过验证,对uwb没有作用.&lt;br&gt;
+进过调试,如果把支持uwb 的feature删除, 确认服务是不会启动的.所以我们在pms里增加的打印堆栈&lt;/p&gt;
+&lt;p&gt;通过堆栈,我们发现是在SystemServer中&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; /**
+ * Starts a miscellaneous grab bag of stuff that has yet to be refactored and organized.
+ */
+ private void startOtherServices(@NonNull TimingsTraceAndSlog t) {
+ t.traceBegin(&amp;#34;startOtherServices&amp;#34;);
+
+ if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_UWB)) {
+ t.traceBegin(&amp;#34;UwbService&amp;#34;);
+ mSystemServiceManager.startServiceFromJar(UWB_SERVICE_CLASS, UWB_APEX_SERVICE_JAR_PATH);
+ t.traceEnd();
+ }&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以我们的修改方案就是在没有uwb的机器上,如果需要获取hasSystemFeature的地方,给返回false.&lt;/p&gt;
+&lt;p&gt;frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+ public boolean hasSystemFeature(String name, int version) {
+ // allow instant applications
+
+ if(&amp;#34;android.hardware.uwb&amp;#34;.equals(name)) {
+ //Log.d(&amp;#34;PackageManagerService wentao&amp;#34;, &amp;#34;wentao hasSystemFeature uwb&amp;#34; &amp;#43;Log.getStackTraceString(new Throwable()));
+
+ //getprop ro.hw.mcu.mac
+ String mcuMac = SystemProperties.get(&amp;#34;ro.hw.mcu.mac&amp;#34;, &amp;#34;(unknown)&amp;#34;);
+ Log.d(&amp;#34;PackageManagerService&amp;#34;, &amp;#34;mcuMac: &amp;#34; &amp;#43; mcuMac);
+ if(&amp;#34;(unknown)&amp;#34;.equals(mcuMac)) {
+ return false;
+ }else{
+ return true;
+ }
+ }&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;这个判断uwb的判断条件一定要在systemserver startOtherServices 之前,不然时序不对.&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>开机时提示 your device is corrupt？</title><link>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E6%97%B6%E6%8F%90%E7%A4%BA-your-device-is-corrupt/</link><pubDate>Thu, 11 Sep 2025 01:46:50 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%BC%80%E6%9C%BA%E6%97%B6%E6%8F%90%E7%A4%BA-your-device-is-corrupt/</guid><description>&lt;p&gt;&lt;a href="https://huang8604.github.io/avb%E6%A0%A1%E9%AA%8C%E7%9B%B8%E5%85%B3%E4%B8%8E%E5%9D%97%E6%A0%A1%E9%AA%8C%E5%8E%9F%E7%90%86"&gt;avb校验相关与块校验原理&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb reboot recovery
+adb root
+adb shell
+reboot &amp;#34;dm-verity enforcing&amp;#34;&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

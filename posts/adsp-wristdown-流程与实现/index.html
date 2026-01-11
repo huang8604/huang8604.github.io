@@ -1,0 +1,517 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Adsp Wristdown 流程与实现 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="#Peppermill #算法研究
+目前 落腕灭屏算法大致在 framework 层实现。
+目前算法的思路：
+#运动检测，通过一些特征值，来判断是否是一个运动段落。 符合的运动检测后，我们来判断是否是落腕的动作。 符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。 背景介绍 早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP
+"><meta name=keywords content='实战,算法研究,blog,sensor'><meta itemprop=name content="adsp wristdown 流程与实现"><meta itemprop=description content="#Peppermill #算法研究
+目前 落腕灭屏算法大致在 framework 层实现。
+目前算法的思路：
+#运动检测，通过一些特征值，来判断是否是一个运动段落。 符合的运动检测后，我们来判断是否是落腕的动作。 符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。 背景介绍 早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP"><meta itemprop=datePublished content="2024-11-06T06:57:56+00:00"><meta itemprop=dateModified content="2024-11-05T01:34:01+00:00"><meta itemprop=wordCount content="2657"><meta itemprop=keywords content="实战,算法研究,Blog,Sensor"><meta property="og:url" content="https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="adsp wristdown 流程与实现"><meta property="og:description" content="#Peppermill #算法研究
+目前 落腕灭屏算法大致在 framework 层实现。
+目前算法的思路：
+#运动检测，通过一些特征值，来判断是否是一个运动段落。 符合的运动检测后，我们来判断是否是落腕的动作。 符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。 背景介绍 早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:56+00:00"><meta property="article:modified_time" content="2024-11-05T01:34:01+00:00"><meta property="article:tag" content="实战"><meta property="article:tag" content="算法研究"><meta property="article:tag" content="Blog"><meta property="article:tag" content="Sensor"><meta name=twitter:card content="summary"><meta name=twitter:title content="adsp wristdown 流程与实现"><meta name=twitter:description content="#Peppermill #算法研究
+目前 落腕灭屏算法大致在 framework 层实现。
+目前算法的思路：
+#运动检测，通过一些特征值，来判断是否是一个运动段落。 符合的运动检测后，我们来判断是否是落腕的动作。 符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。 背景介绍 早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。
+后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/ title="adsp wristdown 流程与实现 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/ title="Android - 深入浅出理解SeLinux-CSDN博客"><link rel=next type=text/html href=https://huang8604.github.io/posts/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%B0-hugging-face/ title="从神经网络到 Hugging Face"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.md title="adsp wristdown 流程与实现 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"adsp wristdown 流程与实现","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0\/"},"genre":"posts","keywords":"实战, 算法研究, blog, sensor","wordcount":2657,"url":"https:\/\/huang8604.github.io\/posts\/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0\/","datePublished":"2024-11-06T06:57:56+00:00","dateModified":"2024-11-05T01:34:01+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Adsp Wristdown 流程与实现</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/categories/android/ class=post-category title="分类 - Android"><i class="fa-regular fa-folder fa-fw" aria-hidden=true></i> Android</a> 和 <a href=/collections/wms/ class=post-collection title="合集 - WMS"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> WMS</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:56"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:34:01"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="2657 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 2700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 6 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><ul><li><ul><li><a href=#背景介绍>背景介绍</a><ul><li><ul><li><a href=#sensorhub>SensorHub</a></li><li><a href=#adsp>ADSP</a></li></ul></li></ul></li><li><a href=#adsp-部分>ADSP 部分</a><ul><li><a href=#编译>编译</a></li><li><a href=#虚拟合成-sensor-添加>虚拟合成 Sensor 添加</a><ul><li><a href=#算法添加>算法添加</a></li></ul></li></ul></li><li><a href=#算法部分>算法部分</a><ul><li><a href=#数据结构>数据结构</a></li><li><a href=#运动检测>运动检测</a></li></ul></li><li><a href=#framework-部分>Framework 部分</a></li><li><a href=#参考部分>参考部分</a><ul><li><a href=#参考到的资料>参考到的资料</a></li><li><a href=#搜索到的无关资料>搜索到的无关资料</a></li></ul></li></ul></li></ul></li></ul></nav></div></div><div class=content id=content><p>#Peppermill #算法研究</p><p>目前 落腕灭屏算法大致在 framework 层实现。<br>目前算法的思路：</p><ol><li><a href=#%E8%BF%90%E5%8A%A8%E6%A3%80%E6%B5%8B>#运动检测</a>，通过一些特征值，来判断是否是一个运动段落。</li><li>符合的运动检测后，我们来判断是否是落腕的动作。</li><li>符合的落腕的动作后，sensor 上报 event。 framework 监听获取后进行灭屏的判断动作。</li></ol><h4 class=heading-element id=背景介绍><span>背景介绍</span>
+<a href=#%e8%83%8c%e6%99%af%e4%bb%8b%e7%bb%8d class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>早起的 Android 平台，Sensor 是放在 AP 侧实现的，Sensor 生成设备节点供上层使用，Sensor 的工作 CPU 就不能完好的休眠。<br>后续的高版本 android 各个平台厂商都有了不同的方案，SensorHub，ADSP</p><h6 class=heading-element id=sensorhub><span>SensorHub</span>
+<a href=#sensorhub class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h6><p>个人理解啊，SensorHub 应该算一个独立的子系统，MCU，可以不依赖 CPU 架构独立运行，可以较大的程度省电。主要功能就是连接各类 sensor 并且去处理，MTK 采用的该方案，使用的是 SRAM 架构，通电就可以保存数据，相对内存需要不停的刷新，长期运行可以节省用电。</p><h6 class=heading-element id=adsp><span>ADSP</span>
+<a href=#adsp class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h6><h4 class=heading-element id=adsp-部分><span>ADSP 部分</span>
+<a href=#adsp-%e9%83%a8%e5%88%86 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>之前把落腕的检测放在 framework 里面实现，在亮屏之后，监听 Asensor 和 GSensor，做为落腕其实只在亮屏后使用，整体上来说，是不影响耗流。<br>将算法下沉到 ADSP，主要考虑后续方案的适配性，针对一些低耗流的需求，可以能够较好的满足。</p><h5 class=heading-element id=编译><span>编译</span>
+<a href=#%e7%bc%96%e8%af%91 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>记录我目前编译的一个问题，完整的 AMSS 编译 OK，但是单独编译 ADSP 的时候就会报错</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-shell"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>RuntimeError: Cannot proceed with encryption/decryption: openssl v1.0.1 is unavailable.</span></span></code></pre></td></tr></table></div></div></div><p>应该是编译出 adsp 的 mbn 后，签名找不到 openssl 导致的，全编译和单编译的环境变量可能有个环节有问题。后来添加了编译的环境变量才能够正常的编译</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-fallback"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl> <span class=k>export</span> <span class=n>PATH</span><span class=o>=/</span><span class=n>pkg</span><span class=o>/</span><span class=n>qct</span><span class=o>/</span><span class=n>software</span><span class=o>/</span><span class=n>python</span><span class=o>/</span><span class=mf>2.7</span><span class=o>/</span><span class=n>bin</span><span class=p>:</span><span class=o>$</span><span class=n>PATH</span></span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=虚拟合成-sensor-添加><span>虚拟合成 Sensor 添加</span>
+<a href=#%e8%99%9a%e6%8b%9f%e5%90%88%e6%88%90-sensor-%e6%b7%bb%e5%8a%a0 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>这部分是驱动同事做的，目前我只是记录下来，具体代码我也同步在了 Media&amp;File -> WristDown 路径下面<br>主要一个是在 adsp_proc/ssc/build/ssc.scons 和 adsp_proc/ssc_api/build/ssc_api.scons 下添加 sensor</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-diff"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-diff data-lang=diff><span class=line><span class=cl><span class=gh>diff --git a/adsp_proc/ssc/build/ssc.scons b/adsp_proc/ssc/build/ssc.scons
+</span></span></span><span class=line><span class=cl><span class=gh>index 8b6ab05..28f98a9 100755 (executable)
+</span></span></span><span class=line><span class=cl><span class=gd>--- a/adsp_proc/ssc/build/ssc.scons
+</span></span></span><span class=line><span class=cl><span class=gi>+++ b/adsp_proc/ssc/build/ssc.scons
+</span></span></span><span class=line><span class=cl><span class=gu>@@ -129,7 +129,7 @@ if env.IsKeyEnable(ssc_build_tags) is True:
+</span></span></span><span class=line><span class=cl>   #-------------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=gd>-  &#39;sns_pedometer&#39;,&#39;sns_psmd&#39;,&#39;sns_rmd&#39;,&#39;sns_rotv&#39;,&#39;smd&#39;,&#39;sns_multishake&#39;,&#39;sns_threshold&#39;,&#39;sns_tilt&#39;,&#39;sns_tilt_to_wake&#39;,&#39;sdc&#39;,
+</span></span></span><span class=line><span class=cl><span class=gi>+  &#39;sns_pedometer&#39;,&#39;sns_psmd&#39;,&#39;sns_rmd&#39;,&#39;sns_rotv&#39;,&#39;smd&#39;,&#39;sns_multishake&#39;,&#39;sns_threshold&#39;,&#39;sns_tilt&#39;,&#39;sns_tilt_to_wake&#39;,&#39;sdc&#39;,&#39;sns_wrist_tilt_updown&#39;,
+</span></span></span><span class=line><span class=cl>   &#39;pah_813x_algo&#39;,&#39;pah_hr&#39;,&#39;sns_pah_hrd_algo_lib&#39;]
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   #-------------------------------------------------------------------------------
+</span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-diff"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-diff data-lang=diff><span class=line><span class=cl><span class=gh>diff --git a/adsp_proc/ssc_api/build/ssc_api.scons b/adsp_proc/ssc_api/build/ssc_api.scons
+</span></span></span><span class=line><span class=cl><span class=gh>index b5ca9ee..d67bc30 100755 (executable)
+</span></span></span><span class=line><span class=cl><span class=gd>--- a/adsp_proc/ssc_api/build/ssc_api.scons
+</span></span></span><span class=line><span class=cl><span class=gi>+++ b/adsp_proc/ssc_api/build/ssc_api.scons
+</span></span></span><span class=line><span class=cl><span class=gu>@@ -127,7 +127,8 @@ WHITELIST = [
+</span></span></span><span class=line><span class=cl>   &#39;sns_heart_rate.proto&#39;,
+</span></span><span class=line><span class=cl>   &#39;sns_offbody_detect.proto&#39;,
+</span></span><span class=line><span class=cl>   &#39;sns_ppg.proto&#39;,
+</span></span><span class=line><span class=cl><span class=gd>-  &#39;sns_philips_vso.proto&#39;]
+</span></span></span><span class=line><span class=cl><span class=gi>+  &#39;sns_philips_vso.proto&#39;,
+</span></span></span><span class=line><span class=cl><span class=gi>+  &#39;sns_wrist_tilt_updown.proto&#39;]
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> if &#39;SENSORS_ALGO_DEV_FLAG&#39; in env:
+</span></span><span class=line><span class=cl>    WHITELIST += [
+</span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>sensor hal 里面也要添加</p><h6 class=heading-element id=算法添加><span>算法添加</span>
+<a href=#%e7%ae%97%e6%b3%95%e6%b7%bb%e5%8a%a0 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h6><p>主要是在 adsp_proc/ssc/sensors/wrist_tilt_updown/src/sns_wrist_tilt_updown_sensor_instance_island.c 里面，<br>根据获取到的 Asensor 和 Gsensor 数据来计算处理</p><h4 class=heading-element id=算法部分><span>算法部分</span>
+<a href=#%e7%ae%97%e6%b3%95%e9%83%a8%e5%88%86 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><h5 class=heading-element id=数据结构><span>数据结构</span>
+<a href=#%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>定义了一个先进先出的队列，用来保存 A sensor 和 G sensor 的数据</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-c"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*===========================================================================
+</span></span></span><span class=line><span class=cl><span class=cm>  LinkedList Definitions
+</span></span></span><span class=line><span class=cl><span class=cm>  ===========================================================================*/</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* init */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>LinkedList_init</span><span class=p>(</span><span class=n>LinkedList</span> <span class=o>*</span><span class=n>list</span><span class=p>,</span> <span class=kt>int</span> <span class=n>capacity</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span> <span class=o>=</span> <span class=p>(</span><span class=n>SensorState</span> <span class=o>*</span><span class=p>)</span><span class=nf>malloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=n>SensorState</span><span class=p>)</span> <span class=o>*</span> <span class=n>capacity</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>rear</span> <span class=o>=</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span> <span class=o>=</span> <span class=n>capacity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>count</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* destory */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>LinkedList_destroy</span><span class=p>(</span><span class=n>LinkedList</span> <span class=o>*</span><span class=n>list</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>free</span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* add item to the tail */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>LinkedList_enqueue</span><span class=p>(</span><span class=n>LinkedList</span> <span class=o>*</span><span class=n>list</span><span class=p>,</span> <span class=n>SensorState</span> <span class=n>item</span><span class=p>,</span><span class=n>sns_sensor_instance</span> <span class=o>*</span><span class=k>const</span> <span class=n>this</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>rear</span> <span class=o>=</span> <span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>rear</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=p>[</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>rear</span><span class=p>]</span> <span class=o>=</span> <span class=n>item</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nf>SNS_INST_PRINTF</span><span class=p>(</span><span class=n>ERROR</span><span class=p>,</span> <span class=n>this</span><span class=p>,</span> <span class=s>&#34;wentao LinkedList_enqueue  item speed = %d /1000&#34;</span><span class=p>,</span> <span class=p>(</span><span class=kt>int</span><span class=p>)</span> <span class=p>(</span><span class=mi>1000</span><span class=o>*</span><span class=n>item</span><span class=p>.</span><span class=n>mSpeed</span><span class=p>)</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>count</span> <span class=o>&lt;</span> <span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>list</span><span class=o>-&gt;</span><span class=n>count</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span> <span class=o>=</span> <span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* remove oldest item */</span>
+</span></span><span class=line><span class=cl><span class=n>SensorState</span> <span class=nf>LinkedList_dequeue</span><span class=p>(</span><span class=n>LinkedList</span> <span class=o>*</span><span class=n>list</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>SensorState</span> <span class=n>item</span> <span class=o>=</span> <span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=p>[</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span> <span class=o>=</span> <span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>%</span> <span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>-&gt;</span><span class=n>count</span><span class=o>--</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>item</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>double</span> <span class=n>mSpeed</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>float</span> <span class=n>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>float</span> <span class=n>y</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>float</span> <span class=n>z</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>uint64_t</span> <span class=n>timestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>SensorState</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>SensorState</span> <span class=o>*</span><span class=n>elements</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>front</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>rear</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>capacity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>LinkedList</span><span class=p>;</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h5 class=heading-element id=运动检测><span>运动检测</span>
+<a href=#%e8%bf%90%e5%8a%a8%e6%a3%80%e6%b5%8b class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>采样数据</p><ol><li>a Sensor 加速度</li><li>g Sensor 角速度</li></ol><p>运动检测主要根据加速度来计算。<br>目前的运动检测算法 根据经验值来判断，后续如果有优化机会，还是考虑采用更科学的计算方法。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//这里面采样频率大概80ms一次，那么一个10个单位的采样数组，大概能记录到0.8秒前的数据。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>float</span><span class=w> </span><span class=n>deltaX</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>x</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>lastX</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>float</span><span class=w> </span><span class=n>deltaY</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>y</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>lastY</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>float</span><span class=w> </span><span class=n>deltaZ</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>z</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=n>lastZ</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//通过计算加速度差值的开方除以间隔时间，作为就检测运动强度的判断依据</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>float</span><span class=w> </span><span class=n>sqrtV</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>sqrt</span><span class=p>(</span><span class=n>deltaX</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>deltaX</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>deltaY</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>deltaY</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>deltaZ</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>deltaZ</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>double</span><span class=w> </span><span class=n>speed</span><span class=w> </span><span class=o>=</span><span class=p>(</span><span class=kt>double</span><span class=p>)</span><span class=w> </span><span class=p>((</span><span class=n>sqrtV</span><span class=o>*</span><span class=n>1000</span><span class=p>.</span><span class=na>0f</span><span class=w> </span><span class=o>/</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=n>timeInterval</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>SensorState</span><span class=w> </span><span class=n>state</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>{</span><span class=n>speed</span><span class=p>,</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>,</span><span class=n>z</span><span class=p>,</span><span class=n>time</span><span class=p>};</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//加入到队列里面</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>count</span><span class=w> </span><span class=o>&gt;=</span><span class=w> </span><span class=n>QUEE_LENGTH</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>LinkedList_dequeue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>LinkedList_enqueue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>,</span><span class=w> </span><span class=n>state</span><span class=p>,</span><span class=k>this</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>//一次有效的手势运动的特征：
+</span></span></span><span class=line><span class=cl><span class=cm>手势动作的特征都是一个个的波形，有强度高峰，然后区域平静
+</span></span></span><span class=line><span class=cl><span class=cm>1. 往前追溯，有初始运动强度的要求，数组开始阶段有一定的强度要求，高于某个阈值
+</span></span></span><span class=line><span class=cl><span class=cm>2. 运动强度是趋于下降的
+</span></span></span><span class=line><span class=cl><span class=cm>3. 后期趋于平静，后续运动强度要低于一定的阈值
+</span></span></span><span class=line><span class=cl><span class=cm>这里的调整，如果强度阈值设置的太低，就会太灵敏。太高就会太迟缓
+</span></span></span><span class=line><span class=cl><span class=cm>低强度阈值也不能设置的太低，除非放在桌子上，不然手腕一般都都有一定的运动值
+</span></span></span><span class=line><span class=cl><span class=cm>TODO： 后续看看学习数字信号的处理，能不能通过滤波，过滤出运动来。
+</span></span></span><span class=line><span class=cl><span class=cm>*/</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kt>int</span><span class=w> </span><span class=nf>isEffectEvent</span><span class=p>(</span><span class=n>LinkedList</span><span class=w> </span><span class=o>*</span><span class=n>list</span><span class=p>,</span><span class=n>sns_sensor_instance</span><span class=w> </span><span class=o>*</span><span class=kd>const</span><span class=w> </span><span class=k>this</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>count</span><span class=w> </span><span class=o>&gt;=</span><span class=w> </span><span class=n>QUEE_LENGTH</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SensorState</span><span class=w> </span><span class=n>state0</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=o>[</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=o>]</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SensorState</span><span class=w> </span><span class=n>state1</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=o>[</span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>1</span><span class=p>)</span><span class=w> </span><span class=o>%</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=o>]</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SensorState</span><span class=w> </span><span class=n>state7</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=o>[</span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>7</span><span class=p>)</span><span class=w> </span><span class=o>%</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=o>]</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SensorState</span><span class=w> </span><span class=n>state8</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=o>[</span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>8</span><span class=p>)</span><span class=w> </span><span class=o>%</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=o>]</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SensorState</span><span class=w> </span><span class=n>state9</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>elements</span><span class=o>[</span><span class=p>(</span><span class=n>list</span><span class=o>-&gt;</span><span class=n>front</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>9</span><span class=p>)</span><span class=w> </span><span class=o>%</span><span class=w> </span><span class=n>list</span><span class=o>-&gt;</span><span class=n>capacity</span><span class=o>]</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>state0</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=n>state1</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>(</span><span class=n>state0</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=n>50</span><span class=p>.</span><span class=na>0</span><span class=w> </span><span class=o>||</span><span class=w> </span><span class=n>state1</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=n>50</span><span class=p>.</span><span class=na>0</span><span class=p>)</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>state7</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>25</span><span class=p>.</span><span class=na>0</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>state8</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>25</span><span class=p>.</span><span class=na>0</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>state9</span><span class=p>.</span><span class=na>mSpeed</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>25</span><span class=p>.</span><span class=na>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>1</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>//SNS_INST_PRINTF(ERROR, this, &#34;wentao isEffectEvent result = %d&#34;,result);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=n>result</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>检测到有效运动之后，判断特征是否是落腕</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>count</span><span class=w> </span><span class=o>&gt;=</span><span class=w> </span><span class=n>QUEE_LENGTH</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>LinkedList_dequeue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>LinkedList_enqueue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>,</span><span class=w> </span><span class=n>state</span><span class=p>,</span><span class=k>this</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>isEffectEvent</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>,</span><span class=k>this</span><span class=p>)</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>1</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>totaly</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>totalAccelz</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>index</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>totalx</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//累计陀螺仪的数值，角速度的累计，</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//这里算法有些问题。应该是角速度乘以与上次上报时间的间隔来累计，而不是固定乘率去累计</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//TODO:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>for</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>i</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w> </span><span class=n>i</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>gyroLinkedList</span><span class=p>.</span><span class=na>count</span><span class=p>;</span><span class=w> </span><span class=n>i</span><span class=o>++</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>totalx</span><span class=w> </span><span class=o>+=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)(</span><span class=n>gyroLinkedList</span><span class=p>.</span><span class=na>elements</span><span class=o>[</span><span class=n>i</span><span class=o>]</span><span class=p>.</span><span class=na>x</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>100</span><span class=p>.</span><span class=na>0f</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>totaly</span><span class=w> </span><span class=o>+=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)(</span><span class=n>gyroLinkedList</span><span class=p>.</span><span class=na>elements</span><span class=o>[</span><span class=n>i</span><span class=o>]</span><span class=p>.</span><span class=na>y</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=n>100</span><span class=p>.</span><span class=na>0f</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//平均Z方向的值，这里也有些问题,b不应该去计算完成的平均z方向。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//应该计算运动静止下来后的平均方向，这里应该建议去后一半数组的平均值</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//TODO:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>for</span><span class=w> </span><span class=p>(;</span><span class=w> </span><span class=n>index</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>count</span><span class=p>;</span><span class=w> </span><span class=n>index</span><span class=o>++</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>totalAccelz</span><span class=w> </span><span class=o>+=</span><span class=w> </span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>elements</span><span class=o>[</span><span class=p>(</span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>front</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>index</span><span class=p>)</span><span class=w> </span><span class=o>%</span><span class=w> </span><span class=n>accelLinkedList</span><span class=p>.</span><span class=na>capacity</span><span class=o>]</span><span class=p>.</span><span class=na>z</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>avgAccelZ</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>15</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>index</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>avgAccelZ</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>totalAccelz</span><span class=w> </span><span class=o>/</span><span class=w> </span><span class=n>index</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//1.陀螺仪判断标准，目前是经验值，totalx 表示的向外翻转的程度 负数表达的是向外翻转</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//由于客户的要求，这里精度降低了，大部分情况可能下一个条件满足的情形下，这个条件都满足了。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//加上了z 《 6的判断，表示表盘太正面的情况下也不算落腕</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>totalx</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=o>-</span><span class=n>40000</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=n>z</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>6</span><span class=p>.</span><span class=na>0f</span><span class=w> </span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=c1>//gyro</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//2 实时的z轴，也就是表盘正上方的姿态 9.8 对应的是地球重力，如果正上方，z应该是9，8</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//完全竖着z应该0， 4.9以上大概就是表盘比较正面的一个状态。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//同时添加限制条件，y&lt;5.0 ，过滤掉表面正对人脸侧过来的这种情况。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>z</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>4</span><span class=p>.</span><span class=na>9f</span><span class=w> </span><span class=o>||</span><span class=w> </span><span class=p>(</span><span class=n>avgAccelZ</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>5</span><span class=p>.</span><span class=na>0f</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=n>z</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>9</span><span class=p>.</span><span class=na>0f</span><span class=p>))</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=n>y</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>5</span><span class=p>.</span><span class=na>0f</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=p>(</span><span class=n>result</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>LinkedList_init</span><span class=p>(</span><span class=o>&amp;</span><span class=n>accelLinkedList</span><span class=p>,</span><span class=w> </span><span class=n>QUEE_LENGTH</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h4 class=heading-element id=framework-部分><span>Framework 部分</span>
+<a href=#framework-%e9%83%a8%e5%88%86 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>由于虚拟的是一个一次性的 sensor<br>注册 sensor 用的方法：</p><blockquote><p>mSensorManager.requestTriggerSensor(triggerEventListener, wristDownSensor);</p></blockquote><p>取消 sensor 的方法：</p><blockquote><p>mSensorManager.cancelTriggerSensor(triggerEventListener, wristDownSensor);</p></blockquote><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>private</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>updateWristDownSensorListener</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>SensorManager</span><span class=w> </span><span class=n>mSensorManager</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>(</span><span class=n>SensorManager</span><span class=p>)</span><span class=w> </span><span class=n>mContext</span><span class=p>.</span><span class=na>getSystemService</span><span class=p>(</span><span class=n>Context</span><span class=p>.</span><span class=na>SENSOR_SERVICE</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>Sensor</span><span class=w> </span><span class=n>wristDownSensor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mSensorManager</span><span class=p>.</span><span class=na>getDefaultSensor</span><span class=p>(</span><span class=n>Sensor</span><span class=p>.</span><span class=na>TYPE_WRIST_DOWN</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=p>(</span><span class=n>wristDownSensor</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//reset set listener</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mSensorManager</span><span class=p>.</span><span class=na>cancelTriggerSensor</span><span class=p>(</span><span class=n>triggerEventListener</span><span class=p>,</span><span class=w> </span><span class=n>wristDownSensor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>triggerEventListener</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>//init triggerEventListener</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>triggerEventListener</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TriggerEventListener</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>onTrigger</span><span class=p>(</span><span class=n>TriggerEvent</span><span class=w> </span><span class=n>event</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>onWristDownTrigger</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>};</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mSensorManager</span><span class=p>.</span><span class=na>requestTriggerSensor</span><span class=p>(</span><span class=n>triggerEventListener</span><span class=p>,</span><span class=w> </span><span class=n>wristDownSensor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>亮屏注册，息屏取消</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>onDisplayStateChange</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>state</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// This method is only needed to support legacy display blanking behavior</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// where the display&#39;s power state is coupled to suspend or to the power HAL.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// The order of operations matters here.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>synchronized</span><span class=w> </span><span class=p>(</span><span class=n>mLock</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mDisplayState</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>state</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>mDisplayState</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>state</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=c1>//... 省略</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>state</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>Display</span><span class=p>.</span><span class=na>STATE_OFF</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>Log</span><span class=p>.</span><span class=na>e</span><span class=p>(</span><span class=n>TAG</span><span class=p>,</span><span class=s>&#34;onDisplayStateChange STATE_OFF&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>cancleWristDownSensor</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>state</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>Display</span><span class=p>.</span><span class=na>STATE_ON</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>Log</span><span class=p>.</span><span class=na>e</span><span class=p>(</span><span class=n>TAG</span><span class=p>,</span><span class=s>&#34;onDisplayStateChange STATE_ON&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>updateWristDownSensorListener</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>触发函数：<br>走 power key 的灭屏流程：</p><blockquote><p>goToSleepInternal(time,PowerManager.GO_TO_SLEEP_REASON_WRISTDOWN,0,Process.SYSTEM_UID);</p></blockquote><p>添加了一个息屏 reason: GO_TO_SLEEP_REASON_WRISTDOWN ,用于 log 和其余业务的判断依据</p><p>添加了 isSkipWristDown，增加了接口，用于过滤一些无需要手势息屏的业务。<br>(mWakeLockSummary & WAKE_LOCK_STAY_AWAKE) != 0 主要针对 申请 wakelock 的页面，不去执行息屏。</p><p><strong>PS：</strong><br>由于 sensor 虚拟的是 TriggerSensor，在 onChange 方法后，sensor 会自动任务结束。<br>所以如果判断到非息屏状态，要从新去注册 sensor</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>private</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>onWristDownTrigger</span><span class=p>(){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>long</span><span class=w> </span><span class=n>time</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mClock</span><span class=p>.</span><span class=na>uptimeMillis</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kt>boolean</span><span class=w> </span><span class=n>isWristDownEnable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mSystemProperties</span><span class=p>.</span><span class=na>get</span><span class=p>(</span><span class=n>WRIST_DOWN_ENABLE</span><span class=p>,</span><span class=w> </span><span class=s>&#34;1&#34;</span><span class=p>).</span><span class=na>equals</span><span class=p>(</span><span class=s>&#34;1&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=p>(</span><span class=n>isWristDownEnable</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=n>isSkipWristDown</span><span class=p>()){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>goToSleepInternal</span><span class=p>(</span><span class=n>time</span><span class=p>,</span><span class=n>PowerManager</span><span class=p>.</span><span class=na>GO_TO_SLEEP_REASON_WRISTDOWN</span><span class=p>,</span><span class=n>0</span><span class=p>,</span><span class=n>Process</span><span class=p>.</span><span class=na>SYSTEM_UID</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=k>else</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>updateWristDownSensorListener</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>private</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=nf>isSkipWristDown</span><span class=p>(){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=n>mStayOn</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>||</span><span class=w> </span><span class=n>mProximityPositive</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>||</span><span class=w> </span><span class=p>(</span><span class=n>mWakeLockSummary</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=n>WAKE_LOCK_STAY_AWAKE</span><span class=p>)</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>||</span><span class=w> </span><span class=n>mScreenBrightnessBoostInProgress</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>||</span><span class=w> </span><span class=o>!</span><span class=n>mBootCompleted</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h4 class=heading-element id=参考部分><span>参考部分</span>
+<a href=#%e5%8f%82%e8%80%83%e9%83%a8%e5%88%86 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><h5 class=heading-element id=参考到的资料><span>参考到的资料</span>
+<a href=#%e5%8f%82%e8%80%83%e5%88%b0%e7%9a%84%e8%b5%84%e6%96%99 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>1.<a href=http://www.c-s-a.org.cn/html/2020/6/7443.html target=_blank rel="external nofollow noopener noreferrer">基于加速度传感器的人体运动模式识别</a></p><p>2.<a href=%E5%9F%BA%E4%BA%8E%E6%83%AF%E6%80%A7%E4%BC%A0%E6%84%9F%E5%99%A8%20MPU6050%20%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95.pdf>基于惯性传感器 MPU6050 的手势识别方法.pdf</a></p><p>3.<a href=https://max.book118.com/html/2018/1013/6232040220001222.shtm target=_blank rel="external nofollow noopener noreferrer">基于三轴加速度传感器的手势识别-刘蓉.pdf</a><br>论文连接：<a href=%E6%89%8B%E5%8A%BF%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E8%B5%84%E6%BA%90#%E5%9F%BA%E4%BA%8E%E4%B8%89%E8%BD%B4%E5%8A%A0%E9%80%9F%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E7%9A%84%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB-%E5%88%98%E8%93%89>手势参考资料资源#基于三轴加速度传感器的手势识别-刘蓉</a></p><h5 class=heading-element id=搜索到的无关资料><span>搜索到的无关资料</span>
+<a href=#%e6%90%9c%e7%b4%a2%e5%88%b0%e7%9a%84%e6%97%a0%e5%85%b3%e8%b5%84%e6%96%99 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p><a href=https://github.com/xioTechnologies/Fusion target=_blank rel="external nofollow noopener noreferrer">Site Unreachable</a></p></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/wms/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・WMS</span></span></a> 7</div><div class=collection-nav><a href=/posts/%E8%AE%A4%E8%AF%86%E7%AA%97%E5%8F%A3-%E7%AA%97%E5%8F%A3%E6%A8%A1%E5%BC%8F-%E7%AA%97%E5%8F%A3%E5%B1%82%E7%BA%A7android-12-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=prev title="【Android 12】认识窗口_android 窗口模式 窗口层级-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>【Android 12】认识窗口_android 窗口模式 窗口层级-CSDN博客</span>
+</a><a href=/posts/android-%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E9%9F%B3%E9%87%8F%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/ class=collection-nav-item rel=next title="Android 原生安全音量逻辑设计"><span>Android 原生安全音量逻辑设计</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:34:01">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/adsp-wristdown-%E6%B5%81%E7%A8%8B%E4%B8%8E%E5%AE%9E%E7%8E%B0/ data-title="Adsp Wristdown 流程与实现"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/%E5%AE%9E%E6%88%98/ class=post-tag title="标签 - 实战">实战</a><a href=/tags/%E7%AE%97%E6%B3%95%E7%A0%94%E7%A9%B6/ class=post-tag title="标签 - 算法研究">算法研究</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a><a href=/tags/sensor/ class=post-tag title="标签 - Sensor">Sensor</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=prev title="Android - 深入浅出理解SeLinux-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android - 深入浅出理解SeLinux-CSDN博客</a><a href=/posts/%E4%BB%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%B0-hugging-face/ class=post-nav-item rel=next title="从神经网络到 Hugging Face">从神经网络到 Hugging Face<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><ul><li><ul><li><a href=#背景介绍>背景介绍</a><ul><li><ul><li><a href=#sensorhub>SensorHub</a></li><li><a href=#adsp>ADSP</a></li></ul></li></ul></li><li><a href=#adsp-部分>ADSP 部分</a><ul><li><a href=#编译>编译</a></li><li><a href=#虚拟合成-sensor-添加>虚拟合成 Sensor 添加</a><ul><li><a href=#算法添加>算法添加</a></li></ul></li></ul></li><li><a href=#算法部分>算法部分</a><ul><li><a href=#数据结构>数据结构</a></li><li><a href=#运动检测>运动检测</a></li></ul></li><li><a href=#framework-部分>Framework 部分</a></li><li><a href=#参考部分>参考部分</a><ul><li><a href=#参考到的资料>参考到的资料</a></li><li><a href=#搜索到的无关资料>搜索到的无关资料</a></li></ul></li></ul></li></ul></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/8802df6b3498b3095433d775c411367f.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

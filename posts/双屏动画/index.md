@@ -1,0 +1,388 @@
+# 双屏动画
+
+## 目标：
+
+![45d40ecaa001304584a749db64e73c80\_MD5](https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif)
+
+## 任务分析和分解：
+
+[#一 监听多指事件](#%E4%B8%80%20%E7%9B%91%E5%90%AC%E5%A4%9A%E6%8C%87%E4%BA%8B%E4%BB%B6)\
+[#二 任务跨屏移动](#%E4%BA%8C%20%E4%BB%BB%E5%8A%A1%E8%B7%A8%E5%B1%8F%E7%A7%BB%E5%8A%A8)
+
+#### 一 监听多指事件
+
+监听手指事件可以参考SystemGesturesPointerEventListener.java\
+通过继承实现PointerEventListener 实现
+
+```java
+import android.view.WindowManagerPolicyConstants.PointerEventListener;
+
+
+实现其中的方法：     
+@Override
+public void onPointerEvent(MotionEvent motionEvent) { 
+   //实现其中的 down move up 事件
+
+}
+
+```
+
+#### 二 任务跨屏移动
+
+![3f862f7353fd7a9cbf45970c70f60729\_MD5](https://picgo.myjojo.fun:666/i/2024/10/16/670f65bcb57d2.png)
+
+```java
+我们在DisplayContent里面做功能实现
+
+mRootWindowContainer.moveRootTaskToDisplay(rootTaskId,otherDisplay.mDisplayId,true);//把task移动到另一屏
+
+
+```
+
+#### 三 移动动画方案-虚拟镜像屏幕
+
+方案：
+
+镜像模式与真实镜像坐标是同步的。
+
+![9f22d9e76d5eb07ecbe9add86a7b36e0\_MD5](https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b3c7a.png)
+
+![ff470b3b344362fbce554c3ad5f54085\_MD5](https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b515b.png)
+
+1. 先创建镜像屏幕图层，当前状态应该是镜像图层盖在源屏幕上面。
+2. 将源屏幕图层，移动到屏幕1的左边。镜像对应的需要在屏幕上显示。
+3. 移动原有屏幕画面到右侧显示器
+4. 判断开始动画移动 -- > 更改图层坐标，动画结束后，判断是否移位 1 移位动画，2 复位动画
+
+创建镜像屏幕
+
+```java
+//添加图层
+SurfaceControl copyTaskSc = null;   
+SurfaceControl copyTaskBuffer = null;
+
+SurfaceControl realWindwosSateBuffer = null;
+
+//创建一个镜像图层
+if(copyTaskSc == null){
+	makeChildSurface(null).setName("copyTaskSc")
+				.setParent(getWindowingLayer())            
+				.build();// getWindowingLayer 在app上吗
+				
+}
+
+if(copyTaskBuffer == null){
+	//镜像一个task的 surfacecontrol   ---- copyTaskBuffer 
+	//surfacecontrol里面其实有一个layer
+	copyTaskBuffer = SurfaceContrl.mirrorSurface(rootTask.getSurfaceControl());
+
+	//原生的一个
+	realWindwosSateBuffer = rootTask.getSurfaceControl();
+
+	//获取一个事务 SurfaceContrl.Transaction t = mWmSerivce.mTransactionFactory.get();
+	//把 拷贝的 copyTaskBuffer 放到了 copyTaskSc 下面，copyTaskSc 在原来的屏幕下面
+	t.reparent(copyTaskBuffer,copyTaskSc);
+	//显示图层
+	t.show(copyTaskSc);
+	t.show(copyTaskBuffer);
+	
+	//平移
+	Matrix  matrix = new Matrix();
+	matrix.reset();
+	matrix.postTranslate(100,0);
+	//往平移
+	t.setMatrix(copyTaskBuffer,matrix,new float[9])
+	
+	t.apply();
+}
+```
+
+移动屏幕到右侧，并且设置左边屏幕外面。
+
+```java
+
+//由于移动到2屏幕，需要再移动到屏幕外，会有闪屏的情况，需要再移动之前，先进行移动。
+//直接调用下面的 startMoveCurrentScreenTask（0，0）
+mRootWindowContainer.moveRootTaskToDisplay(rootTaskId,otherDisplay.mDisplayId,true);//把task移动到另一屏
+```
+
+动画
+
+```java
+//移动镜像图层
+
+public void startMoveCurrentScreenTask(int x ,int y){
+    if(copyTaskBuffer != null){
+        SurfaceControl.Transaction t = mWnService.mTrasactionFactory.get();
+        
+        //屏幕2
+       Matrix matrix = new Matrix();
+        int width = getDisaplayINfog().logicalWIdth;
+        matrix.postTranslate(-width+x,0);
+        
+        //屏幕1
+    	matrix = new Matrix();
+        matrix.reset();
+        matrix.postTranslate(width,y);
+        t.setMatrix(copyTaskBuffer,matrix,new floatp[9]);
+       
+
+        
+        t.setMatix(reaWindowStateBuffer,matrix,new floatp[9]);
+        t.aaply();
+    }
+    
+}
+```
+
+```java
+//真实图层 也需要操作,先移动到最左侧
+reaWindowStateBuffer = rootTask.getSurfaceControl();
+
+```
+
+手指抬起后处理流程：
+
+如果是自动移动屏幕2，则offsetX -----> 1440（width）\
+如果是自动移动屏幕1，则offsetX -----> 0（原点）
+
+![9178ffcf2c4255d0c86b392006fc219c\_MD5](https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b56e2.png)
+
+```java
+
+ case MotionEvent.ACTION_POINTER_UP:
+ case MotionEvent.ACTION_UP:
+  startAutoMove(offsetX, .xxx > xxx ? 1: 0)
+
+
+
+```
+
+```java
+void startAutoMove(int offsetX, int destDisplay){
+    int endX = destDisplay  0 or  width
+    //判断最后屏幕。然后动画结束位置
+    
+    ValueAnimator valueAnimiator =  ValueAnimator.ofInt(offsetx,end);
+    valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
+        public onUpdate(){
+            int current = int animate.getValue();
+            startmovecurrentScreenTask(x,y);
+        }
+    });
+    valueAnimator.setInterpolator();
+    valueAnimator.setDuration();
+    valueAnimator.staret();
+    
+    
+}
+```
+
+```java
+onAnimationEnd
+    //移除图层
+    SurfaceControl.Transaction t = mWnService.mTrasactionFactory.get();
+    t.remove(copyBuffer);	
+    t.remove(copyTaskSc);
+    t.apply();
+	copyBuffer = null;
+	copyTaskSc = null;
+    
+    //动画如果是返回，需要把原镜像move回去。
+    mRootWindowContainer.moveRootTaskToDisplay(mCurrentTaskId,mDisplayId.mDisplayId,true);
+   //移动原镜像图层，从屏幕外再移动回来。
+    matrix.reset();
+    setMatrix()//归零
+    targetActivity.mLauncherTaskBehind =false
+    mRootWindowContainer.ensureActiviesVisible();
+    
+        
+        
+```
+
+```java
+
+//桌面可以可见
+targetActivity.mLauncherTaskBehind =true
+```
+
+镜像模式，源界面发生变化，镜像坐标也会变化
+
+问题分析：
+
+adb shell dumpsys SurfaceFlinger
+
+adb shell dumpsys input
+
+ToDo:
+
+!\[image-20241017173033900]\(/Users/huangwentao/Library/Application Support/typora-user-images/image-20241017173033900.png)
+
+\=======================================
+
+DisplayContent.java
+
+实现双指监听事件\
+DoubleScreenMovePoiListerner  继承 PointerEventListener
+
+DisplayContext.doTestMoveTaskToOtherDisplay
+
+```
+
+//添加图层
+SurfaceControl copyTaskSc = null;
+SurfaceControl copyTaskBuffer = null;
+
+SurfaceControl realWindwosSateBuffer = null;
+
+
+//add by doublescreenmove
+   public void doTestMoveTaskToOtherDisplay() {
+       DisplayContent otherDisplay = null;
+       if (mRootWindowContainer.getChildCount() == 2) {//检测是不是双屏
+           otherDisplay = (mRootWindowContainer.getChildAt(0) == this) ? mRootWindowContainer.getChildAt(1):mRootWindowContainer.getChildAt(0);//获取另一个屏幕的DisplayContent
+       }
+       if (otherDisplay!= this && otherDisplay!= null) {
+           int rootTaskId = 0;
+           try {
+           	
+           	 SurfaceContrl.Transaction t = mWmSerivce.mTransactionFactory.get();
+           	
+           	
+               Task rootTask = getTopRootTask();//获取当前display的顶部Task
+               if (rootTask.isActivityTypeHome()) {//home类型的task不支持移动
+                   android.util.Log.i("DoubleScreen","doTestMoveTaskToOtherDisplay isActivityTypeHome");
+                   return;
+               }
+               rootTaskId =rootTask.mTaskId;
+               
+               //创建一个镜像图层
+               if(copyTaskSc == null){
+               		makeChildSurface(null).setName("copyTaskSc")
+               					.setParent(getWindowingLayer())            
+               					.build();// getWindowingLayer 在app上吗
+               					
+               }
+              if(copyTaskBuffer == null){
+               		copyTaskBuffer = SurfaceContrl.mirrorSurface(rootTask.getSurfaceControl());
+              
+                    realWindwosSateBuffer = rootTask.getSurfaceControl();
+              
+              
+              		t.reparent(copyTaskBuffer,copyTaskSc);
+              		t.show(copyTaskSc);
+              		t.show(copyTaskBuffer);
+              		
+              		
+              		Matrix  matrix = new Matrix();
+              		matrix.reset();
+              		matrix.postTranslate(100,0);
+              		t.setMatrix(copyTaskBuffer,matrix,new float[9])
+              		
+              		t.apply();
+               }
+               
+               ensureOtherDisplayActivityVisible(ohterdisplay);
+               mRootWindowContainer.moveRootTaskToDisplay(rootTaskId,otherDisplay.mDisplayId,true);//把task移动到另一屏
+           }catch (Exception e) {
+               android.util.Log.i("DoubleScreen","doTestMoveTaskToOtherDisplay Exception",e);
+           }
+       }
+   }
+   
+   
+   
+   void ensureOtherDisplayActivityVisible(DisplayContext ohter){
+   	    ActivityRecord topAcitiy = ohter.getTopAcitiy(false,false);
+   	    if(topAcitiy != null){
+   	    	topAcitivty.mLauncherTaskBehind = true;
+   	    }
+   }
+
+
+   
+   
+ //end  by doublescreenmove
+ValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListenr());
+
+
+```
+
+```
+
+package com.android.server.wm;
+
+import android.view.MotionEvent;
+import android.view.WindowManagerPolicyConstants;
+
+public class DoubleScreenMovePointerEventListener implements WindowManagerPolicyConstants.PointerEventListener {
+    boolean shouldBeginMove = false;
+    int mPoint0FirstX = 0;
+    int mPoint1FirstX = 0;
+
+    int mPoint0LastX = 0;
+    int mPoint1LastX = 0;
+    int START_GAP = 20;//动作触发阈值，最少移动为20个像素才可以
+    private final WindowManagerService mService;
+
+    public DoubleScreenMovePointerEventListener(WindowManagerService mService, DisplayContent mDisplayContent) {
+        this.mService = mService;
+        this.mDisplayContent = mDisplayContent;
+    }
+
+    private final DisplayContent mDisplayContent;
+
+    @Override
+    public void onPointerEvent(MotionEvent motionEvent) {
+        android.util.Log.i("DoubleScreenTouch","DoubleScreenMovePointerEventListener onPointerEvent motionEvent = "+motionEvent);
+        switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                if (motionEvent.getPointerCount() > 2) {
+                    shouldBeginMove = false;
+                    android.util.Log.i("DoubleScreen","DoubleScreenMovePointerEventListener motionEvent.getPointerCount() > 2 end DoubleScreenMove ");
+                }
+                if (motionEvent.getPointerCount() == 2) {
+                    if (mPoint0FirstX == 0 && mPoint1FirstX == 0) {
+                        mPoint0FirstX = (int)motionEvent.getX(0);
+                        mPoint1FirstX = (int)motionEvent.getX(1);
+                    }
+                }
+                break;
+           case MotionEvent.ACTION_MOVE:
+               if (motionEvent.getPointerCount() == 2) {
+                   if (!shouldBeginMove && motionEvent.getX(0)  - mPoint0FirstX > START_GAP &&
+                           motionEvent.getX(1)  - mPoint1FirstX > START_GAP) { //识别了双指动作达到触发task移动条件，则调用对应mDisplayContent.doTestMoveTaskToOtherDisplay方法
+                       android.util.Log.i("DoubleScreen","DoubleScreenMovePointerEventListener start DoubleScreenMove ");
+                       shouldBeginMove = true;
+                       mDisplayContent.doTestMoveTaskToOtherDisplay();
+                   }
+
+					if(shouldBeginMove){
+						int  detX =  last - initx; 
+					}
+
+                   mPoint0LastX = (int)motionEvent.getX(0);
+                   mPoint1LastX = (int)motionEvent.getX(1);
+               }
+               break;
+           case MotionEvent.ACTION_POINTER_UP:
+           case MotionEvent.ACTION_UP:
+               shouldBeginMove = false;
+               mPoint0FirstX = mPoint1FirstX =0;
+               android.util.Log.i("DoubleScreen","DoubleScreenMovePointerEventListener ACTION_UP end DoubleScreenMove ");
+               break;
+       }
+    }
+
+}
+
+
+```
+
+
+---
+
+> 作者: [wentao](https://github.com/huang8604)  
+> URL: https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/  
+

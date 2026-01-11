@@ -1,0 +1,720 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Android13 BufferQueueProducer QueueBuffer流程分析-CSDN博客 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。
+"><meta name=keywords content='clippings,转载,blog'><meta itemprop=name content="Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客"><meta itemprop=description content="BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。"><meta itemprop=datePublished content="2024-11-06T06:57:52+00:00"><meta itemprop=dateModified content="2024-11-05T01:33:58+00:00"><meta itemprop=wordCount content="2226"><meta itemprop=keywords content="Clippings,转载,Blog"><meta property="og:url" content="https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客"><meta property="og:description" content="BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:52+00:00"><meta property="article:modified_time" content="2024-11-05T01:33:58+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="转载"><meta property="article:tag" content="Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客"><meta name=twitter:description content="BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 Choreographer postCallback流程分析_choreographer.postcallback-CSDN博客"><link rel=next type=text/html href=https://huang8604.github.io/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueProducer dequeueBuffer流程分析-CSDN博客"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title="Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/"},"genre":"posts","keywords":"clippings, 转载, blog","wordcount":2226,"url":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/","datePublished":"2024-11-06T06:57:52+00:00","dateModified":"2024-11-05T01:33:58+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Android13 BufferQueueProducer QueueBuffer流程分析-CSDN博客</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/ class=post-collection title="合集 - 图形显示"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> 图形显示</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:52"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:33:58"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="2226 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 2300 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 5 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><ul><li><ul><li><a href=#bpconsumerlistener-onframeavailable>BpConsumerListener onFrameAvailable</a><ul><li><a href=#bufferqueuelayer-onframeavailable>BufferQueueLayer onFrameAvailable</a></li></ul></li></ul></li></ul></li></ul></nav></div></div><div class=content id=content><p>BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=3 style=--fi-max-shown-lines:10;--fi-line-digit:3;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span><span class=lnt>241
+</span><span class=lnt>242
+</span><span class=lnt>243
+</span><span class=lnt>244
+</span><span class=lnt>245
+</span><span class=lnt>246
+</span><span class=lnt>247
+</span><span class=lnt>248
+</span><span class=lnt>249
+</span><span class=lnt>250
+</span><span class=lnt>251
+</span><span class=lnt>252
+</span><span class=lnt>253
+</span><span class=lnt>254
+</span><span class=lnt>255
+</span><span class=lnt>256
+</span><span class=lnt>257
+</span><span class=lnt>258
+</span><span class=lnt>259
+</span><span class=lnt>260
+</span><span class=lnt>261
+</span><span class=lnt>262
+</span><span class=lnt>263
+</span><span class=lnt>264
+</span><span class=lnt>265
+</span><span class=lnt>266
+</span><span class=lnt>267
+</span><span class=lnt>268
+</span><span class=lnt>269
+</span><span class=lnt>270
+</span><span class=lnt>271
+</span><span class=lnt>272
+</span><span class=lnt>273
+</span><span class=lnt>274
+</span><span class=lnt>275
+</span><span class=lnt>276
+</span><span class=lnt>277
+</span><span class=lnt>278
+</span><span class=lnt>279
+</span><span class=lnt>280
+</span><span class=lnt>281
+</span><span class=lnt>282
+</span><span class=lnt>283
+</span><span class=lnt>284
+</span><span class=lnt>285
+</span><span class=lnt>286
+</span><span class=lnt>287
+</span><span class=lnt>288
+</span><span class=lnt>289
+</span><span class=lnt>290
+</span><span class=lnt>291
+</span><span class=lnt>292
+</span><span class=lnt>293
+</span><span class=lnt>294
+</span><span class=lnt>295
+</span><span class=lnt>296
+</span><span class=lnt>297
+</span><span class=lnt>298
+</span><span class=lnt>299
+</span><span class=lnt>300
+</span><span class=lnt>301
+</span><span class=lnt>302
+</span><span class=lnt>303
+</span><span class=lnt>304
+</span><span class=lnt>305
+</span><span class=lnt>306
+</span><span class=lnt>307
+</span><span class=lnt>308
+</span><span class=lnt>309
+</span><span class=lnt>310
+</span><span class=lnt>311
+</span><span class=lnt>312
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferQueueProducer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BufferQueueProducer</span> <span class=o>:</span> <span class=k>public</span> <span class=n>BnGraphicBufferProducer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>status_t</span> <span class=n>BufferQueueProducer</span><span class=o>::</span><span class=n>queueBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=n>QueueBufferInput</span> <span class=o>&amp;</span><span class=n>input</span><span class=p>,</span> <span class=n>QueueBufferOutput</span> <span class=o>*</span><span class=n>output</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>ATRACE_CALL</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>ATRACE_BUFFER_INDEX</span><span class=p>(</span><span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>int64_t</span> <span class=n>requestedPresentTimestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>isAutoTimestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>android_dataspace</span> <span class=n>dataSpace</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>Rect</span> <span class=nf>crop</span><span class=p>(</span><span class=n>Rect</span><span class=o>::</span><span class=n>EMPTY_RECT</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>scalingMode</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=n>transform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=n>stickyTransform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;</span> <span class=n>acquireFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>getFrameTimestamps</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>input</span><span class=p>.</span><span class=n>deflate</span><span class=p>(</span><span class=o>&amp;</span><span class=n>requestedPresentTimestamp</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>isAutoTimestamp</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>dataSpace</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=o>&amp;</span><span class=n>crop</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>scalingMode</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>transform</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>acquireFence</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>stickyTransform</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=o>&amp;</span><span class=n>getFrameTimestamps</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>Region</span><span class=o>&amp;</span> <span class=n>surfaceDamage</span> <span class=o>=</span> <span class=n>input</span><span class=p>.</span><span class=n>getSurfaceDamage</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>HdrMetadata</span><span class=o>&amp;</span> <span class=n>hdrMetadata</span> <span class=o>=</span> <span class=n>input</span><span class=p>.</span><span class=n>getHdrMetadata</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>acquireFence</span> <span class=o>==</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: fence is NULL&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>acquireFenceTime</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>make_shared</span><span class=o>&lt;</span><span class=n>FenceTime</span><span class=o>&gt;</span><span class=p>(</span><span class=n>acquireFence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>switch</span> <span class=p>(</span><span class=n>scalingMode</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>case</span> <span class=nl>NATIVE_WINDOW_SCALING_MODE_FREEZE</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>case</span> <span class=nl>NATIVE_WINDOW_SCALING_MODE_SCALE_TO_WINDOW</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>case</span> <span class=nl>NATIVE_WINDOW_SCALING_MODE_SCALE_CROP</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>case</span> <span class=nl>NATIVE_WINDOW_SCALING_MODE_NO_SCALE_CROP</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: unknown scaling mode %d&#34;</span><span class=p>,</span> <span class=n>scalingMode</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IConsumerListener</span><span class=o>&gt;</span> <span class=n>frameAvailableListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IConsumerListener</span><span class=o>&gt;</span> <span class=n>frameReplacedListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>callbackTicket</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>uint64_t</span> <span class=n>currentFrameNumber</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>BufferItem</span> <span class=n>item</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=c1>// Autolock scope
+</span></span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>lock_guard</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>mutex</span><span class=o>&gt;</span> <span class=n>lock</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mIsAbandoned</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: BufferQueue has been abandoned&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>NO_INIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConnectedApi</span> <span class=o>==</span> <span class=n>BufferQueueCore</span><span class=o>::</span><span class=n>NO_CONNECTED_API</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: BufferQueue has no connected producer&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>NO_INIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>slot</span> <span class=o>&lt;</span> <span class=mi>0</span> <span class=o>||</span> <span class=n>slot</span> <span class=o>&gt;=</span> <span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: slot index %d out of range [0, %d)&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>slot</span><span class=p>,</span> <span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=nf>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isDequeued</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: slot %d is not owned by the producer &#34;</span>
+</span></span><span class=line><span class=cl>                    <span class=s>&#34;(state = %s)&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>,</span> <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>string</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=nf>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mRequestBufferCalled</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: slot %d was queued without requesting &#34;</span>
+</span></span><span class=line><span class=cl>                    <span class=s>&#34;a buffer&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// If shared buffer mode has just been enabled, cache the slot of the
+</span></span></span><span class=line><span class=cl>        <span class=c1>// first buffer that is queued and mark it as the shared buffer.
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span> <span class=o>&amp;&amp;</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferSlot</span> <span class=o>==</span>
+</span></span><span class=line><span class=cl>                <span class=n>BufferQueueCore</span><span class=o>::</span><span class=n>INVALID_BUFFER_SLOT</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferSlot</span> <span class=o>=</span> <span class=n>slot</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>mShared</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>BQ_LOGV</span><span class=p>(</span><span class=s>&#34;queueBuffer: slot=%d/%&#34;</span> <span class=n>PRIu64</span> <span class=s>&#34; time=%&#34;</span> <span class=n>PRIu64</span> <span class=s>&#34; dataSpace=%d&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=s>&#34; validHdrMetadataTypes=0x%x crop=[%d,%d,%d,%d] transform=%#x scale=%s&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>slot</span><span class=p>,</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFrameCounter</span> <span class=o>+</span> <span class=mi>1</span><span class=p>,</span> <span class=n>requestedPresentTimestamp</span><span class=p>,</span> <span class=n>dataSpace</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>hdrMetadata</span><span class=p>.</span><span class=n>validTypes</span><span class=p>,</span> <span class=n>crop</span><span class=p>.</span><span class=n>left</span><span class=p>,</span> <span class=n>crop</span><span class=p>.</span><span class=n>top</span><span class=p>,</span> <span class=n>crop</span><span class=p>.</span><span class=n>right</span><span class=p>,</span> <span class=n>crop</span><span class=p>.</span><span class=n>bottom</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>transform</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>BufferItem</span><span class=o>::</span><span class=n>scalingModeName</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>scalingMode</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;&amp;</span> <span class=n>graphicBuffer</span><span class=p>(</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mGraphicBuffer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>Rect</span> <span class=nf>bufferRect</span><span class=p>(</span><span class=n>graphicBuffer</span><span class=o>-&gt;</span><span class=n>getWidth</span><span class=p>(),</span> <span class=n>graphicBuffer</span><span class=o>-&gt;</span><span class=n>getHeight</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>Rect</span> <span class=nf>croppedRect</span><span class=p>(</span><span class=n>Rect</span><span class=o>::</span><span class=n>EMPTY_RECT</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>crop</span><span class=p>.</span><span class=n>intersect</span><span class=p>(</span><span class=n>bufferRect</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>croppedRect</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>croppedRect</span> <span class=o>!=</span> <span class=n>crop</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;queueBuffer: crop rect is not contained within the &#34;</span>
+</span></span><span class=line><span class=cl>                    <span class=s>&#34;buffer in slot %d&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// Override UNKNOWN dataspace with consumer default
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>dataSpace</span> <span class=o>==</span> <span class=n>HAL_DATASPACE_UNKNOWN</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>dataSpace</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mDefaultBufferDataSpace</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mFence</span> <span class=o>=</span> <span class=n>acquireFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>queue</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// Increment the frame counter and store a local version of it
+</span></span></span><span class=line><span class=cl>        <span class=c1>// for use outside the lock on mCore-&gt;mMutex.
+</span></span></span><span class=line><span class=cl>        <span class=o>++</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFrameCounter</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>currentFrameNumber</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFrameCounter</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mFrameNumber</span> <span class=o>=</span> <span class=n>currentFrameNumber</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mAcquireCalled</span> <span class=o>=</span> <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mAcquireCalled</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mGraphicBuffer</span> <span class=o>=</span> <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mGraphicBuffer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mCrop</span> <span class=o>=</span> <span class=n>crop</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mTransform</span> <span class=o>=</span> <span class=n>transform</span> <span class=o>&amp;</span>
+</span></span><span class=line><span class=cl>                <span class=o>~</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>NATIVE_WINDOW_TRANSFORM_INVERSE_DISPLAY</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mTransformToDisplayInverse</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>                <span class=p>(</span><span class=n>transform</span> <span class=o>&amp;</span> <span class=n>NATIVE_WINDOW_TRANSFORM_INVERSE_DISPLAY</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mScalingMode</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>scalingMode</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mTimestamp</span> <span class=o>=</span> <span class=n>requestedPresentTimestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mIsAutoTimestamp</span> <span class=o>=</span> <span class=n>isAutoTimestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mDataSpace</span> <span class=o>=</span> <span class=n>dataSpace</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mHdrMetadata</span> <span class=o>=</span> <span class=n>hdrMetadata</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mFrameNumber</span> <span class=o>=</span> <span class=n>currentFrameNumber</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mSlot</span> <span class=o>=</span> <span class=n>slot</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mFence</span> <span class=o>=</span> <span class=n>acquireFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mFenceTime</span> <span class=o>=</span> <span class=n>acquireFenceTime</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mIsDroppable</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mAsyncMode</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>                <span class=p>(</span><span class=n>mConsumerIsSurfaceFlinger</span> <span class=o>&amp;&amp;</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueueBufferCanDrop</span><span class=p>)</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>                <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mLegacyBufferDrop</span> <span class=o>&amp;&amp;</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueueBufferCanDrop</span><span class=p>)</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>                <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span> <span class=o>&amp;&amp;</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferSlot</span> <span class=o>==</span> <span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mSurfaceDamage</span> <span class=o>=</span> <span class=n>surfaceDamage</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mQueuedBuffer</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mAutoRefresh</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span> <span class=o>&amp;&amp;</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mAutoRefresh</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mApi</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConnectedApi</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mStickyTransform</span> <span class=o>=</span> <span class=n>stickyTransform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// Cache the shared buffer data so that the BufferItem can be recreated.
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferCache</span><span class=p>.</span><span class=n>crop</span> <span class=o>=</span> <span class=n>crop</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferCache</span><span class=p>.</span><span class=n>transform</span> <span class=o>=</span> <span class=n>transform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferCache</span><span class=p>.</span><span class=n>scalingMode</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=n>scalingMode</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferCache</span><span class=p>.</span><span class=n>dataspace</span> <span class=o>=</span> <span class=n>dataSpace</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>bufferReplaced</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>empty</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// When the queue is empty, we can ignore mDequeueBufferCannotBlock
+</span></span></span><span class=line><span class=cl>            <span class=c1>// and simply queue this buffer
+</span></span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>frameAvailableListener</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConsumerListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// When the queue is not empty, we need to look at the last buffer
+</span></span></span><span class=line><span class=cl>            <span class=c1>// in the queue to see if we need to replace it
+</span></span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>last</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>itemAt</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>-</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>last</span><span class=p>.</span><span class=n>mIsDroppable</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>last</span><span class=p>.</span><span class=n>mIsStale</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>mSlots</span><span class=p>[</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>freeQueued</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                    <span class=c1>// After leaving shared buffer mode, the shared buffer will
+</span></span></span><span class=line><span class=cl>                    <span class=c1>// still be around. Mark it as no longer shared if this
+</span></span></span><span class=line><span class=cl>                    <span class=c1>// operation causes it to be free.
+</span></span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>                            <span class=n>mSlots</span><span class=p>[</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isFree</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=n>mSlots</span><span class=p>[</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>mShared</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>// Don&#39;t put the shared buffer on the free list.
+</span></span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isShared</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mActiveBuffers</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFreeBuffers</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>last</span><span class=p>.</span><span class=n>mSlot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>output</span><span class=o>-&gt;</span><span class=n>bufferReplaced</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=c1>// Make sure to merge the damage rect from the frame we&#39;re about
+</span></span></span><span class=line><span class=cl>                <span class=c1>// to drop into the new frame&#39;s damage rect.
+</span></span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>last</span><span class=p>.</span><span class=n>mSurfaceDamage</span><span class=p>.</span><span class=n>bounds</span><span class=p>()</span> <span class=o>==</span> <span class=n>Rect</span><span class=o>::</span><span class=n>INVALID_RECT</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>                    <span class=n>item</span><span class=p>.</span><span class=n>mSurfaceDamage</span><span class=p>.</span><span class=n>bounds</span><span class=p>()</span> <span class=o>==</span> <span class=n>Rect</span><span class=o>::</span><span class=n>INVALID_RECT</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>item</span><span class=p>.</span><span class=n>mSurfaceDamage</span> <span class=o>=</span> <span class=n>Region</span><span class=o>::</span><span class=n>INVALID_REGION</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>item</span><span class=p>.</span><span class=n>mSurfaceDamage</span> <span class=o>|=</span> <span class=n>last</span><span class=p>.</span><span class=n>mSurfaceDamage</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=c1>// Overwrite the droppable buffer with the incoming one
+</span></span></span><span class=line><span class=cl>                <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>editItemAt</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span> <span class=o>=</span> <span class=n>item</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>frameReplacedListener</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConsumerListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>frameAvailableListener</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConsumerListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mBufferHasBeenQueued</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mDequeueCondition</span><span class=p>.</span><span class=n>notify_all</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mLastQueuedSlot</span> <span class=o>=</span> <span class=n>slot</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>width</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mDefaultWidth</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>height</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mDefaultHeight</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>transformHint</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mTransformHintInUse</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mTransformHint</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>numPendingBuffers</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>uint32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>size</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>output</span><span class=o>-&gt;</span><span class=n>nextFrameNumber</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFrameCounter</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>ATRACE_INT</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConsumerName</span><span class=p>.</span><span class=n>string</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>int32_t</span><span class=o>&gt;</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>size</span><span class=p>()));</span>
+</span></span><span class=line><span class=cl><span class=cp>#ifndef NO_BINDER
+</span></span></span><span class=line><span class=cl>        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mOccupancyTracker</span><span class=p>.</span><span class=n>registerOccupancyChange</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mQueue</span><span class=p>.</span><span class=n>size</span><span class=p>());</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl>        <span class=c1>// Take a ticket for the callback functions
+</span></span></span><span class=line><span class=cl>        <span class=n>callbackTicket</span> <span class=o>=</span> <span class=n>mNextCallbackTicket</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>VALIDATE_CONSISTENCY</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=c1>// Autolock scope
+</span></span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// It is okay not to clear the GraphicBuffer when the consumer is SurfaceFlinger because
+</span></span></span><span class=line><span class=cl>    <span class=c1>// it is guaranteed that the BufferQueue is inside SurfaceFlinger&#39;s process and
+</span></span></span><span class=line><span class=cl>    <span class=c1>// there will be no Binder call
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mConsumerIsSurfaceFlinger</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>item</span><span class=p>.</span><span class=n>mGraphicBuffer</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Update and get FrameEventHistory.
+</span></span></span><span class=line><span class=cl>    <span class=n>nsecs_t</span> <span class=n>postedTime</span> <span class=o>=</span> <span class=n>systemTime</span><span class=p>(</span><span class=n>SYSTEM_TIME_MONOTONIC</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>NewFrameEventsEntry</span> <span class=n>newFrameEventsEntry</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>currentFrameNumber</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>postedTime</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>requestedPresentTimestamp</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>acquireFenceTime</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=n>addAndGetFrameTimestamps</span><span class=p>(</span><span class=o>&amp;</span><span class=n>newFrameEventsEntry</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>getFrameTimestamps</span> <span class=o>?</span> <span class=o>&amp;</span><span class=n>output</span><span class=o>-&gt;</span><span class=nl>frameTimestamps</span> <span class=p>:</span> <span class=k>nullptr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Call back without the main BufferQueue lock held, but with the callback
+</span></span></span><span class=line><span class=cl>    <span class=c1>// lock held so we can ensure that callbacks occur in order
+</span></span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>connectedApi</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;</span> <span class=n>lastQueuedFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=c1>// scope for the lock
+</span></span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>unique_lock</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>mutex</span><span class=o>&gt;</span> <span class=n>lock</span><span class=p>(</span><span class=n>mCallbackMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=n>callbackTicket</span> <span class=o>!=</span> <span class=n>mCurrentCallbackTicket</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCallbackCondition</span><span class=p>.</span><span class=n>wait</span><span class=p>(</span><span class=n>lock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>frameAvailableListener</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>frameAvailableListener</span><span class=o>-&gt;</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=n>item</span><span class=p>);</span> <span class=c1>//通知消费者去消费
+</span></span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=nf>if</span> <span class=p>(</span><span class=n>frameReplacedListener</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>frameReplacedListener</span><span class=o>-&gt;</span><span class=n>onFrameReplaced</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>connectedApi</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConnectedApi</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>lastQueuedFence</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>mLastQueueBufferFence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mLastQueueBufferFence</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>acquireFence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLastQueuedCrop</span> <span class=o>=</span> <span class=n>item</span><span class=p>.</span><span class=n>mCrop</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLastQueuedTransform</span> <span class=o>=</span> <span class=n>item</span><span class=p>.</span><span class=n>mTransform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=o>++</span><span class=n>mCurrentCallbackTicket</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mCallbackCondition</span><span class=p>.</span><span class=n>notify_all</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Wait without lock held
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>connectedApi</span> <span class=o>==</span> <span class=n>NATIVE_WINDOW_API_EGL</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Waiting here allows for two full buffers to be queued but not a
+</span></span></span><span class=line><span class=cl>        <span class=c1>// third. In the event that frames take varying time, this makes a
+</span></span></span><span class=line><span class=cl>        <span class=c1>// small trade-off in favor of latency rather than throughput.
+</span></span></span><span class=line><span class=cl>        <span class=n>lastQueuedFence</span><span class=o>-&gt;</span><span class=n>waitForever</span><span class=p>(</span><span class=s>&#34;Throttling EGL Production&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>NO_ERROR</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>将Surface进程数据传过来，然后封装成BufferItem，放入BufferQueueCore的mQueue中，再通过frameAvailableListener通知消费者去消费。</p><h4 class=heading-element id=bpconsumerlistener-onframeavailable><span>BpConsumerListener onFrameAvailable</span>
+<a href=#bpconsumerlistener-onframeavailable class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>调用frameAvailableListener(IConsumerListener)的onFrameAvailable方法，IConsumerListener是一个接口由BpConsumerListener实现，调用BpConsumerListener的onFrameAvailable方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/IConsumerListener.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BpConsumerListener</span> <span class=o>:</span> <span class=k>public</span> <span class=n>SafeBpInterface</span><span class=o>&lt;</span><span class=n>IConsumerListener</span><span class=o>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>onFrameAvailable</span><span class=p>(</span><span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=k>override</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>callRemoteAsync</span><span class=o>&lt;</span><span class=k>decltype</span><span class=p>(</span><span class=o>&amp;</span><span class=n>IConsumerListener</span><span class=o>::</span><span class=n>onFrameAvailable</span><span class=p>)</span><span class=o>&gt;</span><span class=p>(</span><span class=n>Tag</span><span class=o>::</span><span class=n>ON_FRAME_AVAILABLE</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                                        <span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><p>这里的frameAvailableListener是BufferQueueCore的mConsumerListener。</p><p>BufferQueueCore的mConsumerListener是ConsumerBase构造函数传过来的BufferQueue::ProxyConsumerListener。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferLayer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>ProxyConsumerListener</span> <span class=o>:</span> <span class=k>public</span> <span class=n>BnConsumerListener</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=n>BufferQueue</span><span class=o>::</span><span class=n>ProxyConsumerListener</span><span class=o>::</span><span class=n>onFrameAvailable</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>sp</span><span class=o>&lt;</span><span class=n>ConsumerListener</span><span class=o>&gt;</span> <span class=n>listener</span><span class=p>(</span><span class=n>mConsumerListener</span><span class=p>.</span><span class=n>promote</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>listener</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>listener</span><span class=o>-&gt;</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><p>BufferQueue::ProxyConsumerListener中的listener又是ConsumerBase。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/ConsumerBase.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>ConsumerBase</span> <span class=o>:</span> <span class=k>public</span> <span class=k>virtual</span> <span class=n>RefBase</span><span class=p>,</span> <span class=k>protected</span> <span class=n>ConsumerListener</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=n>ConsumerBase</span><span class=o>::</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>CB_LOGV</span><span class=p>(</span><span class=s>&#34;onFrameAvailable&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>sp</span><span class=o>&lt;</span><span class=n>FrameAvailableListener</span><span class=o>&gt;</span> <span class=n>listener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span> <span class=c1>// scope for the lock
+</span></span></span><span class=line><span class=cl>            <span class=n>Mutex</span><span class=o>::</span><span class=n>Autolock</span> <span class=n>lock</span><span class=p>(</span><span class=n>mFrameAvailableMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>listener</span> <span class=o>=</span> <span class=n>mFrameAvailableListener</span><span class=p>.</span><span class=n>promote</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>listener</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>CB_LOGV</span><span class=p>(</span><span class=s>&#34;actually calling onFrameAvailable&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>listener</span><span class=o>-&gt;</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>ConsumerBase中又有一个mFrameAvailableListener，这又是通过外部调用ConsumerBase的setFrameAvailableListener函数传递过来的BufferQueueLayer。</p><p>当BufferQueueLayer有新的buffer到来时，会调用之前在SurfaceFlinger中Layer的创建时注册的ContentsChangedListener的onFrameAvailable方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>BufferQueueLayer</span><span class=o>::</span><span class=n>ContentsChangedListener</span><span class=o>::</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Mutex</span><span class=o>::</span><span class=n>Autolock</span> <span class=n>lock</span><span class=p>(</span><span class=n>mMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>mBufferQueueLayer</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mBufferQueueLayer</span><span class=o>-&gt;</span><span class=n>onFrameAvailable</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=bufferqueuelayer-onframeavailable><span>BufferQueueLayer onFrameAvailable</span>
+<a href=#bufferqueuelayer-onframeavailable class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>调用BufferQueueLayer的onFrameAvailable方法，通知图像或视频帧已经可用并准备好显示：</p><p><a href=/Android13%20BufferQueueLayer%20onFrameAvailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2>Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客</a></p></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・图形显示</span></span></a> 43</div><div class=collection-nav><a href=/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=prev title="Android13 BufferQueueProducer DequeueBuffer流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>Android13 BufferQueueProducer DequeueBuffer流程分析-CSDN博客</span>
+</a><a href=/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=next title="Android13 Choreographer PostCallback流程分析_choreographer.postcallback-CSDN博客"><span>Android13 Choreographer PostCallback流程分析_choreographer.postcallback-CSDN博客</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:33:58">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ data-title="Android13 BufferQueueProducer QueueBuffer流程分析-CSDN博客"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=prev title="Android13 Choreographer PostCallback流程分析_choreographer.postcallback-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android13 Choreographer PostCallback流程分析_choreographer.postcallback-CSDN博客</a><a href=/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=next title="Android13 BufferQueueProducer DequeueBuffer流程分析-CSDN博客">Android13 BufferQueueProducer DequeueBuffer流程分析-CSDN博客<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><ul><li><ul><li><a href=#bpconsumerlistener-onframeavailable>BpConsumerListener onFrameAvailable</a><ul><li><a href=#bufferqueuelayer-onframeavailable>BufferQueueLayer onFrameAvailable</a></li></ul></li></ul></li></ul></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/419ba319655c5ddfb531b986089f307f.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

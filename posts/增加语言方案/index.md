@@ -1,0 +1,1250 @@
+# 增加语言方案
+
+## 【问题描述】
+
+客户需求,要求日文可以在平假字和汉字之间切换.
+
+ 
+
+## 【分析过程】
+
+刚开始拿到问题的是,查找了日文字库的支持格式,发现日本字库就是包括了平假字和汉字,是这两个的一个集合.不存在两个
+
+字库的方式.
+
+ 
+
+## 【解决方法】
+
+日文包括了平假字和汉字的集合,那么如果我们要切换平假字和汉字,我们就需要新建一个语言,日文作为平假字的设置,新建
+
+的语言作为汉字的设置方式.
+
+添加一种新的语言
+
+ 
+
+#### lily方案：
+
+### 1 确认语言类型
+
+language\_code  与 country code   比如 ak-GH     language code 就是 ak ， country code就是GH 
+
+资源文件夹可以定义为values-ak-rGH  如果没有国家码冲突，可以直接定义 values-ak
+
+> 1. 我们需要去下面网站查找 language code 和 contry code:
+>
+> language code: https://zh.wikipedia.org/wiki/ISO\_639­1
+>
+> country code : https://zh.wikipedia.org/wiki/ISO\_3166­1
+>
+> 如果我们添加的语言在里面,就直接使用,如果不在里面,那我们需要确保我们添加的缩写不能与上面的ISO\_639­1重复.
+>
+> 所以我们以hg\_JP 作为新添加的一种语言,hg是 language cod, JP是conrty code
+>
+>  
+
+由于手表项目 语言客户指定了平假名的 语言类型 ak ，为了适配客户apk，在手表项目中没有新建一个语言，而是在现有ak的语言基础上做修改。同样需要到icu中更改icu数据。
+
+ 
+
+### 2 添加ICU资源
+
+由于Hiragana/Kanji是给上层语言切换做区分,ICU的资源我们主要是拷贝ja 里面的资源，再进行客制化的修改。
+
+把对应的txt文件放到（external\icu\icu4c\source\data）目录下coll、curr、lang、locales、region，zone这些子文件夹
+
+中。
+
+ 
+
+主要是检查上面目录里面的ak.txt 文件， 将ja.txt 拷贝至ak.txt文件
+
+ 
+
+主要差异话的，locales 里面的txt文件：
+
+#### 文字差异 午前 午後
+
+```d
+1. --- a/icu4c/source/data/locales/ja.txt
+2. +++ b/icu4c/source/data/locales/ja.txt
+3. @@ -1258,16 +1258,16 @@
+4.          }
+5.          gregorian{
+6.              AmPmMarkers{
+7. -                "午前",
+8. -                "午後",
+9. +                "ごぜん",
+10. +                "ごご",
+11.              }
+12.              AmPmMarkersAbbr{
+13. -                "午前",
+14. -                "午後",
+15. +                "ごぜん",
+16. +                "ごご",
+17.              }
+18.              AmPmMarkersNarrow{
+19. -                "午前",
+20. -                "午後",
+21. +                "ごぜん",
+22. +                "ごご",
+23.              }
+24.              DateTimePatterns{
+25.                  "H時mm分ss秒 zzzz",
+26. @@ -1345,30 +1345,30 @@
+27.                  format{
+28.                      abbreviated{
+29.                          "日",
+30. -                        "月",
+31. -                        "火",
+32. -                        "水",
+33. -                        "木",
+34. -                        "金",
+35. -                        "土",
+36. +                        "にち",
+37. +                        "げつ",
+38. +                        "か",
+39. +                        "すい",
+40. +                        "もく",
+41. +                        "きん",
+42. +                        "ど",
+43.                      }
+```
+
+ 
+
+#### 2.1 更新分词规则
+
+![image.png](https://picgo.myjojo.fun:666/i/2024/03/12/65efc4cc53811.png)\
+客户报出问题，不同语言下，同样字符串，换行不一样。\
+经过分析。TextView 里面的换行规则是在StaticLayout里面：
+
+ 
+
+```java
+LineBreaker.Result res = lineBreaker.computeLineBreaks(measuredPara.getMeasuredText(), constraints, mLineCount);
+```
+
+```java
+    /**
+     * Break paragraph into lines.
+     *
+     * The result is filled to out param.
+     *
+     * @param measuredPara a result of the text measurement
+     * @param constraints for a single paragraph
+     * @param lineNumber a line number of this paragraph
+     */
+    public @NonNull Result computeLineBreaks(
+            @NonNull MeasuredText measuredPara,
+            @NonNull ParagraphConstraints constraints,
+            @IntRange(from = 0) int lineNumber) {
+
+        return new Result(nComputeLineBreaks(
+                mNativePtr,
+
+                // Inputs
+                measuredPara.getChars(),
+                measuredPara.getNativePtr(),
+                measuredPara.getChars().length,
+                constraints.mFirstWidth,
+                constraints.mFirstWidthLineCount,
+                constraints.mWidth,
+                constraints.mVariableTabStops,
+                constraints.mDefaultTabStop,
+                lineNumber));
+    }
+```
+
+   nComputeLineBreaks 方法是一个Native的方法，用于计算什么时候开始换行
+
+![image.png](https://picgo.myjojo.fun:666/i/2024/03/12/65efc5dcaad6f.png)
+
+发现换行要根据分词规则去换行，那么日语ja有特定的分词规则，而额外添加的ak没有，使用的就是基础的分词规则。\
+如果要保持一致，那么就需要将ja的brkitr 资源拷贝一份给ak
+
+> \[!NOTE] brkitr 说明\
+> ICU（International Components for Unicode）的 `brkitr` 库是一个提供文本边界分析的库，`brkitr` 是“boundary breaker iterator”（边界分割迭代器）的缩写。它用来确定文本中的边界位置，如单词边界、句子边界、行边界和字符边界。这对于文本处理非常关键，尤其是在需要对文本进行分词、换行、选择或光标移动等操作时。
+
+以下是 `brkitr` 库一些常见的使用场景：
+
+> 1. **单词边界**：用于文本编辑或处理时确定单词的开始和结束，这在文本选择或者双击单词时特别有用。
+>
+> 2. **句子边界**：用于文本处理时确定句子的开始和结束，例如，在处理自动大写新句子的首字母或文本摘要时。
+>
+> 3. **行边界**：用于文本布局时确定在哪里进行换行，这在UI组件如TextView的文本折行处理中尤其重要。
+>
+> 4. **字符边界**：用于确定可分割的字符边界，比如在处理复合字符（如带变音符的字母）时正确地光标定位或者文本选择。
+
+`brkitr` 库实现了国际化的文本边界规则，支持多种语言和文本规则。它利用Unicode文本分割算法和语言特定的规则来确定这些边界，从而提供准确的文本处理能力。在全球化的应用开发中，正确地识别和处理不同语言的文本边界是非常重要的。
+
+### 3. 编译ICU资源
+
+> lili项目
+>
+> 进入到\$AOSP/external/icu/icu4c/source/目录下的
+>
+> 在该目录下执行 ./runConfigureICU Linux命令生成MAKE文件
+>
+> 执行make INCLUDE\_UNI\_CORE\_DATA=1
+>
+> 1. 将第一步生成的external/icu4c/icubuild/data/out/tmp/icudtxxl.dat复制到external/icu4c/stubdata下并改名为
+>
+> icudtxxl­all.dat覆盖原来的同名文件。
+>
+> cpexternal/icu/icu4c/source/data/out/tmp/icudt58l.dat \$AOSP/external/icu/icu4c/source/stubdata 
+
+该方案在A11 上编译失效，烧入手机后 ，载入icu会出错 开不了机器。
+
+编译方案：
+
+首先在工程根目录，进行source ,lunch ，设置环境变量。
+
+然后在  aosp/external/icu/tools 目录下
+
+执行下面脚本：updateicudata.py
+
+会自动config 和编译，然后自动把结果copy 到 stubdata目录。
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+### 4.添加语言支持
+
+\# [sdm429w\_law.mk](http://review4-sh.sim.com:8080/c/Android-HighPlat-Repositories/platform/vendor/qcom/sdm429w_law/+/46394/1/sdm429w_law.mk) Definedthelocales
+
+PRODUCT\_LOCALES:=en\_US  ja\_JP   ak\_GK
+
+ 
+
+ 
+
+ 
+
+ 
+
+### 5.翻译字符串
+
+在frameworks/base/core/res/res/下新增加一个values­-ak的文件夹,新建一个strings.xml文件，把frameworks翻
+
+译内容放在这个文件内:
+
+对每个app做翻译，在每个app对应的res目录下面建立values­-ak文件夹，并将翻译好的strings.xml放在里面；
+
+ 
+
+ 
+
+### 6. 添加设置菜单
+
+ 
+
+设置语言主要就是通过  LocalePicker.updateLocale(hiragana); 来实现
+
+ 
+
+1. import java.util.Locale;
+
+2. import com.android.internal.app.LocalePicker;
+
+3.     static final String hiragana\_language ="ak";
+
+4.     static final String hiragana\_country ="GH";
+
+5.     static final String kanji\_language = "ja";
+
+6.     static final String kanji\_country = "JP";
+
+7.     static final String english\_language = "en";
+
+8.     static final String english\_country = "US";
+
+9.     @Override
+
+10.     protected void onCreate(Bundle savedInstanceState) {
+
+11.         super.onCreate(savedInstanceState);
+
+12.         setContentView(R.layout.activity\_language\_setting);
+
+13.         mRadioGroup = findViewById(R.id.rg\_show);
+
+14.         mRbHiragana = findViewById(R.id.rb\_hiragana);
+
+15.         mRbKanji    = findViewById(R.id.rb\_kanji);
+
+16.         mRbEnglish  = findViewById(R.id.rb\_en\_us);
+
+17.         updateRadioMenuChecked();
+
+18.         updateEnglisMenu();
+
+19.         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+20.             @Override
+
+21.             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+22.                 if(checkedId == R.id.rb\_hiragana){
+
+23.                     Locale hiragana = new Locale(hiragana\_language,hiragana\_country);
+
+24.                     LocalePicker.updateLocale(hiragana);
+
+25.                 }else if(checkedId == R.id.rb\_kanji) {
+
+26.                     Locale kanji = new Locale(kanji\_language,kanji\_country);
+
+27.                     LocalePicker.updateLocale(kanji);
+
+28.                 }else if(checkedId == R.id.rb\_en\_us) {
+
+29.                     Locale english\_us = new Locale(english\_language,english\_country);
+
+30.                     LocalePicker.updateLocale(english\_us);
+
+31.                 }
+
+32.             }
+
+33.         });
+
+34.     }
+
+### 附录：
+
+##### 年月日翻译：
+
+```d
+diff --git a/icu4c/source/data/locales/ak.txt b/icu4c/source/data/locales/ak.txt
+index 2591869..2e4ceaf 100644
+--- a/icu4c/source/data/locales/ak.txt
++++ b/icu4c/source/data/locales/ak.txt
+@@ -243,8 +243,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "GGGGy年M月d日EEEE",
+-                "GGGGy年M月d日",
++                "GGGGyねんMがつdにちEEEE",
++                "GGGGyねんMがつdにち",
+                 "Gy/MM/dd",
+                 "Gy/MM/dd",
+                 "{1} {0}",
+@@ -254,42 +254,42 @@
+                 "{1} {0}",
+             }
+             availableFormats{
+-                EEEEd{"d日EEEE"}
+-                Ed{"d日(E)"}
+-                Gy{"GGGGy年"}
+-                GyMMM{"GGGGy年M月"}
+-                GyMMMEEEEd{"GGGGy年M月d日EEEE"}
+-                GyMMMEd{"GGGGy年M月d日(E)"}
+-                GyMMMd{"GGGGy年M月d日"}
+-                GyMd{"GGGGy年M月d日"}
++                EEEEd{"dにちEEEE"}
++                Ed{"dにち(E)"}
++                Gy{"GGGGyねん"}
++                GyMMM{"GGGGyねんMがつ"}
++                GyMMMEEEEd{"GGGGyねんMがつdにちEEEE"}
++                GyMMMEd{"GGGGyねんMがつdにち(E)"}
++                GyMMMd{"GGGGyねんMがつdにち"}
++                GyMd{"GGGGyねんMがつdにち"}
+                 H{"H時"}
+                 Hm{"H:mm"}
+                 Hms{"H:mm:ss"}
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEEEEd{"M/dEEEE"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEEEEd{"M月d日EEEE"}
+-                MMMEd{"M月d日(E)"}
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMM{"Mがつ"}
++                MMMEEEEd{"MがつdにちEEEE"}
++                MMMEd{"Mがつdにち(E)"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
++                d{"dにち"}
+                 h{"aK時"}
+                 hm{"aK:mm"}
+                 hms{"aK:mm:ss"}
+                 ms{"mm:ss"}
+-                y{"GGGGy年"}
+-                yyyy{"GGGGy年"}
+-                yyyyM{"GGGGy年M月"}
+-                yyyyMEEEEd{"GGGGy年M/dEEEE"}
+-                yyyyMEd{"GGGGy年M/d(E)"}
++                y{"GGGGyねん"}
++                yyyy{"GGGGyねん"}
++                yyyyM{"GGGGyねんMがつ"}
++                yyyyMEEEEd{"GGGGyねんM/dEEEE"}
++                yyyyMEd{"GGGGyねんM/d(E)"}
+                 yyyyMM{"Gy/MM"}
+-                yyyyMMM{"GGGGy年M月"}
+-                yyyyMMMEEEEd{"GGGGy年M月d日EEEE"}
+-                yyyyMMMEd{"GGGGy年M月d日(E)"}
+-                yyyyMMMM{"GGGGy年M月"}
+-                yyyyMMMd{"GGGGy年M月d日"}
++                yyyyMMM{"GGGGyねんMがつ"}
++                yyyyMMMEEEEd{"GGGGyねんMがつdにちEEEE"}
++                yyyyMMMEd{"GGGGyねんMがつdにち(E)"}
++                yyyyMMMM{"GGGGyねんMがつ"}
++                yyyyMMMd{"GGGGyねんMがつdにち"}
+                 yyyyMd{"Gy/M/d"}
+             }
+             eras{
+@@ -311,15 +311,15 @@
+                 "H:mm:ss",
+                 "H:mm",
+                 {
+-                    "U年MMMd日EEEE",
++                    "UねんMMMdにちEEEE",
+                     "hanidec",
+                 }
+                 {
+-                    "U年MMMd日",
++                    "UねんMMMdにち",
+                     "hanidec",
+                 }
+                 {
+-                    "U年MMMd日",
++                    "UねんMMMdにち",
+                     "hanidec",
+                 }
+                 "U-M-d",
+@@ -336,13 +336,13 @@
+                 E{"ccc"}
+                 EBhm{"BK:mm (E)"}
+                 EBhms{"BK:mm:ss (E)"}
+-                EEEEd{"d日EEEE"}
+-                Ed{"d日(E)"}
+-                Gy{"U年"}
+-                GyMMM{"U年MMM"}
+-                GyMMMEEEEd{"U年MMMd日EEEE"}
+-                GyMMMEd{"U年MMMd日(E)"}
+-                GyMMMd{"U年MMMd日"}
++                EEEEd{"dにちEEEE"}
++                Ed{"dにち(E)"}
++                Gy{"Uねん"}
++                GyMMM{"UねんMMM"}
++                GyMMMEEEEd{"UねんMMMdにちEEEE"}
++                GyMMMEd{"UねんMMMdにち(E)"}
++                GyMMMd{"UねんMMMdにち"}
+                 H{"H時"}
+                 Hm{"H:mm"}
+                 Hms{"H:mm:ss"}
+@@ -350,34 +350,34 @@
+                 MEEEEd{"M/dEEEE"}
+                 MEd{"M/d(E)"}
+                 MMM{"LLL"}
+-                MMMEEEEd{"MMMd日EEEE"}
+-                MMMEd{"MMMd日(E)"}
+-                MMMMd{"MMMMd日"}
+-                MMMd{"MMMd日"}
++                MMMEEEEd{"MMMdにちEEEE"}
++                MMMEd{"MMMdにち(E)"}
++                MMMMd{"MMMMdにち"}
++                MMMd{"MMMdにち"}
+                 Md{"M/d"}
+-                UM{"U年M月"}
+-                UMMM{"U年MMM"}
+-                UMMMd{"U年MMMd日"}
+-                UMd{"U年M月d日"}
+-                d{"d日"}
++                UM{"UねんMがつ"}
++                UMMM{"UねんMMM"}
++                UMMMd{"UねんMMMdにち"}
++                UMd{"UねんMがつdにち"}
++                d{"dにち"}
+                 h{"aK時"}
+                 hm{"aK:mm"}
+                 hms{"aK:mm:ss"}
+                 ms{"mm:ss"}
+-                y{"U年"}
+-                yMd{"U年M月d日"}
+-                yyyy{"U年"}
+-                yyyyM{"U年M月"}
+-                yyyyMEEEEd{"U年M月d日EEEE"}
+-                yyyyMEd{"U年M月d日(E)"}
+-                yyyyMMM{"U年MMM"}
+-                yyyyMMMEEEEd{"U年MMMd日EEEE"}
+-                yyyyMMMEd{"U年MMMd日(E)"}
+-                yyyyMMMM{"U年MMMM"}
+-                yyyyMMMd{"U年MMMd日"}
+-                yyyyMd{"U年M月d日"}
+-                yyyyQQQ{"U年QQQ"}
+-                yyyyQQQQ{"U年QQQQ"}
++                y{"Uねん"}
++                yMd{"UねんMがつdにち"}
++                yyyy{"Uねん"}
++                yyyyM{"UねんMがつ"}
++                yyyyMEEEEd{"UねんMがつdにちEEEE"}
++                yyyyMEd{"UねんMがつdにち(E)"}
++                yyyyMMM{"UねんMMM"}
++                yyyyMMMEEEEd{"UねんMMMdにちEEEE"}
++                yyyyMMMEd{"UねんMMMdにち(E)"}
++                yyyyMMMM{"UねんMMMM"}
++                yyyyMMMd{"UねんMMMdにち"}
++                yyyyMd{"UねんMがつdにち"}
++                yyyyQQQ{"UねんQQQ"}
++                yyyyQQQQ{"UねんQQQQ"}
+             }
+             cyclicNameSets{
+                 dayParts{
+@@ -529,7 +529,7 @@
+                     H{"H時～H時(v)"}
+                 }
+                 M{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MEd{
+                     M{"MM/dd(E)～MM/dd(E)"}
+@@ -539,22 +539,22 @@
+                     M{"MMM～MMM"}
+                 }
+                 MMMEd{
+-                    M{"MMMd日(E)～MMMd日(E)"}
+-                    d{"MMMd日(E)～d日(E)"}
++                    M{"MMMdにち(E)～MMMdにち(E)"}
++                    d{"MMMdにち(E)～dにち(E)"}
+                 }
+                 MMMM{
+                     M{"MMMM～MMMM"}
+                 }
+                 MMMd{
+-                    M{"MMMd日～MMMd日"}
+-                    d{"MMMd日～d日"}
++                    M{"MMMdにち～MMMdにち"}
++                    d{"MMMdにち～dにち"}
+                 }
+                 Md{
+                     M{"MM/dd～MM/dd"}
+                     d{"MM/dd～MM/dd"}
+                 }
+                 d{
+-                    d{"d日～d日"}
++                    d{"dにち～dにち"}
+                 }
+                 fallback{"{0}～{1}"}
+                 h{
+@@ -576,7 +576,7 @@
+                     h{"aK時～K時(v)"}
+                 }
+                 y{
+-                    y{"U年～U年"}
++                    y{"Uねん～Uねん"}
+                 }
+                 yM{
+                     M{"U/MM～U/MM"}
+@@ -588,22 +588,22 @@
+                     y{"U/MM/dd(E)～U/MM/dd(E)"}
+                 }
+                 yMMM{
+-                    M{"U年MMM～MMM"}
+-                    y{"U年MMM～U年MMM"}
++                    M{"UねんMMM～MMM"}
++                    y{"UねんMMM～UねんMMM"}
+                 }
+                 yMMMEd{
+-                    M{"U年MMMd日(E)～MMMd日(E)"}
+-                    d{"U年MMMd日(E)～d日(E)"}
+-                    y{"U年MMMd日(E)～U年MMMd日(E)"}
++                    M{"UねんMMMdにち(E)～MMMdにち(E)"}
++                    d{"UねんMMMdにち(E)～dにち(E)"}
++                    y{"UねんMMMdにち(E)～UねんMMMdにち(E)"}
+                 }
+                 yMMMM{
+-                    M{"U年MMM～MMM"}
+-                    y{"U年MMM～U年MMM"}
++                    M{"UねんMMM～MMM"}
++                    y{"UねんMMM～UねんMMM"}
+                 }
+                 yMMMd{
+-                    M{"U年MMMd日～MMMd日"}
+-                    d{"U年MMMd日～d日"}
+-                    y{"U年MMMd日～U年MMMd日"}
++                    M{"UねんMMMdにち～MMMdにち"}
++                    d{"UねんMMMdにち～dにち"}
++                    y{"UねんMMMdにち～UねんMMMdにち"}
+                 }
+                 yMd{
+                     M{"U/MM/dd～U/MM/dd"}
+@@ -837,9 +837,9 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "U年MMMd日EEEE",
+-                "U年MMMd日",
+-                "U年MMMd日",
++                "UねんMMMdにちEEEE",
++                "UねんMMMdにち",
++                "UねんMMMdにち",
+                 "U-M-d",
+                 "{1} {0}",
+                 "{1} {0}",
+@@ -1160,8 +1160,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "Gy年M月d日(EEEE)",
+-                "Gy年M月d日",
++                "GyねんMがつdにち(EEEE)",
++                "GyねんMがつdにち",
+                 "GGGGGy/MM/dd",
+                 "GGGGGy/M/d",
+                 "{1} {0}",
+@@ -1177,47 +1177,47 @@
+                 E{"ccc"}
+                 EBhm{"BK:mm (E)"}
+                 EBhms{"BK:mm:ss (E)"}
+-                EEEEd{"d日(EEEE)"}
++                EEEEd{"dにち(EEEE)"}
+                 EHm{"H:mm (E)"}
+                 EHms{"H:mm:ss (E)"}
+-                Ed{"d日(E)"}
++                Ed{"dにち(E)"}
+                 Ehm{"aK:mm (E)"}
+                 Ehms{"aK:mm:ss (E)"}
+-                Gy{"Gy年"}
+-                GyMMM{"Gy年M月"}
+-                GyMMMEEEEd{"Gy年M月d日(EEEE)"}
+-                GyMMMEd{"Gy年M月d日(E)"}
+-                GyMMMd{"Gy年M月d日"}
++                Gy{"Gyねん"}
++                GyMMM{"GyねんMがつ"}
++                GyMMMEEEEd{"GyねんMがつdにち(EEEE)"}
++                GyMMMEd{"GyねんMがつdにち(E)"}
++                GyMMMd{"GyねんMがつdにち"}
+                 H{"H時"}
+                 Hm{"H:mm"}
+                 Hms{"H:mm:ss"}
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEEEEd{"M/d(EEEE)"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEEEEd{"M月d日(EEEE)"}
+-                MMMEd{"M月d日(E)"}
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMM{"Mがつ"}
++                MMMEEEEd{"Mがつdにち(EEEE)"}
++                MMMEd{"Mがつdにち(E)"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
++                d{"dにち"}
+                 h{"aK時"}
+                 hm{"aK:mm"}
+                 hms{"aK:mm:ss"}
+                 ms{"mm:ss"}
+-                y{"Gy年"}
+-                yyyy{"Gy年"}
++                y{"Gyねん"}
++                yyyy{"Gyねん"}
+                 yyyyM{"GGGGGy/M"}
+                 yyyyMEEEEd{"GGGGGy/M/d(EEEE)"}
+                 yyyyMEd{"GGGGGy/M/d(E)"}
+-                yyyyMMM{"Gy年M月"}
+-                yyyyMMMEEEEd{"Gy年M月d日(EEEE)"}
+-                yyyyMMMEd{"Gy年M月d日(E)"}
+-                yyyyMMMM{"Gy年M月"}
+-                yyyyMMMd{"Gy年M月d日"}
++                yyyyMMM{"GyねんMがつ"}
++                yyyyMMMEEEEd{"GyねんMがつdにち(EEEE)"}
++                yyyyMMMEd{"GyねんMがつdにち(E)"}
++                yyyyMMMM{"GyねんMがつ"}
++                yyyyMMMd{"GyねんMがつdにち"}
+                 yyyyMd{"GGGGGy/M/d"}
+                 yyyyQQQ{"Gy/QQQ"}
+-                yyyyQQQQ{"Gy年QQQQ"}
++                yyyyQQQQ{"GyねんQQQQ"}
+             }
+             intervalFormats{
+                 Bh{
+@@ -1247,8 +1247,8 @@
+                     y{"GGGGGy/MM/dd～y/MM/dd"}
+                 }
+                 Gy{
+-                    G{"Gy年～Gy年"}
+-                    y{"Gy年～y年"}
++                    G{"Gyねん～Gyねん"}
++                    y{"Gyねん～yねん"}
+                 }
+                 GyM{
+                     G{"GGGGGy/MM～GGGGGy/MM"}
+@@ -1262,21 +1262,21 @@
+                     y{"GGGGGy/MM/dd(E)～y/MM/dd(E)"}
+                 }
+                 GyMMM{
+-                    G{"Gy年M月～Gy年M月"}
+-                    M{"Gy年M月～M月"}
+-                    y{"Gy年M月～y年M月"}
++                    G{"GyねんMがつ～GyねんMがつ"}
++                    M{"GyねんMがつ～Mがつ"}
++                    y{"GyねんMがつ～yねんMがつ"}
+                 }
+                 GyMMMEd{
+-                    G{"Gy年M月d日(E)～Gy年M月d日(E)"}
+-                    M{"Gy年M月d日(E)～M月d日(E)"}
+-                    d{"Gy年M月d日(E)～d日(E)"}
+-                    y{"Gy年M月d日(E)～y年M月d日(E)"}
++                    G{"GyねんMがつdにち(E)～GyねんMがつdにち(E)"}
++                    M{"GyねんMがつdにち(E)～Mがつdにち(E)"}
++                    d{"GyねんMがつdにち(E)～dにち(E)"}
++                    y{"GyねんMがつdにち(E)～yねんMがつdにち(E)"}
+                 }
+                 GyMMMd{
+-                    G{"Gy年M月d日～Gy年M月d日"}
+-                    M{"Gy年M月d日～M月d日"}
+-                    d{"Gy年M月d日～d日"}
+-                    y{"Gy年M月d日～y年M月d日"}
++                    G{"GyねんMがつdにち～GyねんMがつdにち"}
++                    M{"GyねんMがつdにち～Mがつdにち"}
++                    d{"GyねんMがつdにち～dにち"}
++                    y{"GyねんMがつdにち～yねんMがつdにち"}
+                 }
+                 GyMd{
+                     G{"GGGGGy/MM/dd～GGGGGy/MM/dd"}
+@@ -1299,32 +1299,32 @@
+                     H{"H時～H時(v)"}
+                 }
+                 M{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MEd{
+                     M{"MM/dd(E)～MM/dd(E)"}
+                     d{"MM/dd(E)～MM/dd(E)"}
+                 }
+                 MMM{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MMMEd{
+-                    M{"M月d日(E)～M月d日(E)"}
+-                    d{"M月d日(E)～d日(E)"}
++                    M{"Mがつdにち(E)～Mがつdにち(E)"}
++                    d{"Mがつdにち(E)～dにち(E)"}
+                 }
+                 MMMM{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MMMd{
+-                    M{"M月d日～M月d日"}
+-                    d{"M月d日～d日"}
++                    M{"Mがつdにち～Mがつdにち"}
++                    d{"Mがつdにち～dにち"}
+                 }
+                 Md{
+                     M{"MM/dd～MM/dd"}
+                     d{"MM/dd～MM/dd"}
+                 }
+                 d{
+-                    d{"d日～d日"}
++                    d{"dにち～dにち"}
+                 }
+                 fallback{"{0}～{1}"}
+                 h{
+@@ -1346,7 +1346,7 @@
+                     h{"aK時～K時(v)"}
+                 }
+                 y{
+-                    y{"Gy年～y年"}
++                    y{"Gyねん～yねん"}
+                 }
+                 yM{
+                     M{"GGGGGy/MM～y/MM"}
+@@ -1358,22 +1358,22 @@
+                     y{"GGGGGy/MM/dd(E)～y/MM/dd(E)"}
+                 }
+                 yMMM{
+-                    M{"Gy年M月～M月"}
+-                    y{"Gy年M月～y年M月"}
++                    M{"GyねんMがつ～Mがつ"}
++                    y{"GyねんMがつ～yねんMがつ"}
+                 }
+                 yMMMEd{
+-                    M{"Gy年M月d日(E)～M月d日(E)"}
+-                    d{"Gy年M月d日(E)～d日(E)"}
+-                    y{"Gy年M月d日(E)～y年M月d日(E)"}
++                    M{"GyねんMがつdにち(E)～Mがつdにち(E)"}
++                    d{"GyねんMがつdにち(E)～dにち(E)"}
++                    y{"GyねんMがつdにち(E)～yねんMがつdにち(E)"}
+                 }
+                 yMMMM{
+-                    M{"Gy年M月～M月"}
+-                    y{"Gy年M月～y年M月"}
++                    M{"GyねんMがつ～Mがつ"}
++                    y{"GyねんMがつ～yねんMがつ"}
+                 }
+                 yMMMd{
+-                    M{"Gy年M月d日～M月d日"}
+-                    d{"Gy年M月d日～d日"}
+-                    y{"Gy年M月d日～y年M月d日"}
++                    M{"GyねんMがつdにち～Mがつdにち"}
++                    d{"GyねんMがつdにち～dにち"}
++                    y{"GyねんMがつdにち～yねんMがつdにち"}
+                 }
+                 yMd{
+                     M{"GGGGGy/MM/dd～y/MM/dd"}
+@@ -1400,8 +1400,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "y年M月d日EEEE",
+-                "y年M月d日",
++                "yねんMがつdにちEEEE",
++                "yねんMがつdにち",
+                 "y/MM/dd",
+                 "y/MM/dd",
+                 "{1} {0}",
+@@ -1420,56 +1420,56 @@
+                 E{"ccc"}
+                 EBhm{"BK:mm (E)"}
+                 EBhms{"BK:mm:ss (E)"}
+-                EEEEd{"d日EEEE"}
++                EEEEd{"dにちEEEE"}
+                 EHm{"H:mm (E)"}
+                 EHms{"H:mm:ss (E)"}
+-                Ed{"d日(E)"}
++                Ed{"dにち(E)"}
+                 Ehm{"aK:mm (E)"}
+                 Ehms{"aK:mm:ss (E)"}
+-                Gy{"Gy年"}
+-                GyMMM{"Gy年M月"}
+-                GyMMMEEEEd{"Gy年M月d日EEEE"}
+-                GyMMMEd{"Gy年M月d日(E)"}
+-                GyMMMd{"Gy年M月d日"}
++                Gy{"Gyねん"}
++                GyMMM{"GyねんMがつ"}
++                GyMMMEEEEd{"GyねんMがつdにちEEEE"}
++                GyMMMEd{"GyねんMがつdにち(E)"}
++                GyMMMd{"GyねんMがつdにち"}
+                 H{"H時"}
+                 Hm{"H:mm"}
+                 Hms{"H:mm:ss"}
+                 Hmsv{"H:mm:ss v"}
+                 Hmv{"H:mm v"}
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEEEEd{"M/dEEEE"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEEEEd{"M月d日EEEE"}
+-                MMMEd{"M月d日(E)"}
++                MMM{"Mがつ"}
++                MMMEEEEd{"MがつdにちEEEE"}
++                MMMEd{"Mがつdにち(E)"}
+                 MMMMW{
+-                    other{"M月第W週"}
++                    other{"Mがつ第W週"}
+                 }
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
++                d{"dにち"}
+                 h{"aK時"}
+                 hm{"aK:mm"}
+                 hms{"aK:mm:ss"}
+                 hmsv{"aK:mm:ss v"}
+                 hmv{"aK:mm v"}
+                 ms{"mm:ss"}
+-                y{"y年"}
++                y{"yねん"}
+                 yM{"y/M"}
+                 yMEEEEd{"y/M/dEEEE"}
+                 yMEd{"y/M/d(E)"}
+                 yMM{"y/MM"}
+-                yMMM{"y年M月"}
+-                yMMMEEEEd{"y年M月d日EEEE"}
+-                yMMMEd{"y年M月d日(E)"}
+-                yMMMM{"y年M月"}
+-                yMMMd{"y年M月d日"}
++                yMMM{"yねんMがつ"}
++                yMMMEEEEd{"yねんMがつdにちEEEE"}
++                yMMMEd{"yねんMがつdにち(E)"}
++                yMMMM{"yねんMがつ"}
++                yMMMd{"yねんMがつdにち"}
+                 yMd{"y/M/d"}
+                 yQQQ{"y/QQQ"}
+-                yQQQQ{"y年QQQQ"}
++                yQQQQ{"yねんQQQQ"}
+                 yw{
+-                    other{"Y年第w週"}
++                    other{"yねん第w週"}
+                 }
+             }
+             dayNames{
+@@ -1649,8 +1649,8 @@
+                     m{"BK:mm～K:mm"}
+                 }
+                 Gy{
+-                    G{"Gy年～Gy年"}
+-                    y{"Gy年～y年"}
++                    G{"Gyねん～Gyねん"}
++                    y{"Gyねん～yねん"}
+                 }
+                 GyM{
+                     G{"Gy/MM～Gy/MM"}
+@@ -1664,21 +1664,21 @@
+                     y{"Gy/MM/dd(E)～y/MM/dd(E)"}
+                 }
+                 GyMMM{
+-                    G{"Gy年M月～Gy年M月"}
+-                    M{"Gy年M月～M月"}
+-                    y{"Gy年M月～y年M月"}
++                    G{"GyねんMがつ～GyねんMがつ"}
++                    M{"GyねんMがつ～Mがつ"}
++                    y{"GyねんMがつ～yねんMがつ"}
+                 }
+                 GyMMMEd{
+-                    G{"Gy年M月d日(E)～Gy年M月d日(E)"}
+-                    M{"Gy年M月d日(E)～M月d日(E)"}
+-                    d{"Gy年M月d日(E)～d日(E)"}
+-                    y{"Gy年M月d日(E)～y年M月d日(E)"}
++                    G{"GyねんMがつdにち(E)～GyねんMがつdにち(E)"}
++                    M{"GyねんMがつdにち(E)～Mがつdにち(E)"}
++                    d{"GyねんMがつdにち(E)～dにち(E)"}
++                    y{"GyねんMがつdにち(E)～yねんMがつdにち(E)"}
+                 }
+                 GyMMMd{
+-                    G{"Gy年M月d日～Gy年M月d日"}
+-                    M{"Gy年M月d日～M月d日"}
+-                    d{"Gy年M月d日～d日"}
+-                    y{"Gy年M月d日～y年M月d日"}
++                    G{"GyねんMがつdにち～GyねんMがつdにち"}
++                    M{"GyねんMがつdにち～Mがつdにち"}
++                    d{"GyねんMがつdにち～dにち"}
++                    y{"GyねんMがつdにち～yねんMがつdにち"}
+                 }
+                 GyMd{
+                     G{"Gy/MM/dd～Gy/MM/dd"}
+@@ -1701,32 +1701,32 @@
+                     H{"H時～H時(v)"}
+                 }
+                 M{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MEd{
+                     M{"MM/dd(E)～MM/dd(E)"}
+                     d{"MM/dd(E)～MM/dd(E)"}
+                 }
+                 MMM{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MMMEd{
+-                    M{"M月d日(E)～M月d日(E)"}
+-                    d{"M月d日(E)～d日(E)"}
++                    M{"Mがつdにち(E)～Mがつdにち(E)"}
++                    d{"Mがつdにち(E)～dにち(E)"}
+                 }
+                 MMMM{
+-                    M{"M月～M月"}
++                    M{"Mがつ～Mがつ"}
+                 }
+                 MMMd{
+-                    M{"M月d日～M月d日"}
+-                    d{"M月d日～d日"}
++                    M{"Mがつdにち～Mがつdにち"}
++                    d{"Mがつdにち～dにち"}
+                 }
+                 Md{
+                     M{"MM/dd～MM/dd"}
+                     d{"MM/dd～MM/dd"}
+                 }
+                 d{
+-                    d{"d日～d日"}
++                    d{"dにち～dにち"}
+                 }
+                 fallback{"{0}～{1}"}
+                 h{
+@@ -1748,7 +1748,7 @@
+                     h{"aK時～K時(v)"}
+                 }
+                 y{
+-                    y{"y年～y年"}
++                    y{"yねん～yねん"}
+                 }
+                 yM{
+                     M{"y/MM～y/MM"}
+@@ -1760,22 +1760,22 @@
+                     y{"y/MM/dd(E)～y/MM/dd(E)"}
+                 }
+                 yMMM{
+-                    M{"y年M月～M月"}
+-                    y{"y年M月～y年M月"}
++                    M{"yねんMがつ～Mがつ"}
++                    y{"yねんMがつ～yねんMがつ"}
+                 }
+                 yMMMEd{
+-                    M{"y年M月d日(E)～M月d日(E)"}
+-                    d{"y年M月d日(E)～d日(E)"}
+-                    y{"y年M月d日(E)～y年M月d日(E)"}
++                    M{"yねんMがつdにち(E)～Mがつdにち(E)"}
++                    d{"yねんMがつdにち(E)～dにち(E)"}
++                    y{"yねんMがつdにち(E)～yねんMがつdにち(E)"}
+                 }
+                 yMMMM{
+-                    M{"y年M月～M月"}
+-                    y{"y年M月～y年M月"}
++                    M{"yねんMがつ～Mがつ"}
++                    y{"yねんMがつ～yねんMがつ"}
+                 }
+                 yMMMd{
+-                    M{"y年M月d日～M月d日"}
+-                    d{"y年M月d日～d日"}
+-                    y{"y年M月d日～y年M月d日"}
++                    M{"yねんMがつdにち～Mがつdにち"}
++                    d{"yねんMがつdにち～dにち"}
++                    y{"yねんMがつdにち～yねんMがつdにち"}
+                 }
+                 yMd{
+                     M{"y/MM/dd～y/MM/dd"}
+@@ -1922,8 +1922,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "Gy年M月d日EEEE",
+-                "Gy年M月d日",
++                "GyねんMがつdにちEEEE",
++                "GyねんMがつdにち",
+                 "Gy/MM/dd",
+                 "Gy/MM/dd",
+                 "{1} {0}",
+@@ -2155,8 +2155,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "Gy年M月d日EEEE",
+-                "Gy年M月d日",
++                "GyねんMがつdにちEEEE",
++                "GyねんMがつdにち",
+                 "Gy/MM/dd",
+                 "Gy/MM/dd",
+                 "{1} {0}",
+@@ -2166,15 +2166,15 @@
+                 "{1} {0}",
+             }
+             availableFormats{
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEd{"M月d日(E)"}
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMM{"Mがつ"}
++                MMMEd{"Mがつdにち(E)"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
+-                y{"Gy年"}
++                d{"dにち"}
++                y{"Gyねん"}
+             }
+             eras{
+                 abbreviated{
+@@ -2285,15 +2285,15 @@
+                 "H:mm:ss",
+                 "H:mm",
+                 {
+-                    "Gy年M月d日EEEE",
++                    "GyねんMがつdにちEEEE",
+                     "y=jpanyear",
+                 }
+                 {
+-                    "Gy年M月d日",
++                    "GyねんMがつdにち",
+                     "y=jpanyear",
+                 }
+                 {
+-                    "Gy年M月d日",
++                    "GyねんMがつdにち",
+                     "y=jpanyear",
+                 }
+                 "GGGGGy/M/d",
+@@ -2305,44 +2305,44 @@
+             }
+             availableFormats{
+                 E{"ccc"}
+-                EEEEd{"d日EEEE"}
+-                Ed{"d日(E)"}
+-                Gy{"Gy年"}
+-                GyMMM{"Gy年M月"}
+-                GyMMMEEEEd{"Gy年M月d日EEEE"}
+-                GyMMMEd{"Gy年M月d日(E)"}
+-                GyMMMd{"Gy年M月d日"}
++                EEEEd{"dにちEEEE"}
++                Ed{"dにち(E)"}
++                Gy{"Gyねん"}
++                GyMMM{"GyねんMがつ"}
++                GyMMMEEEEd{"GyねんMがつdにちEEEE"}
++                GyMMMEd{"GyねんMがつdにち(E)"}
++                GyMMMd{"GyねんMがつdにち"}
+                 H{"H時"}
+                 Hm{"H:mm"}
+                 Hms{"H:mm:ss"}
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEEEEd{"M/dEEEE"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEEEEd{"M月d日EEEE"}
+-                MMMEd{"M月d日(E)"}
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMM{"Mがつ"}
++                MMMEEEEd{"MがつdにちEEEE"}
++                MMMEd{"Mがつdにち(E)"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
++                d{"dにち"}
+                 h{"aK時"}
+                 hm{"aK:mm"}
+                 hms{"aK:mm:ss"}
+                 ms{"mm:ss"}
+-                y{"Gy年"}
+-                yyyy{"Gy年"}
++                y{"Gyねん"}
++                yyyy{"Gyねん"}
+                 yyyyM{"GGGGGy/M"}
+                 yyyyMEEEEd{"GGGGGy/M/dEEEE"}
+                 yyyyMEd{"GGGGGy/M/d(E)"}
+                 yyyyMM{"GGGGGy/MM"}
+-                yyyyMMM{"Gy年M月"}
+-                yyyyMMMEEEEd{"Gy年M月d日EEEE"}
+-                yyyyMMMEd{"Gy年M月d日(E)"}
+-                yyyyMMMM{"Gy年M月"}
+-                yyyyMMMd{"Gy年M月d日"}
++                yyyyMMM{"GyねんMがつ"}
++                yyyyMMMEEEEd{"GyねんMがつdにちEEEE"}
++                yyyyMMMEd{"GyねんMがつdにち(E)"}
++                yyyyMMMM{"GyねんMがつ"}
++                yyyyMMMd{"GyねんMがつdにち"}
+                 yyyyMd{"GGGGGy/M/d"}
+                 yyyyQQQ{"Gy/QQQ"}
+-                yyyyQQQQ{"Gy年QQQQ"}
++                yyyyQQQQ{"GyねんQQQQ"}
+             }
+             eras{
+                 abbreviated{
+@@ -2934,8 +2934,8 @@
+                 "H:mm:ss z",
+                 "H:mm:ss",
+                 "H:mm",
+-                "Gy年M月d日EEEE",
+-                "Gy年M月d日",
++                "GyねんMがつdにちEEEE",
++                "GyねんMがつdにち",
+                 "Gy/MM/dd",
+                 "Gy/MM/dd",
+                 "{1} {0}",
+@@ -2945,15 +2945,15 @@
+                 "{1} {0}",
+             }
+             availableFormats{
+-                M{"M月"}
++                M{"Mがつ"}
+                 MEd{"M/d(E)"}
+-                MMM{"M月"}
+-                MMMEd{"M月d日(E)"}
+-                MMMMd{"M月d日"}
+-                MMMd{"M月d日"}
++                MMM{"Mがつ"}
++                MMMEd{"Mがつdにち(E)"}
++                MMMMd{"Mがつdにち"}
++                MMMd{"Mがつdにち"}
+                 Md{"M/d"}
+-                d{"d日"}
+-                y{"Gy年"}
++                d{"dにち"}
++                y{"Gyねん"}
+             }
+             eras{
+                 abbreviated{
+@@ -3069,11 +3069,11 @@
+         day{
+             dn{"日"}
+             relative{
+-                "-1"{"昨日"}
+-                "-2"{"一昨日"}
+-                "0"{"今日"}
+-                "1"{"明日"}
+-                "2"{"明後日"}
++                "-1"{"きのう"}
++                "-2"{"おととい"}
++                "0"{"きょう"}
++                "1"{"あした"}
++                "2"{"あさって"}
+             }
+             relativeTime{
+                 future{
+@@ -3087,11 +3087,11 @@
+         day-narrow{
+             dn{"日"}
+             relative{
+-                "-1"{"昨日"}
+-                "-2"{"一昨日"}
+-                "0"{"今日"}
+-                "1"{"明日"}
+-                "2"{"明後日"}
++                "-1"{"きのう"}
++                "-2"{"おととい"}
++                "0"{"きょう"}
++                "1"{"あした"}
++                "2"{"あさって"}
+             }
+             relativeTime{
+                 future{
+@@ -3105,11 +3105,11 @@
+         day-short{
+             dn{"日"}
+             relative{
+-                "-1"{"昨日"}
+-                "-2"{"一昨日"}
+-                "0"{"今日"}
+-                "1"{"明日"}
+-                "2"{"明後日"}
++                "-1"{"きのう"}
++                "-2"{"おととい"}
++                "0"{"きょう"}
++                "1"{"あした"}
++                "2"{"あさって"}
+             }
+             relativeTime{
+                 future{
+
+```
+
+
+---
+
+> 作者: [wentao](https://github.com/huang8604)  
+> URL: https://huang8604.github.io/posts/%E5%A2%9E%E5%8A%A0%E8%AF%AD%E8%A8%80%E6%96%B9%E6%A1%88/  
+

@@ -1,0 +1,537 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>双屏动画 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="目标： "><meta name=keywords content='clippings,转载,blog,实战'><meta itemprop=name content="双屏动画"><meta itemprop=description content="目标："><meta itemprop=datePublished content="2024-11-06T06:57:58+00:00"><meta itemprop=dateModified content="2024-11-05T01:34:05+00:00"><meta itemprop=wordCount content="2088"><meta itemprop=keywords content="Clippings,转载,Blog,实战"><meta property="og:url" content="https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="双屏动画"><meta property="og:description" content="目标："><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:58+00:00"><meta property="article:modified_time" content="2024-11-05T01:34:05+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="转载"><meta property="article:tag" content="Blog"><meta property="article:tag" content="实战"><meta name=twitter:card content="summary"><meta name=twitter:title content="双屏动画"><meta name=twitter:description content="目标："><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/ title="双屏动画 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/ title=自动开关机脚本><link rel=next type=text/html href=https://huang8604.github.io/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/ title=Zygote进程相关><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/index.md title="双屏动画 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"双屏动画","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB\/"},"genre":"posts","keywords":"clippings, 转载, blog, 实战","wordcount":2088,"url":"https:\/\/huang8604.github.io\/posts\/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB\/","datePublished":"2024-11-06T06:57:58+00:00","dateModified":"2024-11-05T01:34:05+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>双屏动画</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/wms/ class=post-collection title="合集 - WMS"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> WMS</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:58"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:34:05"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="2088 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 2100 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 5 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#目标>目标：</a></li><li><a href=#任务分析和分解>任务分析和分解：</a><ul><li><ul><li><a href=#一-监听多指事件>一 监听多指事件</a></li><li><a href=#二-任务跨屏移动>二 任务跨屏移动</a></li><li><a href=#三-移动动画方案-虚拟镜像屏幕>三 移动动画方案-虚拟镜像屏幕</a></li></ul></li></ul></li></ul></nav></div></div><div class=content id=content><h2 class=heading-element id=目标><span>目标：</span>
+<a href=#%e7%9b%ae%e6%a0%87 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif title=45d40ecaa001304584a749db64e73c80\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif data-sub-html="<h2>45d40ecaa001304584a749db64e73c80\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/17/6710e06e654de.gif alt=45d40ecaa001304584a749db64e73c80\_MD5></a></p><h2 class=heading-element id=任务分析和分解><span>任务分析和分解：</span>
+<a href=#%e4%bb%bb%e5%8a%a1%e5%88%86%e6%9e%90%e5%92%8c%e5%88%86%e8%a7%a3 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p><a href=#%E4%B8%80%20%E7%9B%91%E5%90%AC%E5%A4%9A%E6%8C%87%E4%BA%8B%E4%BB%B6>#一 监听多指事件</a><br><a href=#%E4%BA%8C%20%E4%BB%BB%E5%8A%A1%E8%B7%A8%E5%B1%8F%E7%A7%BB%E5%8A%A8>#二 任务跨屏移动</a></p><h4 class=heading-element id=一-监听多指事件><span>一 监听多指事件</span>
+<a href=#%e4%b8%80-%e7%9b%91%e5%90%ac%e5%a4%9a%e6%8c%87%e4%ba%8b%e4%bb%b6 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>监听手指事件可以参考SystemGesturesPointerEventListener.java<br>通过继承实现PointerEventListener 实现</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=nn>android.view.WindowManagerPolicyConstants.PointerEventListener</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>实现其中的方法</span><span class=err>：</span><span class=w>     
+</span></span></span><span class=line><span class=cl><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>onPointerEvent</span><span class=p>(</span><span class=n>MotionEvent</span><span class=w> </span><span class=n>motionEvent</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=c1>//实现其中的 down move up 事件</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><h4 class=heading-element id=二-任务跨屏移动><span>二 任务跨屏移动</span>
+<a href=#%e4%ba%8c-%e4%bb%bb%e5%8a%a1%e8%b7%a8%e5%b1%8f%e7%a7%bb%e5%8a%a8 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/16/670f65bcb57d2.png title=3f862f7353fd7a9cbf45970c70f60729\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/16/670f65bcb57d2.png data-sub-html="<h2>3f862f7353fd7a9cbf45970c70f60729\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/16/670f65bcb57d2.png alt=3f862f7353fd7a9cbf45970c70f60729\_MD5></a></p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>我们在DisplayContent里面做功能实现</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>mRootWindowContainer</span><span class=p>.</span><span class=na>moveRootTaskToDisplay</span><span class=p>(</span><span class=n>rootTaskId</span><span class=p>,</span><span class=n>otherDisplay</span><span class=p>.</span><span class=na>mDisplayId</span><span class=p>,</span><span class=kc>true</span><span class=p>);</span><span class=o>//</span><span class=n>把task移动到另一屏</span></span></span></code></pre></td></tr></table></div></div></div><h4 class=heading-element id=三-移动动画方案-虚拟镜像屏幕><span>三 移动动画方案-虚拟镜像屏幕</span>
+<a href=#%e4%b8%89-%e7%a7%bb%e5%8a%a8%e5%8a%a8%e7%94%bb%e6%96%b9%e6%a1%88-%e8%99%9a%e6%8b%9f%e9%95%9c%e5%83%8f%e5%b1%8f%e5%b9%95 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>方案：</p><p>镜像模式与真实镜像坐标是同步的。</p><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b3c7a.png title=9f22d9e76d5eb07ecbe9add86a7b36e0\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b3c7a.png data-sub-html="<h2>9f22d9e76d5eb07ecbe9add86a7b36e0\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b3c7a.png alt=9f22d9e76d5eb07ecbe9add86a7b36e0\_MD5></a></p><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b515b.png title=ff470b3b344362fbce554c3ad5f54085\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b515b.png data-sub-html="<h2>ff470b3b344362fbce554c3ad5f54085\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b515b.png alt=ff470b3b344362fbce554c3ad5f54085\_MD5></a></p><ol><li>先创建镜像屏幕图层，当前状态应该是镜像图层盖在源屏幕上面。</li><li>将源屏幕图层，移动到屏幕1的左边。镜像对应的需要在屏幕上显示。</li><li>移动原有屏幕画面到右侧显示器</li><li>判断开始动画移动 &ndash; > 更改图层坐标，动画结束后，判断是否移位 1 移位动画，2 复位动画</li></ol><p>创建镜像屏幕</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=c1>//添加图层</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>SurfaceControl</span><span class=w> </span><span class=n>copyTaskSc</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>   
+</span></span></span><span class=line><span class=cl><span class=n>SurfaceControl</span><span class=w> </span><span class=n>copyTaskBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>SurfaceControl</span><span class=w> </span><span class=n>realWindwosSateBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//创建一个镜像图层</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=n>copyTaskSc</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>makeChildSurface</span><span class=p>(</span><span class=kc>null</span><span class=p>).</span><span class=na>setName</span><span class=p>(</span><span class=s>&#34;copyTaskSc&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>.</span><span class=na>setParent</span><span class=p>(</span><span class=n>getWindowingLayer</span><span class=p>())</span><span class=w>            
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>.</span><span class=na>build</span><span class=p>();</span><span class=c1>// getWindowingLayer 在app上吗</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//镜像一个task的 surfacecontrol   ---- copyTaskBuffer </span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//surfacecontrol里面其实有一个layer</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>copyTaskBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>SurfaceContrl</span><span class=p>.</span><span class=na>mirrorSurface</span><span class=p>(</span><span class=n>rootTask</span><span class=p>.</span><span class=na>getSurfaceControl</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//原生的一个</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>realWindwosSateBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>rootTask</span><span class=p>.</span><span class=na>getSurfaceControl</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//获取一个事务 SurfaceContrl.Transaction t = mWmSerivce.mTransactionFactory.get();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//把 拷贝的 copyTaskBuffer 放到了 copyTaskSc 下面，copyTaskSc 在原来的屏幕下面</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>t</span><span class=p>.</span><span class=na>reparent</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=p>,</span><span class=n>copyTaskSc</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//显示图层</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>t</span><span class=p>.</span><span class=na>show</span><span class=p>(</span><span class=n>copyTaskSc</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>t</span><span class=p>.</span><span class=na>show</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//平移</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>Matrix</span><span class=w>  </span><span class=n>matrix</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Matrix</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>matrix</span><span class=p>.</span><span class=na>reset</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>matrix</span><span class=p>.</span><span class=na>postTranslate</span><span class=p>(</span><span class=n>100</span><span class=p>,</span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>//往平移</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>t</span><span class=p>.</span><span class=na>setMatrix</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=p>,</span><span class=n>matrix</span><span class=p>,</span><span class=k>new</span><span class=w> </span><span class=kt>float</span><span class=o>[</span><span class=n>9</span><span class=o>]</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>t</span><span class=p>.</span><span class=na>apply</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>移动屏幕到右侧，并且设置左边屏幕外面。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//由于移动到2屏幕，需要再移动到屏幕外，会有闪屏的情况，需要再移动之前，先进行移动。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//直接调用下面的 startMoveCurrentScreenTask（0，0）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>mRootWindowContainer</span><span class=p>.</span><span class=na>moveRootTaskToDisplay</span><span class=p>(</span><span class=n>rootTaskId</span><span class=p>,</span><span class=n>otherDisplay</span><span class=p>.</span><span class=na>mDisplayId</span><span class=p>,</span><span class=kc>true</span><span class=p>);</span><span class=o>//</span><span class=n>把task移动到另一屏</span></span></span></code></pre></td></tr></table></div></div></div><p>动画</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=c1>//移动镜像图层</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>startMoveCurrentScreenTask</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>x</span><span class=w> </span><span class=p>,</span><span class=kt>int</span><span class=w> </span><span class=n>y</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>if</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SurfaceControl</span><span class=p>.</span><span class=na>Transaction</span><span class=w> </span><span class=n>t</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mWnService</span><span class=p>.</span><span class=na>mTrasactionFactory</span><span class=p>.</span><span class=na>get</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>//屏幕2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>       </span><span class=n>Matrix</span><span class=w> </span><span class=n>matrix</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Matrix</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>int</span><span class=w> </span><span class=n>width</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getDisaplayINfog</span><span class=p>().</span><span class=na>logicalWIdth</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>matrix</span><span class=p>.</span><span class=na>postTranslate</span><span class=p>(</span><span class=o>-</span><span class=n>width</span><span class=o>+</span><span class=n>x</span><span class=p>,</span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>//屏幕1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    	</span><span class=n>matrix</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>Matrix</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>matrix</span><span class=p>.</span><span class=na>reset</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>matrix</span><span class=p>.</span><span class=na>postTranslate</span><span class=p>(</span><span class=n>width</span><span class=p>,</span><span class=n>y</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>t</span><span class=p>.</span><span class=na>setMatrix</span><span class=p>(</span><span class=n>copyTaskBuffer</span><span class=p>,</span><span class=n>matrix</span><span class=p>,</span><span class=k>new</span><span class=w> </span><span class=n>floatp</span><span class=o>[</span><span class=n>9</span><span class=o>]</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>       
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>t</span><span class=p>.</span><span class=na>setMatix</span><span class=p>(</span><span class=n>reaWindowStateBuffer</span><span class=p>,</span><span class=n>matrix</span><span class=p>,</span><span class=k>new</span><span class=w> </span><span class=n>floatp</span><span class=o>[</span><span class=n>9</span><span class=o>]</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>t</span><span class=p>.</span><span class=na>aaply</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=c1>//真实图层 也需要操作,先移动到最左侧</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>reaWindowStateBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>rootTask</span><span class=p>.</span><span class=na>getSurfaceControl</span><span class=p>();</span></span></span></code></pre></td></tr></table></div></div></div><p>手指抬起后处理流程：</p><p>如果是自动移动屏幕2，则offsetX &mdash;&ndash;> 1440（width）<br>如果是自动移动屏幕1，则offsetX &mdash;&ndash;> 0（原点）</p><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b56e2.png title=9178ffcf2c4255d0c86b392006fc219c\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b56e2.png data-sub-html="<h2>9178ffcf2c4255d0c86b392006fc219c\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/17/6710e059b56e2.png alt=9178ffcf2c4255d0c86b392006fc219c\_MD5></a></p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> </span><span class=k>case</span><span class=w> </span><span class=n>MotionEvent</span><span class=p>.</span><span class=na>ACTION_POINTER_UP</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> </span><span class=k>case</span><span class=w> </span><span class=n>MotionEvent</span><span class=p>.</span><span class=na>ACTION_UP</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>startAutoMove</span><span class=p>(</span><span class=n>offsetX</span><span class=p>,</span><span class=w> </span><span class=p>.</span><span class=na>xxx</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=n>xxx</span><span class=w> </span><span class=o>?</span><span class=w> </span><span class=n>1</span><span class=p>:</span><span class=w> </span><span class=n>0</span><span class=p>)</span></span></span></code></pre></td></tr></table></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kt>void</span><span class=w> </span><span class=nf>startAutoMove</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>offsetX</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>destDisplay</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=n>endX</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>destDisplay</span><span class=w>  </span><span class=n>0</span><span class=w> </span><span class=n>or</span><span class=w>  </span><span class=n>width</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>//判断最后屏幕。然后动画结束位置</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>ValueAnimator</span><span class=w> </span><span class=n>valueAnimiator</span><span class=w> </span><span class=o>=</span><span class=w>  </span><span class=n>ValueAnimator</span><span class=p>.</span><span class=na>ofInt</span><span class=p>(</span><span class=n>offsetx</span><span class=p>,</span><span class=n>end</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>valueAnimator</span><span class=p>.</span><span class=na>addUpdateListener</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>ValueAnimator</span><span class=p>.</span><span class=na>AnimatorUpdateListener</span><span class=p>(){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kd>public</span><span class=w> </span><span class=nf>onUpdate</span><span class=p>(){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=kt>int</span><span class=w> </span><span class=n>current</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>animate</span><span class=p>.</span><span class=na>getValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>startmovecurrentScreenTask</span><span class=p>(</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>});</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>valueAnimator</span><span class=p>.</span><span class=na>setInterpolator</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>valueAnimator</span><span class=p>.</span><span class=na>setDuration</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>valueAnimator</span><span class=p>.</span><span class=na>staret</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>onAnimationEnd</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>//移除图层</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>SurfaceControl</span><span class=p>.</span><span class=na>Transaction</span><span class=w> </span><span class=n>t</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mWnService</span><span class=p>.</span><span class=na>mTrasactionFactory</span><span class=p>.</span><span class=na>get</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>t</span><span class=p>.</span><span class=na>remove</span><span class=p>(</span><span class=n>copyBuffer</span><span class=p>);</span><span class=w>	
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>t</span><span class=p>.</span><span class=na>remove</span><span class=p>(</span><span class=n>copyTaskSc</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>t</span><span class=p>.</span><span class=na>apply</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>copyBuffer</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>copyTaskSc</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>//动画如果是返回，需要把原镜像move回去。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>mRootWindowContainer</span><span class=p>.</span><span class=na>moveRootTaskToDisplay</span><span class=p>(</span><span class=n>mCurrentTaskId</span><span class=p>,</span><span class=n>mDisplayId</span><span class=p>.</span><span class=na>mDisplayId</span><span class=p>,</span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=c1>//移动原镜像图层，从屏幕外再移动回来。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>matrix</span><span class=p>.</span><span class=na>reset</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>setMatrix</span><span class=p>()</span><span class=c1>//归零</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>targetActivity</span><span class=p>.</span><span class=na>mLauncherTaskBehind</span><span class=w> </span><span class=o>=</span><span class=kc>false</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>mRootWindowContainer</span><span class=p>.</span><span class=na>ensureActiviesVisible</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c1>//桌面可以可见</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=n>targetActivity</span><span class=p>.</span><span class=na>mLauncherTaskBehind</span><span class=w> </span><span class=o>=</span><span class=kc>true</span></span></span></code></pre></td></tr></table></div></div></div><p>镜像模式，源界面发生变化，镜像坐标也会变化</p><p>问题分析：</p><p>adb shell dumpsys SurfaceFlinger</p><p>adb shell dumpsys input</p><p>ToDo:</p><p>![image-20241017173033900](/Users/huangwentao/Library/Application Support/typora-user-images/image-20241017173033900.png)</p><p>=======================================</p><p>DisplayContent.java</p><p>实现双指监听事件<br>DoubleScreenMovePoiListerner 继承 PointerEventListener</p><p>DisplayContext.doTestMoveTaskToOtherDisplay</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-fallback"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>//添加图层
+</span></span><span class=line><span class=cl>SurfaceControl copyTaskSc = null;
+</span></span><span class=line><span class=cl>SurfaceControl copyTaskBuffer = null;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>SurfaceControl realWindwosSateBuffer = null;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>//add by doublescreenmove
+</span></span><span class=line><span class=cl>   public void doTestMoveTaskToOtherDisplay() {
+</span></span><span class=line><span class=cl>       DisplayContent otherDisplay = null;
+</span></span><span class=line><span class=cl>       if (mRootWindowContainer.getChildCount() == 2) {//检测是不是双屏
+</span></span><span class=line><span class=cl>           otherDisplay = (mRootWindowContainer.getChildAt(0) == this) ? mRootWindowContainer.getChildAt(1):mRootWindowContainer.getChildAt(0);//获取另一个屏幕的DisplayContent
+</span></span><span class=line><span class=cl>       }
+</span></span><span class=line><span class=cl>       if (otherDisplay!= this &amp;&amp; otherDisplay!= null) {
+</span></span><span class=line><span class=cl>           int rootTaskId = 0;
+</span></span><span class=line><span class=cl>           try {
+</span></span><span class=line><span class=cl>           	
+</span></span><span class=line><span class=cl>           	 SurfaceContrl.Transaction t = mWmSerivce.mTransactionFactory.get();
+</span></span><span class=line><span class=cl>           	
+</span></span><span class=line><span class=cl>           	
+</span></span><span class=line><span class=cl>               Task rootTask = getTopRootTask();//获取当前display的顶部Task
+</span></span><span class=line><span class=cl>               if (rootTask.isActivityTypeHome()) {//home类型的task不支持移动
+</span></span><span class=line><span class=cl>                   android.util.Log.i(&#34;DoubleScreen&#34;,&#34;doTestMoveTaskToOtherDisplay isActivityTypeHome&#34;);
+</span></span><span class=line><span class=cl>                   return;
+</span></span><span class=line><span class=cl>               }
+</span></span><span class=line><span class=cl>               rootTaskId =rootTask.mTaskId;
+</span></span><span class=line><span class=cl>               
+</span></span><span class=line><span class=cl>               //创建一个镜像图层
+</span></span><span class=line><span class=cl>               if(copyTaskSc == null){
+</span></span><span class=line><span class=cl>               		makeChildSurface(null).setName(&#34;copyTaskSc&#34;)
+</span></span><span class=line><span class=cl>               					.setParent(getWindowingLayer())            
+</span></span><span class=line><span class=cl>               					.build();// getWindowingLayer 在app上吗
+</span></span><span class=line><span class=cl>               					
+</span></span><span class=line><span class=cl>               }
+</span></span><span class=line><span class=cl>              if(copyTaskBuffer == null){
+</span></span><span class=line><span class=cl>               		copyTaskBuffer = SurfaceContrl.mirrorSurface(rootTask.getSurfaceControl());
+</span></span><span class=line><span class=cl>              
+</span></span><span class=line><span class=cl>                    realWindwosSateBuffer = rootTask.getSurfaceControl();
+</span></span><span class=line><span class=cl>              
+</span></span><span class=line><span class=cl>              
+</span></span><span class=line><span class=cl>              		t.reparent(copyTaskBuffer,copyTaskSc);
+</span></span><span class=line><span class=cl>              		t.show(copyTaskSc);
+</span></span><span class=line><span class=cl>              		t.show(copyTaskBuffer);
+</span></span><span class=line><span class=cl>              		
+</span></span><span class=line><span class=cl>              		
+</span></span><span class=line><span class=cl>              		Matrix  matrix = new Matrix();
+</span></span><span class=line><span class=cl>              		matrix.reset();
+</span></span><span class=line><span class=cl>              		matrix.postTranslate(100,0);
+</span></span><span class=line><span class=cl>              		t.setMatrix(copyTaskBuffer,matrix,new float[9])
+</span></span><span class=line><span class=cl>              		
+</span></span><span class=line><span class=cl>              		t.apply();
+</span></span><span class=line><span class=cl>               }
+</span></span><span class=line><span class=cl>               
+</span></span><span class=line><span class=cl>               ensureOtherDisplayActivityVisible(ohterdisplay);
+</span></span><span class=line><span class=cl>               mRootWindowContainer.moveRootTaskToDisplay(rootTaskId,otherDisplay.mDisplayId,true);//把task移动到另一屏
+</span></span><span class=line><span class=cl>           }catch (Exception e) {
+</span></span><span class=line><span class=cl>               android.util.Log.i(&#34;DoubleScreen&#34;,&#34;doTestMoveTaskToOtherDisplay Exception&#34;,e);
+</span></span><span class=line><span class=cl>           }
+</span></span><span class=line><span class=cl>       }
+</span></span><span class=line><span class=cl>   }
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl>   void ensureOtherDisplayActivityVisible(DisplayContext ohter){
+</span></span><span class=line><span class=cl>   	    ActivityRecord topAcitiy = ohter.getTopAcitiy(false,false);
+</span></span><span class=line><span class=cl>   	    if(topAcitiy != null){
+</span></span><span class=line><span class=cl>   	    	topAcitivty.mLauncherTaskBehind = true;
+</span></span><span class=line><span class=cl>   	    }
+</span></span><span class=line><span class=cl>   }
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl> //end  by doublescreenmove
+</span></span><span class=line><span class=cl>ValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListenr());</span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-fallback"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kn>package</span><span class=w> </span><span class=nx>com</span><span class=p>.</span><span class=nx>android</span><span class=p>.</span><span class=nx>server</span><span class=p>.</span><span class=nx>wm</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=nx>android</span><span class=p>.</span><span class=nx>view</span><span class=p>.</span><span class=nx>MotionEvent</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=nx>android</span><span class=p>.</span><span class=nx>view</span><span class=p>.</span><span class=nx>WindowManagerPolicyConstants</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nx>public</span><span class=w> </span><span class=nx>class</span><span class=w> </span><span class=nx>DoubleScreenMovePointerEventListener</span><span class=w> </span><span class=nx>implements</span><span class=w> </span><span class=nx>WindowManagerPolicyConstants</span><span class=p>.</span><span class=nx>PointerEventListener</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>boolean</span><span class=w> </span><span class=nx>shouldBeginMove</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=kc>false</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=nx>mPoint0FirstX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=mi>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=nx>mPoint1FirstX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=mi>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=nx>mPoint0LastX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=mi>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=nx>mPoint1LastX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=mi>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>int</span><span class=w> </span><span class=nx>START_GAP</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=mi>20</span><span class=p>;</span><span class=cp>//动作触发阈值，最少移动为20个像素才可以</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>private</span><span class=w> </span><span class=nx>final</span><span class=w> </span><span class=nx>WindowManagerService</span><span class=w> </span><span class=nx>mService</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>public</span><span class=w> </span><span class=nf>DoubleScreenMovePointerEventListener</span><span class=p>(</span><span class=nx>WindowManagerService</span><span class=w> </span><span class=nx>mService</span><span class=p>,</span><span class=w> </span><span class=nx>DisplayContent</span><span class=w> </span><span class=nx>mDisplayContent</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>this</span><span class=p>.</span><span class=nx>mService</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>mService</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>this</span><span class=p>.</span><span class=nx>mDisplayContent</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>mDisplayContent</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>private</span><span class=w> </span><span class=nx>final</span><span class=w> </span><span class=nx>DisplayContent</span><span class=w> </span><span class=nx>mDisplayContent</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=err>@</span><span class=nx>Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nx>public</span><span class=w> </span><span class=nx>void</span><span class=w> </span><span class=nf>onPointerEvent</span><span class=p>(</span><span class=nx>MotionEvent</span><span class=w> </span><span class=nx>motionEvent</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nx>android</span><span class=p>.</span><span class=nx>util</span><span class=p>.</span><span class=nx>Log</span><span class=p>.</span><span class=nf>i</span><span class=p>(</span><span class=s>&#34;DoubleScreenTouch&#34;</span><span class=p>,</span><span class=s>&#34;DoubleScreenMovePointerEventListener onPointerEvent motionEvent = &#34;</span><span class=o>+</span><span class=nx>motionEvent</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>switch</span><span class=w> </span><span class=p>(</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getActionMasked</span><span class=p>())</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=nx>MotionEvent</span><span class=p>.</span><span class=nx>ACTION_DOWN</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>case</span><span class=w> </span><span class=nx>MotionEvent</span><span class=p>.</span><span class=nx>ACTION_POINTER_DOWN</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getPointerCount</span><span class=p>()</span><span class=w> </span><span class=p>&gt;</span><span class=w> </span><span class=mi>2</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=nx>shouldBeginMove</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=kc>false</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=nx>android</span><span class=p>.</span><span class=nx>util</span><span class=p>.</span><span class=nx>Log</span><span class=p>.</span><span class=nf>i</span><span class=p>(</span><span class=s>&#34;DoubleScreen&#34;</span><span class=p>,</span><span class=s>&#34;DoubleScreenMovePointerEventListener motionEvent.getPointerCount() &gt; 2 end DoubleScreenMove &#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getPointerCount</span><span class=p>()</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=mi>2</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=nx>mPoint0FirstX</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=mi>0</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=nx>mPoint1FirstX</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=mi>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                        </span><span class=nx>mPoint0FirstX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                        </span><span class=nx>mPoint1FirstX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=k>break</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>           </span><span class=k>case</span><span class=w> </span><span class=nx>MotionEvent</span><span class=p>.</span><span class=nx>ACTION_MOVE</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getPointerCount</span><span class=p>()</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=mi>2</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                   </span><span class=k>if</span><span class=w> </span><span class=p>(!</span><span class=nx>shouldBeginMove</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span><span class=w>  </span><span class=o>-</span><span class=w> </span><span class=nx>mPoint0FirstX</span><span class=w> </span><span class=p>&gt;</span><span class=w> </span><span class=nx>START_GAP</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                           </span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span><span class=w>  </span><span class=o>-</span><span class=w> </span><span class=nx>mPoint1FirstX</span><span class=w> </span><span class=p>&gt;</span><span class=w> </span><span class=nx>START_GAP</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=cp>//识别了双指动作达到触发task移动条件，则调用对应mDisplayContent.doTestMoveTaskToOtherDisplay方法</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                       </span><span class=nx>android</span><span class=p>.</span><span class=nx>util</span><span class=p>.</span><span class=nx>Log</span><span class=p>.</span><span class=nf>i</span><span class=p>(</span><span class=s>&#34;DoubleScreen&#34;</span><span class=p>,</span><span class=s>&#34;DoubleScreenMovePointerEventListener start DoubleScreenMove &#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                       </span><span class=nx>shouldBeginMove</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=kc>true</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                       </span><span class=nx>mDisplayContent</span><span class=p>.</span><span class=nf>doTestMoveTaskToOtherDisplay</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                   </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=k>if</span><span class=p>(</span><span class=nx>shouldBeginMove</span><span class=p>){</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>						</span><span class=kt>int</span><span class=w>  </span><span class=nx>detX</span><span class=w> </span><span class=p>=</span><span class=w>  </span><span class=nx>last</span><span class=w> </span><span class=o>-</span><span class=w> </span><span class=nx>initx</span><span class=p>;</span><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                   </span><span class=nx>mPoint0LastX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                   </span><span class=nx>mPoint1LastX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=nx>motionEvent</span><span class=p>.</span><span class=nf>getX</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=k>break</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>           </span><span class=k>case</span><span class=w> </span><span class=nx>MotionEvent</span><span class=p>.</span><span class=nx>ACTION_POINTER_UP</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>           </span><span class=k>case</span><span class=w> </span><span class=nx>MotionEvent</span><span class=p>.</span><span class=nx>ACTION_UP</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=nx>shouldBeginMove</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=kc>false</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=nx>mPoint0FirstX</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>mPoint1FirstX</span><span class=w> </span><span class=p>=</span><span class=mi>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=nx>android</span><span class=p>.</span><span class=nx>util</span><span class=p>.</span><span class=nx>Log</span><span class=p>.</span><span class=nf>i</span><span class=p>(</span><span class=s>&#34;DoubleScreen&#34;</span><span class=p>,</span><span class=s>&#34;DoubleScreenMovePointerEventListener ACTION_UP end DoubleScreenMove &#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>               </span><span class=k>break</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>       </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/wms/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・WMS</span></span></a> 7</div><div class=collection-nav><a href=/posts/android-%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E9%9F%B3%E9%87%8F%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/ class=collection-nav-item rel=prev title="Android 原生安全音量逻辑设计"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>Android 原生安全音量逻辑设计</span>
+</a><a href=/posts/android-%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E7%A9%BA%E9%97%B4%E7%9A%84%E9%AB%98%E9%80%9A%E7%AD%94%E7%96%91/ class=collection-nav-item rel=next title="Android 记录系统空间的高通答疑"><span>Android 记录系统空间的高通答疑</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:34:05">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/%E5%8F%8C%E5%B1%8F%E5%8A%A8%E7%94%BB/ data-title=双屏动画><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a><a href=/tags/%E5%AE%9E%E6%88%98/ class=post-tag title="标签 - 实战">实战</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/%E8%87%AA%E5%8A%A8%E5%BC%80%E5%85%B3%E6%9C%BA%E8%84%9A%E6%9C%AC/ class=post-nav-item rel=prev title=自动开关机脚本><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>自动开关机脚本</a><a href=/posts/zygote%E8%BF%9B%E7%A8%8B%E7%9B%B8%E5%85%B3/ class=post-nav-item rel=next title=Zygote进程相关>Zygote进程相关<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><a href=#目标>目标：</a></li><li><a href=#任务分析和分解>任务分析和分解：</a><ul><li><ul><li><a href=#一-监听多指事件>一 监听多指事件</a></li><li><a href=#二-任务跨屏移动>二 任务跨屏移动</a></li><li><a href=#三-移动动画方案-虚拟镜像屏幕>三 移动动画方案-虚拟镜像屏幕</a></li></ul></li></ul></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/431d80e57fcc6b0a2941de32f58ec0c7.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

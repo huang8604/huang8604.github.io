@@ -1,0 +1,851 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Android14 - WindowManagerService之客户端Activity布局-CSDN博客 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="Android1****4 - WindowManagerService之客户端Activity****布局 一**、主要角色** WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例：
+"><meta name=keywords content='clippings,转载,blog'><meta itemprop=name content="Android14 - WindowManagerService之客户端Activity布局-CSDN博客"><meta itemprop=description content="Android1****4 - WindowManagerService之客户端Activity****布局 一**、主要角色** WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例："><meta itemprop=datePublished content="2024-11-06T06:57:52+00:00"><meta itemprop=dateModified content="2024-11-05T01:33:58+00:00"><meta itemprop=wordCount content="3620"><meta itemprop=keywords content="Clippings,转载,Blog"><meta property="og:url" content="https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="Android14 - WindowManagerService之客户端Activity布局-CSDN博客"><meta property="og:description" content="Android1****4 - WindowManagerService之客户端Activity****布局 一**、主要角色** WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例："><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:52+00:00"><meta property="article:modified_time" content="2024-11-05T01:33:58+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="转载"><meta property="article:tag" content="Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android14 - WindowManagerService之客户端Activity布局-CSDN博客"><meta name=twitter:description content="Android1****4 - WindowManagerService之客户端Activity****布局 一**、主要角色** WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例："><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/ title="Android14 - WindowManagerService之客户端Activity布局-CSDN博客 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96getresources%E4%B8%8Ebinder%E4%BA%A4%E7%81%AB%E5%AF%BC%E8%87%B4%E7%9A%84%E7%95%8C%E9%9D%A2%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96/ title=Android性能优化：getResources()与Binder交火导致的界面卡顿优化><link rel=next type=text/html href=https://huang8604.github.io/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 SurfaceFlinger onLayerUpdate流程分析-CSDN博客"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/index.md title="Android14 - WindowManagerService之客户端Activity布局-CSDN博客 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Android14 - WindowManagerService之客户端Activity布局-CSDN博客","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2\/"},"genre":"posts","keywords":"clippings, 转载, blog","wordcount":3620,"url":"https:\/\/huang8604.github.io\/posts\/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2\/","datePublished":"2024-11-06T06:57:52+00:00","dateModified":"2024-11-05T01:33:58+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Android14 - WindowManagerService之客户端Activity布局-CSDN博客</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/wms/ class=post-collection title="合集 - WMS"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> WMS</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:52"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:33:58"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="3620 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 3700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 8 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#a---windowmanagerservice><strong>A<strong><strong>n</strong></strong>d<strong><strong>r</strong></strong>oi<strong><strong>d</strong></strong>1****4</strong> <strong>-</strong> <strong>WindowManagerService<strong><strong>之客户端</strong></strong>Activity****布局</strong></a></li><li><a href=#一主要角色><strong>一</strong>**、<strong><strong>主要</strong></strong>角色**</a></li><li></li><li><a href=#二窗口的构建过程><strong>二</strong>**、**<strong>窗口的构建过程</strong></a></li></ul></nav></div></div><div class=content id=content><h2 class=heading-element id=a---windowmanagerservice><span><strong>A<strong><strong>n</strong></strong>d<strong><strong>r</strong></strong>oi<strong><strong>d</strong></strong>1****4</strong> <strong>-</strong> <strong>WindowManagerService<strong><strong>之客户端</strong></strong>Activity****布局</strong></span>
+<a href=#a---windowmanagerservice class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><h2 class=heading-element id=一主要角色><span><strong>一</strong>**、<strong><strong>主要</strong></strong>角色**</span>
+<a href=#%e4%b8%80%e4%b8%bb%e8%a6%81%e8%a7%92%e8%89%b2 class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>WMS作为一个服务端，有多种客户端与其交互的场景。我们以常见的Activity为例：</p><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/11/6708eb606ad96.png title=873897761998e36aeca2444101760422\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/11/6708eb606ad96.png data-sub-html="<h2>873897761998e36aeca2444101760422\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/11/6708eb606ad96.png alt=873897761998e36aeca2444101760422\_MD5></a><br><strong>Activity</strong>：在ActivityThread构建一个Activity后，会调用其attach方法，在attach中构建了一个PhoneWindow。</p><p><strong>PhoneWindow</strong>：一个Activity对应一个PhoneWindow。而每个PhoneWindow持有一个WindowManagerImpl对象。</p><p><strong>WindowManagerImpl</strong>：是服务端WMS在客户端的代理。而WindowManagerImpl中持有WindowManagerGlobal。</p><p><strong>WindowManagerGlobal</strong>：是进程内的单例。WindowManagerGlobal不仅持有WMS服务端的WindowManagerService、WindowSession的引用，并且集合了所有的ViewRootImpl、DecorView等</p><p><strong>ViewRootImpl</strong>：每个Activity对应一个ViewRootImp对象。ViewRootImp是作为客户端与WMS的桥梁。从客户端到服务端的角度，ViewRootImp中持有的WindowSession对象是服务端Session的引用，一个Session对应一个客户端进程。从服务端到客户端的角度，ViewRootImp中有一个子类W，是binder通信的服务端，W对象的引用被WMS持有，用来服务端向客户端通信。另外，ViewRootImp中持有DecorView对象。从逻辑上，ViewRootImpl是View树的根，但其本身并不是一个View，只是实现了ViewParent接口。DecorView是ViewRootImp的子类（见setView()方法中的view.assignParent(this)）</p><p>）</p><p><strong>DecorView</strong>：每个Activity对应一个DecorView。DecorView是真正的顶层View，是最外层的view。其inflate PhoneWidow传过来的layout后，将其addView作为自己的第0个类。DecorView维护了一个窗口的基本结构，包括主内容区域、titlebar区域等。</p><h2 class=heading-element><span></span>
+<a href=# class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><h2 class=heading-element id=二窗口的构建过程><span><strong>二</strong>**、**<strong>窗口的构建过程</strong></span>
+<a href=#%e4%ba%8c%e7%aa%97%e5%8f%a3%e7%9a%84%e6%9e%84%e5%bb%ba%e8%bf%87%e7%a8%8b class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>窗口的结构大致如下：</p><p><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/10/11/6708eaa644ff9.png title=9cab045e506b7ba8efac0632869f6944\_MD5 data-thumbnail=https://picgo.myjojo.fun:666/i/2024/10/11/6708eaa644ff9.png data-sub-html="<h2>9cab045e506b7ba8efac0632869f6944\_MD5</h2>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/10/11/6708eaa644ff9.png alt=9cab045e506b7ba8efac0632869f6944\_MD5></a></p><p>其过程参考上图，在PhoneWindow的初始化过程中，调用了generateLayout(DecorView decor)方法，其中对一个window的整体画面进行了初始化。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=3 style=--fi-max-shown-lines:10;--fi-line-digit:3;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span><span class=lnt>241
+</span><span class=lnt>242
+</span><span class=lnt>243
+</span><span class=lnt>244
+</span><span class=lnt>245
+</span><span class=lnt>246
+</span><span class=lnt>247
+</span><span class=lnt>248
+</span><span class=lnt>249
+</span><span class=lnt>250
+</span><span class=lnt>251
+</span><span class=lnt>252
+</span><span class=lnt>253
+</span><span class=lnt>254
+</span><span class=lnt>255
+</span><span class=lnt>256
+</span><span class=lnt>257
+</span><span class=lnt>258
+</span><span class=lnt>259
+</span><span class=lnt>260
+</span><span class=lnt>261
+</span><span class=lnt>262
+</span><span class=lnt>263
+</span><span class=lnt>264
+</span><span class=lnt>265
+</span><span class=lnt>266
+</span><span class=lnt>267
+</span><span class=lnt>268
+</span><span class=lnt>269
+</span><span class=lnt>270
+</span><span class=lnt>271
+</span><span class=lnt>272
+</span><span class=lnt>273
+</span><span class=lnt>274
+</span><span class=lnt>275
+</span><span class=lnt>276
+</span><span class=lnt>277
+</span><span class=lnt>278
+</span><span class=lnt>279
+</span><span class=lnt>280
+</span><span class=lnt>281
+</span><span class=lnt>282
+</span><span class=lnt>283
+</span><span class=lnt>284
+</span><span class=lnt>285
+</span><span class=lnt>286
+</span><span class=lnt>287
+</span><span class=lnt>288
+</span><span class=lnt>289
+</span><span class=lnt>290
+</span><span class=lnt>291
+</span><span class=lnt>292
+</span><span class=lnt>293
+</span><span class=lnt>294
+</span><span class=lnt>295
+</span><span class=lnt>296
+</span><span class=lnt>297
+</span><span class=lnt>298
+</span><span class=lnt>299
+</span><span class=lnt>300
+</span><span class=lnt>301
+</span><span class=lnt>302
+</span><span class=lnt>303
+</span><span class=lnt>304
+</span><span class=lnt>305
+</span><span class=lnt>306
+</span><span class=lnt>307
+</span><span class=lnt>308
+</span><span class=lnt>309
+</span><span class=lnt>310
+</span><span class=lnt>311
+</span><span class=lnt>312
+</span><span class=lnt>313
+</span><span class=lnt>314
+</span><span class=lnt>315
+</span><span class=lnt>316
+</span><span class=lnt>317
+</span><span class=lnt>318
+</span><span class=lnt>319
+</span><span class=lnt>320
+</span><span class=lnt>321
+</span><span class=lnt>322
+</span><span class=lnt>323
+</span><span class=lnt>324
+</span><span class=lnt>325
+</span><span class=lnt>326
+</span><span class=lnt>327
+</span><span class=lnt>328
+</span><span class=lnt>329
+</span><span class=lnt>330
+</span><span class=lnt>331
+</span><span class=lnt>332
+</span><span class=lnt>333
+</span><span class=lnt>334
+</span><span class=lnt>335
+</span><span class=lnt>336
+</span><span class=lnt>337
+</span><span class=lnt>338
+</span><span class=lnt>339
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>protected</span><span class=w> </span><span class=n>ViewGroup</span><span class=w> </span><span class=nf>generateLayout</span><span class=p>(</span><span class=n>DecorView</span><span class=w> </span><span class=n>decor</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// Apply data from current theme.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// Style来自于Theme xml文件</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>TypedArray</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getWindowStyle</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mIsFloating</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowIsFloating</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kt>int</span><span class=w> </span><span class=n>flagsToUpdate</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>(</span><span class=n>FLAG_LAYOUT_IN_SCREEN</span><span class=o>|</span><span class=n>FLAG_LAYOUT_INSET_DECOR</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mIsFloating</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setLayout</span><span class=p>(</span><span class=n>WRAP_CONTENT</span><span class=p>,</span><span class=w> </span><span class=n>WRAP_CONTENT</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>0</span><span class=p>,</span><span class=w> </span><span class=n>flagsToUpdate</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_LAYOUT_IN_SCREEN</span><span class=o>|</span><span class=n>FLAG_LAYOUT_INSET_DECOR</span><span class=p>,</span><span class=w> </span><span class=n>flagsToUpdate</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>getAttributes</span><span class=p>().</span><span class=na>setFitInsetsSides</span><span class=p>(</span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>getAttributes</span><span class=p>().</span><span class=na>setFitInsetsTypes</span><span class=p>(</span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowNoTitle</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_NO_TITLE</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowActionBar</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// Don&#39;t allow an action bar if there is no title.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_ACTION_BAR</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowActionBarOverlay</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_ACTION_BAR_OVERLAY</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowActionModeOverlay</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_ACTION_MODE_OVERLAY</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFullscreen</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_FULLSCREEN</span><span class=p>,</span><span class=w> </span><span class=n>FLAG_FULLSCREEN</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowTranslucentStatus</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_TRANSLUCENT_STATUS</span><span class=p>,</span><span class=w> </span><span class=n>FLAG_TRANSLUCENT_STATUS</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowTranslucentNavigation</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_TRANSLUCENT_NAVIGATION</span><span class=p>,</span><span class=w> </span><span class=n>FLAG_TRANSLUCENT_NAVIGATION</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowShowWallpaper</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_SHOW_WALLPAPER</span><span class=p>,</span><span class=w> </span><span class=n>FLAG_SHOW_WALLPAPER</span><span class=o>&amp;</span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowEnableSplitTouch</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>getContext</span><span class=p>().</span><span class=na>getApplicationInfo</span><span class=p>().</span><span class=na>targetSdkVersion</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=o>&gt;=</span><span class=w> </span><span class=n>android</span><span class=p>.</span><span class=na>os</span><span class=p>.</span><span class=na>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>HONEYCOMB</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_SPLIT_TOUCH</span><span class=p>,</span><span class=w> </span><span class=n>FLAG_SPLIT_TOUCH</span><span class=o>&amp;</span><span class=p>(</span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowMinWidthMajor</span><span class=p>,</span><span class=w> </span><span class=n>mMinWidthMajor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowMinWidthMinor</span><span class=p>,</span><span class=w> </span><span class=n>mMinWidthMinor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>DEBUG</span><span class=p>)</span><span class=w> </span><span class=n>Log</span><span class=p>.</span><span class=na>d</span><span class=p>(</span><span class=n>TAG</span><span class=p>,</span><span class=w> </span><span class=s>&#34;Min width minor: &#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>mMinWidthMinor</span><span class=p>.</span><span class=na>coerceToString</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>+</span><span class=w> </span><span class=s>&#34;, major: &#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>mMinWidthMajor</span><span class=p>.</span><span class=na>coerceToString</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedWidthMajor</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFixedWidthMajor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=n>mFixedWidthMajor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedWidthMajor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mFixedWidthMajor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedWidthMinor</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFixedWidthMinor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=n>mFixedWidthMinor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedWidthMinor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mFixedWidthMinor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedHeightMajor</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFixedHeightMajor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=n>mFixedHeightMajor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedHeightMajor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mFixedHeightMajor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedHeightMinor</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFixedHeightMinor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=n>mFixedHeightMinor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>a</span><span class=p>.</span><span class=na>getValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFixedHeightMinor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mFixedHeightMinor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowContentTransitions</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_CONTENT_TRANSITIONS</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowActivityTransitions</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>requestFeature</span><span class=p>(</span><span class=n>FEATURE_ACTIVITY_TRANSITIONS</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mIsTranslucent</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowIsTranslucent</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=n>Context</span><span class=w> </span><span class=n>context</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getContext</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>targetSdk</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>context</span><span class=p>.</span><span class=na>getApplicationInfo</span><span class=p>().</span><span class=na>targetSdkVersion</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=n>targetPreL</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>targetSdk</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>android</span><span class=p>.</span><span class=na>os</span><span class=p>.</span><span class=na>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>LOLLIPOP</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>boolean</span><span class=w> </span><span class=n>targetPreQ</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>targetSdk</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>Q</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>mForcedStatusBarColor</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mStatusBarColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_statusBarColor</span><span class=p>,</span><span class=w> </span><span class=n>Color</span><span class=p>.</span><span class=na>BLACK</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>mForcedNavigationBarColor</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>navBarCompatibleColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>context</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>color</span><span class=p>.</span><span class=na>navigation_bar_compatible</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>navBarDefaultColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>context</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>color</span><span class=p>.</span><span class=na>navigation_bar_default</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>navBarColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_navigationBarColor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>navBarDefaultColor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mNavigationBarColor</span><span class=w> </span><span class=o>=</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>navBarColor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>navBarDefaultColor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>						</span><span class=o>&amp;&amp;</span><span class=w> </span><span class=o>!</span><span class=n>context</span><span class=p>.</span><span class=na>getResources</span><span class=p>().</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>								</span><span class=n>R</span><span class=p>.</span><span class=na>bool</span><span class=p>.</span><span class=na>config_navBarDefaultTransparent</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=o>?</span><span class=w> </span><span class=n>navBarCompatibleColor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=p>:</span><span class=w> </span><span class=n>navBarColor</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mNavigationBarDividerColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_navigationBarDividerColor</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>Color</span><span class=p>.</span><span class=na>TRANSPARENT</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>targetPreQ</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mEnsureStatusBarContrastWhenTransparent</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_enforceStatusBarContrast</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mEnsureNavigationBarContrastWhenTransparent</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_enforceNavigationBarContrast</span><span class=p>,</span><span class=w> </span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>WindowManager</span><span class=p>.</span><span class=na>LayoutParams</span><span class=w> </span><span class=n>params</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getAttributes</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// Non-floating windows on high end devices must put up decor beneath the system bars and</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// therefore must know about visibility changes of those.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>mIsFloating</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>targetPreL</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowDrawsSystemBarBackgrounds</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>setFlags</span><span class=p>(</span><span class=n>FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=o>~</span><span class=n>getForcedWindowFlags</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mDecor</span><span class=p>.</span><span class=na>mForceWindowDrawsBarBackgrounds</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>params</span><span class=p>.</span><span class=na>privateFlags</span><span class=w> </span><span class=o>|=</span><span class=w> </span><span class=n>PRIVATE_FLAG_FORCE_DRAW_BAR_BACKGROUNDS</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>privateFlags</span><span class=w> </span><span class=o>|=</span><span class=w> </span><span class=n>PRIVATE_FLAG_NO_MOVE_ANIMATION</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowNoMoveAnimation</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>privateFlags</span><span class=w> </span><span class=o>|=</span><span class=w> </span><span class=n>PRIVATE_FLAG_NO_MOVE_ANIMATION</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>sysUiVis</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>decor</span><span class=p>.</span><span class=na>getSystemUiVisibility</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>statusLightFlag</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>View</span><span class=p>.</span><span class=na>SYSTEM_UI_FLAG_LIGHT_STATUS_BAR</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>statusFlag</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowLightStatusBar</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>?</span><span class=w> </span><span class=n>statusLightFlag</span><span class=w> </span><span class=p>:</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>navLightFlag</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>View</span><span class=p>.</span><span class=na>SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>navFlag</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowLightNavigationBar</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>?</span><span class=w> </span><span class=n>navLightFlag</span><span class=w> </span><span class=p>:</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>decor</span><span class=p>.</span><span class=na>setSystemUiVisibility</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>(</span><span class=n>sysUiVis</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=o>~</span><span class=p>(</span><span class=n>statusLightFlag</span><span class=w> </span><span class=o>|</span><span class=w> </span><span class=n>navLightFlag</span><span class=p>))</span><span class=w> </span><span class=o>|</span><span class=w> </span><span class=p>(</span><span class=n>statusFlag</span><span class=w> </span><span class=o>|</span><span class=w> </span><span class=n>navFlag</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowLayoutInDisplayCutoutMode</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>mode</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getInt</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowLayoutInDisplayCutoutMode</span><span class=p>,</span><span class=w> </span><span class=o>-</span><span class=n>1</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mode</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=o>||</span><span class=w> </span><span class=n>mode</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=n>LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>UnsupportedOperationException</span><span class=p>(</span><span class=s>&#34;Unknown windowLayoutInDisplayCutoutMode: &#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=o>+</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getString</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowLayoutInDisplayCutoutMode</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>layoutInDisplayCutoutMode</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mode</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mAlwaysReadCloseOnTouchAttr</span><span class=w> </span><span class=o>||</span><span class=w> </span><span class=n>getContext</span><span class=p>().</span><span class=na>getApplicationInfo</span><span class=p>().</span><span class=na>targetSdkVersion</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>&gt;=</span><span class=w> </span><span class=n>android</span><span class=p>.</span><span class=na>os</span><span class=p>.</span><span class=na>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>HONEYCOMB</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowCloseOnTouchOutside</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>setCloseOnTouchOutsideIfNotSet</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>hasSoftInputMode</span><span class=p>())</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>softInputMode</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getInt</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowSoftInputMode</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>params</span><span class=p>.</span><span class=na>softInputMode</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_backgroundDimEnabled</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>mIsFloating</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=cm>/* All dialogs should have the window dimmed */</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>getForcedWindowFlags</span><span class=p>()</span><span class=o>&amp;</span><span class=n>WindowManager</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>.</span><span class=na>FLAG_DIM_BEHIND</span><span class=p>)</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>params</span><span class=p>.</span><span class=na>flags</span><span class=w> </span><span class=o>|=</span><span class=w> </span><span class=n>WindowManager</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>.</span><span class=na>FLAG_DIM_BEHIND</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=o>!</span><span class=n>haveDimAmount</span><span class=p>())</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>params</span><span class=p>.</span><span class=na>dimAmount</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getFloat</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>android</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_backgroundDimAmount</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>.</span><span class=na>5f</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBlurBehindEnabled</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>getForcedWindowFlags</span><span class=p>()</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=n>WindowManager</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>.</span><span class=na>FLAG_BLUR_BEHIND</span><span class=p>)</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>params</span><span class=p>.</span><span class=na>flags</span><span class=w> </span><span class=o>|=</span><span class=w> </span><span class=n>WindowManager</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>.</span><span class=na>FLAG_BLUR_BEHIND</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>setBlurBehindRadius</span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getDimensionPixelSize</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>android</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBlurBehindRadius</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>setBackgroundBlurRadius</span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>getDimensionPixelSize</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBackgroundBlurRadius</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>params</span><span class=p>.</span><span class=na>windowAnimations</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>params</span><span class=p>.</span><span class=na>windowAnimations</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getResourceId</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowAnimationStyle</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// The rest are only done if this window is not embedded; otherwise,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// the values are inherited from our container.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>getContainer</span><span class=p>()</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mBackgroundDrawable</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFrameResource</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mFrameResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getResourceId</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowFrame</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBackground</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mBackgroundDrawable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getDrawable</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBackground</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>a</span><span class=p>.</span><span class=na>hasValue</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBackgroundFallback</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>mBackgroundFallbackDrawable</span><span class=w> </span><span class=o>=</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>a</span><span class=p>.</span><span class=na>getDrawable</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowBackgroundFallback</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mLoadElevation</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>mElevation</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getDimension</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowElevation</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mClipToOutline</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getBoolean</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowClipToOutline</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mTextColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getColor</span><span class=p>(</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_textColor</span><span class=p>,</span><span class=w> </span><span class=n>Color</span><span class=p>.</span><span class=na>TRANSPARENT</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// Inflate the window decor.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// 根据Feature的设置，选择不同的layout xml。具体的resource来源于platform/frameworks/base/core/res/res，根据不同平台选择具体的资源文件。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 如果什么都没有设置，最后默认的会选择R.layout.screen_simple;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kt>int</span><span class=w> </span><span class=n>layoutResource</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kt>int</span><span class=w> </span><span class=n>features</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getLocalFeatures</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// System.out.println(&#34;Features: 0x&#34; + Integer.toHexString(features));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>((</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_LEFT_ICON</span><span class=p>)</span><span class=w> </span><span class=o>|</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_RIGHT_ICON</span><span class=p>)))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mIsFloating</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>TypedValue</span><span class=w> </span><span class=n>res</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>getContext</span><span class=p>().</span><span class=na>getTheme</span><span class=p>().</span><span class=na>resolveAttribute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>R</span><span class=p>.</span><span class=na>attr</span><span class=p>.</span><span class=na>dialogTitleIconsDecorLayout</span><span class=p>,</span><span class=w> </span><span class=n>res</span><span class=p>,</span><span class=w> </span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>res</span><span class=p>.</span><span class=na>resourceId</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_title_icons</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// XXX Remove this once action bar supports these features.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>removeFeature</span><span class=p>(</span><span class=n>FEATURE_ACTION_BAR</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// System.out.println(&#34;Title Icons!&#34;);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>((</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_PROGRESS</span><span class=p>)</span><span class=w> </span><span class=o>|</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_INDETERMINATE_PROGRESS</span><span class=p>)))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=o>&amp;&amp;</span><span class=w> </span><span class=p>(</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_ACTION_BAR</span><span class=p>))</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// Special case for a window with only a progress bar (and title).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// XXX Need to have a no-title version of embedded windows.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_progress</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// System.out.println(&#34;Progress!&#34;);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_CUSTOM_TITLE</span><span class=p>))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// Special case for a window with a custom title.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// If the window is floating, we need a dialog layout</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mIsFloating</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>TypedValue</span><span class=w> </span><span class=n>res</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>getContext</span><span class=p>().</span><span class=na>getTheme</span><span class=p>().</span><span class=na>resolveAttribute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>R</span><span class=p>.</span><span class=na>attr</span><span class=p>.</span><span class=na>dialogCustomTitleDecorLayout</span><span class=p>,</span><span class=w> </span><span class=n>res</span><span class=p>,</span><span class=w> </span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>res</span><span class=p>.</span><span class=na>resourceId</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_custom_title</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// XXX Remove this once action bar supports these features.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>removeFeature</span><span class=p>(</span><span class=n>FEATURE_ACTION_BAR</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_NO_TITLE</span><span class=p>))</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// If no other features and not embedded, only need a title.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// If the window is floating, we need a dialog layout</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mIsFloating</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>TypedValue</span><span class=w> </span><span class=n>res</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>TypedValue</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>getContext</span><span class=p>().</span><span class=na>getTheme</span><span class=p>().</span><span class=na>resolveAttribute</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>R</span><span class=p>.</span><span class=na>attr</span><span class=p>.</span><span class=na>dialogTitleDecorLayout</span><span class=p>,</span><span class=w> </span><span class=n>res</span><span class=p>,</span><span class=w> </span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>res</span><span class=p>.</span><span class=na>resourceId</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_ACTION_BAR</span><span class=p>))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=na>getResourceId</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>R</span><span class=p>.</span><span class=na>styleable</span><span class=p>.</span><span class=na>Window_windowActionBarFullscreenDecorLayout</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_action_bar</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_title</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// System.out.println(&#34;Title!&#34;);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_ACTION_MODE_OVERLAY</span><span class=p>))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_simple_overlay_action_mode</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// Embedded, so no decoration is needed.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>layoutResource</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>R</span><span class=p>.</span><span class=na>layout</span><span class=p>.</span><span class=na>screen_simple</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// System.out.println(&#34;Simple!&#34;);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mDecor</span><span class=p>.</span><span class=na>startChanging</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 将最终的layoutResource传给DecorView，在DecorView里面去inflate</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mDecor</span><span class=p>.</span><span class=na>onResourcesLoaded</span><span class=p>(</span><span class=n>mLayoutInflater</span><span class=p>,</span><span class=w> </span><span class=n>layoutResource</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>ViewGroup</span><span class=w> </span><span class=n>contentParent</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>(</span><span class=n>ViewGroup</span><span class=p>)</span><span class=n>findViewById</span><span class=p>(</span><span class=n>ID_ANDROID_CONTENT</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>contentParent</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=s>&#34;Window couldn&#39;t find content container view&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>((</span><span class=n>features</span><span class=w> </span><span class=o>&amp;</span><span class=w> </span><span class=p>(</span><span class=n>1</span><span class=w> </span><span class=o>&lt;&lt;</span><span class=w> </span><span class=n>FEATURE_INDETERMINATE_PROGRESS</span><span class=p>))</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>ProgressBar</span><span class=w> </span><span class=n>progress</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getCircularProgressBar</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>progress</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>progress</span><span class=p>.</span><span class=na>setIndeterminate</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// Remaining setup -- of background and title -- that only applies</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// to top-level windows.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>getContainer</span><span class=p>()</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mDecor</span><span class=p>.</span><span class=na>setWindowBackground</span><span class=p>(</span><span class=n>mBackgroundDrawable</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kd>final</span><span class=w> </span><span class=n>Drawable</span><span class=w> </span><span class=n>frame</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mFrameResource</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>frame</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>getContext</span><span class=p>().</span><span class=na>getDrawable</span><span class=p>(</span><span class=n>mFrameResource</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>frame</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>null</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mDecor</span><span class=p>.</span><span class=na>setWindowFrame</span><span class=p>(</span><span class=n>frame</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mDecor</span><span class=p>.</span><span class=na>setElevation</span><span class=p>(</span><span class=n>mElevation</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mDecor</span><span class=p>.</span><span class=na>setClipToOutline</span><span class=p>(</span><span class=n>mClipToOutline</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mTitle</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>setTitle</span><span class=p>(</span><span class=n>mTitle</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mTitleColor</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=n>0</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>mTitleColor</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>mTextColor</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>setTitleColor</span><span class=p>(</span><span class=n>mTitleColor</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mDecor</span><span class=p>.</span><span class=na>finishChanging</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=n>contentParent</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>该方法做了几件事：</p><p>1. 获取主题属性。TypedArray a = getWindowStyle();</p><p>getWindowStyle最终调用的是</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>platform</span><span class=o>/</span><span class=n>frameworks</span><span class=o>/</span><span class=n>base</span><span class=o>/</span><span class=n>core</span><span class=o>/</span><span class=n>java</span><span class=o>/</span><span class=n>android</span><span class=o>/</span><span class=n>content</span><span class=o>/</span><span class=n>Context</span><span class=p>.</span><span class=na>java</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=nd>@NonNull</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>final</span><span class=w> </span><span class=n>TypedArray</span><span class=w> </span><span class=nf>obtainStyledAttributes</span><span class=p>(</span><span class=nd>@NonNull</span><span class=w> </span><span class=nd>@StyleableRes</span><span class=w> </span><span class=kt>int</span><span class=o>[]</span><span class=w> </span><span class=n>attrs</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=n>getTheme</span><span class=p>().</span><span class=na>obtainStyledAttributes</span><span class=p>(</span><span class=n>attrs</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><p>Theme获取根据不同平台、版本返回不同的文件：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>platform</span><span class=o>/</span><span class=n>frameworks</span><span class=o>/</span><span class=n>base</span><span class=o>/</span><span class=n>core</span><span class=o>/</span><span class=n>java</span><span class=o>/</span><span class=n>android</span><span class=o>/</span><span class=n>content</span><span class=o>/</span><span class=n>res</span><span class=o>/</span><span class=n>Resources</span><span class=p>.</span><span class=na>java</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=nd>@UnsupportedAppUsage</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=nf>selectDefaultTheme</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>curTheme</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>targetSdkVersion</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=n>selectSystemTheme</span><span class=p>(</span><span class=n>curTheme</span><span class=p>,</span><span class=w> </span><span class=n>targetSdkVersion</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>com</span><span class=p>.</span><span class=na>android</span><span class=p>.</span><span class=na>internal</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>style</span><span class=p>.</span><span class=na>Theme</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>com</span><span class=p>.</span><span class=na>android</span><span class=p>.</span><span class=na>internal</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>style</span><span class=p>.</span><span class=na>Theme_Holo</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>com</span><span class=p>.</span><span class=na>android</span><span class=p>.</span><span class=na>internal</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>style</span><span class=p>.</span><span class=na>Theme_DeviceDefault</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>com</span><span class=p>.</span><span class=na>android</span><span class=p>.</span><span class=na>internal</span><span class=p>.</span><span class=na>R</span><span class=p>.</span><span class=na>style</span><span class=p>.</span><span class=na>Theme_DeviceDefault_Light_DarkActionBar</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=cm>/** @hide */</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=nf>selectSystemTheme</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>curTheme</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>targetSdkVersion</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>orig</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>holo</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=kt>int</span><span class=w> </span><span class=n>dark</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>deviceDefault</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>curTheme</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=n>ID_NULL</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=n>curTheme</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>targetSdkVersion</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>HONEYCOMB</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=n>orig</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>targetSdkVersion</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>ICE_CREAM_SANDWICH</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=n>holo</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>targetSdkVersion</span><span class=w> </span><span class=o>&lt;</span><span class=w> </span><span class=n>Build</span><span class=p>.</span><span class=na>VERSION_CODES</span><span class=p>.</span><span class=na>N</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=n>dark</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=n>deviceDefault</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>对应的是platform/frameworks/base/core/res/res/values/themes.xml、platform/frameworks/base/core/res/res/values/themes_holo.xml、platform/frameworks/base/core/res/res/values/themes_device_defaults.xml等等这些主题文件。</p><p>2. 根据theme里的配置，设置feature、flags、背景色等。</p><p>3. 根据设置后的feature，选择一个layout文件layoutResource。该layoutResource传给DecorView进行窗口View构建。</p><p>一般layout都分为上面的titlebar的区域，和下面的content主区域。titlebar部分的区域不是固定的，每个layout可能有不同的布局。content一般是固定的。就是说大部分layout都会有一个id为content的layout。</p><p>以默认的platform/frameworks/base/core/res/res/layout/screen_simple.xml文件为例：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-xml"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;LinearLayout</span> <span class=na>xmlns:android=</span><span class=s>&#34;http://schemas.android.com/apk/res/android&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=na>android:layout_width=</span><span class=s>&#34;match_parent&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=na>android:layout_height=</span><span class=s>&#34;match_parent&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=na>android:fitsSystemWindows=</span><span class=s>&#34;true&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=na>android:orientation=</span><span class=s>&#34;vertical&#34;</span><span class=nt>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;ViewStub</span> <span class=na>android:id=</span><span class=s>&#34;@+id/action_mode_bar_stub&#34;</span>
+</span></span><span class=line><span class=cl>              <span class=na>android:inflatedId=</span><span class=s>&#34;@+id/action_mode_bar&#34;</span>
+</span></span><span class=line><span class=cl>              <span class=na>android:layout=</span><span class=s>&#34;@layout/action_mode_bar&#34;</span>
+</span></span><span class=line><span class=cl>              <span class=na>android:layout_width=</span><span class=s>&#34;match_parent&#34;</span>
+</span></span><span class=line><span class=cl>              <span class=na>android:layout_height=</span><span class=s>&#34;wrap_content&#34;</span>
+</span></span><span class=line><span class=cl>              <span class=na>android:theme=</span><span class=s>&#34;?attr/actionBarTheme&#34;</span> <span class=nt>/&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;FrameLayout</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:id=</span><span class=s>&#34;@android:id/content&#34;</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:layout_width=</span><span class=s>&#34;match_parent&#34;</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:layout_height=</span><span class=s>&#34;match_parent&#34;</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:foregroundInsidePadding=</span><span class=s>&#34;false&#34;</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:foregroundGravity=</span><span class=s>&#34;fill_horizontal|top&#34;</span>
+</span></span><span class=line><span class=cl>         <span class=na>android:foreground=</span><span class=s>&#34;?android:attr/windowContentOverlay&#34;</span> <span class=nt>/&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/LinearLayout&gt;</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>action_mode_bar_stub是title的部分。</p><p>@android:id/content是主内容区域。对应的是PhoneWindow的mContentParent成员。</p><p>而整个布局对应的是DecorView的mContentRoot成员变量，在mContentRoot构建后，也被add到DecorView的第0个Child。具体</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-java"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>platform</span><span class=o>/</span><span class=n>frameworks</span><span class=o>/</span><span class=n>base</span><span class=o>/</span><span class=n>core</span><span class=o>/</span><span class=n>java</span><span class=o>/</span><span class=n>com</span><span class=o>/</span><span class=n>android</span><span class=o>/</span><span class=n>internal</span><span class=o>/</span><span class=n>policy</span><span class=o>/</span><span class=n>DecorView</span><span class=p>.</span><span class=na>java</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=kt>void</span><span class=w> </span><span class=nf>onResourcesLoaded</span><span class=p>(</span><span class=n>LayoutInflater</span><span class=w> </span><span class=n>inflater</span><span class=p>,</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>layoutResource</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mBackdropFrameRenderer</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>loadBackgroundDrawablesIfNeeded</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mBackdropFrameRenderer</span><span class=p>.</span><span class=na>onResourcesLoaded</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>this</span><span class=p>,</span><span class=w> </span><span class=n>mResizingBackgroundDrawable</span><span class=p>,</span><span class=w> </span><span class=n>mCaptionBackgroundDrawable</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>mUserCaptionBackgroundDrawable</span><span class=p>,</span><span class=w> </span><span class=n>getCurrentColor</span><span class=p>(</span><span class=n>mStatusColorViewState</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=n>getCurrentColor</span><span class=p>(</span><span class=n>mNavigationColorViewState</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mDecorCaptionView</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>createDecorCaptionView</span><span class=p>(</span><span class=n>inflater</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=kd>final</span><span class=w> </span><span class=n>View</span><span class=w> </span><span class=n>root</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>inflater</span><span class=p>.</span><span class=na>inflate</span><span class=p>(</span><span class=n>layoutResource</span><span class=p>,</span><span class=w> </span><span class=kc>null</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mDecorCaptionView</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>mDecorCaptionView</span><span class=p>.</span><span class=na>getParent</span><span class=p>()</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=n>addView</span><span class=p>(</span><span class=n>mDecorCaptionView</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>					</span><span class=k>new</span><span class=w> </span><span class=n>ViewGroup</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>(</span><span class=n>MATCH_PARENT</span><span class=p>,</span><span class=w> </span><span class=n>MATCH_PARENT</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>mDecorCaptionView</span><span class=p>.</span><span class=na>addView</span><span class=p>(</span><span class=n>root</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=k>new</span><span class=w> </span><span class=n>ViewGroup</span><span class=p>.</span><span class=na>MarginLayoutParams</span><span class=p>(</span><span class=n>MATCH_PARENT</span><span class=p>,</span><span class=w> </span><span class=n>MATCH_PARENT</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// Put it below the color views.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=n>addView</span><span class=p>(</span><span class=n>root</span><span class=p>,</span><span class=w> </span><span class=n>0</span><span class=p>,</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>ViewGroup</span><span class=p>.</span><span class=na>LayoutParams</span><span class=p>(</span><span class=n>MATCH_PARENT</span><span class=p>,</span><span class=w> </span><span class=n>MATCH_PARENT</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>mContentRoot</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>(</span><span class=n>ViewGroup</span><span class=p>)</span><span class=w> </span><span class=n>root</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=n>initializeElevation</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/wms/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・WMS</span></span></a> 7</div><div class=collection-nav><a href=/posts/vsync%E4%B9%8Bapp%E5%B1%82%E9%9D%A2%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90-vsynceventdata-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=next title="Vsync之app层面深入分析  Vsynceventdata-CSDN博客"><span>Vsync之app层面深入分析 Vsynceventdata-CSDN博客</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:33:58">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/android14-windowmanagerservice%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AFactivity%E5%B8%83%E5%B1%80-csdn%E5%8D%9A%E5%AE%A2/ data-title="Android14 - WindowManagerService之客户端Activity布局-CSDN博客"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96getresources%E4%B8%8Ebinder%E4%BA%A4%E7%81%AB%E5%AF%BC%E8%87%B4%E7%9A%84%E7%95%8C%E9%9D%A2%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96/ class=post-nav-item rel=prev title=Android性能优化：getResources()与Binder交火导致的界面卡顿优化><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android性能优化：getResources()与Binder交火导致的界面卡顿优化</a><a href=/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=next title="Android13 SurfaceFlinger OnLayerUpdate流程分析-CSDN博客">Android13 SurfaceFlinger OnLayerUpdate流程分析-CSDN博客<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><a href=#a---windowmanagerservice><strong>A<strong><strong>n</strong></strong>d<strong><strong>r</strong></strong>oi<strong><strong>d</strong></strong>1****4</strong> <strong>-</strong> <strong>WindowManagerService<strong><strong>之客户端</strong></strong>Activity****布局</strong></a></li><li><a href=#一主要角色><strong>一</strong>**、<strong><strong>主要</strong></strong>角色**</a></li><li></li><li><a href=#二窗口的构建过程><strong>二</strong>**、**<strong>窗口的构建过程</strong></a></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/620aab88eb8db52c83a7e625e7c4d9ee.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

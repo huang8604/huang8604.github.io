@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>图形显示 - 合集 - 文韬的文档</title><link>https://huang8604.github.io/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.154.4 &amp; FixIt v0.4.1</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Fri, 21 Nov 2025 08:01:29 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/index.xml" rel="self" type="application/rss+xml"/><item><title>Android13 SurfaceFlinger onComposerHalRefresh流程分析_android 13 surfaceflinge变化-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Fri, 21 Nov 2025 08:01:29 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalrefresh%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;onComposerHalRefresh方法是SurfaceFlinger中的一个函数。该方法的作用是在Composer &lt;a href="https://so.csdn.net/so/search?q=HAL%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;HAL&lt;/a&gt;刷新时被调用，用于更新显示内容。onComposerHalRefresh方法会在SurfaceFlinger接收到Composer HAL刷新事件时被调用。Composer HAL是硬件抽象层的一部分，负责与硬件显示设备进行通信。当Composer HAL完成一次刷新操作后，会通知SurfaceFlinger进行相应的处理。&lt;/p&gt;</description></item><item><title>FH20GMS-120 [VTS][MR1]vts_generic_boot_image_test - GMS - Confluence</title><link>https://huang8604.github.io/posts/fh20gms-120-vtsmr1vts_generic_boot_image_test-gms-confluence/</link><pubDate>Fri, 21 Nov 2025 08:01:29 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/fh20gms-120-vtsmr1vts_generic_boot_image_test-gms-confluence/</guid><description>&lt;h2 class="heading-element" id="fh20gms-120-vtsmr1vts_generic_boot_image_test"&gt;&lt;span&gt;FH20GMS-120 [VTS][MR1]vts_generic_boot_image_test&lt;/span&gt;
+ &lt;a href="#fh20gms-120-vtsmr1vts_generic_boot_image_test" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png" title="image.png" data-thumbnail="https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png" data-sub-html="&lt;h2&gt;image.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2025/10/29/690173b22ea59.png' alt="image.png"&gt;&lt;/a&gt;&lt;/p&gt;</description></item><item><title>自动背光算法-Android 8.1</title><link>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E8%83%8C%E5%85%89%E7%AE%97%E6%B3%95-android-8.1/</link><pubDate>Thu, 21 Aug 2025 07:29:37 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%87%AA%E5%8A%A8%E8%83%8C%E5%85%89%E7%AE%97%E6%B3%95-android-8.1/</guid><description>&lt;p&gt;本文基于工作中自动背光笔记扩充了下，记录下自动背光算法。&lt;br&gt;
+基于Android 8.1, 代码可参看 &lt;a href="https://link.segmentfault.com/?enc=S%2FVnvVcbfiJWLu1xPNnWoQ%3D%3D.L2VvVVv78YDcKnviPVlOdjS3H7uSKqzygibjxQLrLdLb%2BAreqZCsVQ2EcdiTwPlq" target="_blank" rel="external nofollow noopener noreferrer"&gt;http://androidxref.com/8.1.0_&amp;hellip;&lt;/a&gt;&lt;br&gt;
+Android 9加入了所谓的机器学习算法，根据用户调节时亮度和光感重新生成曲线，&lt;br&gt;
+自动背光时的滑动条不再是调节adjustment值，暂时不想写了。。。&lt;br&gt;
+Android 10简单看了下，加入了对foreground应用的微调支持，暂时不想写了。。。&lt;/p&gt;</description></item><item><title>开发中常用到的一些调试命令</title><link>https://huang8604.github.io/posts/%E5%BC%80%E5%8F%91%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/</link><pubDate>Wed, 16 Jul 2025 01:32:57 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E5%BC%80%E5%8F%91%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/</guid><description>&lt;h2 class="heading-element" id="单编模块命令在systemvendor目录下"&gt;&lt;span&gt;单编模块命令：在SYSTEM/VENDOR目录下&lt;/span&gt;
+ &lt;a href="#%e5%8d%95%e7%bc%96%e6%a8%a1%e5%9d%97%e5%91%bd%e4%bb%a4%e5%9c%a8systemvendor%e7%9b%ae%e5%bd%95%e4%b8%8b" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;source build/envsetup.sh&lt;br&gt;
+lunch (选编号，也可以直接输入名称+&amp;quot;-&amp;quot;+user/userdebug，这个不知道可以看编译好的out/target/product下的目录名，或者直接看build_android.sh脚本里定义的 )&lt;/p&gt;</description></item><item><title>背光曲线的创建</title><link>https://huang8604.github.io/posts/%E8%83%8C%E5%85%89%E6%9B%B2%E7%BA%BF%E7%9A%84%E5%88%9B%E5%BB%BA/</link><pubDate>Mon, 30 Jun 2025 11:29:15 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%83%8C%E5%85%89%E6%9B%B2%E7%BA%BF%E7%9A%84%E5%88%9B%E5%BB%BA/</guid><description>&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png" title="https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png" data-thumbnail="https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png" data-sub-html="&lt;h2&gt;https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png' alt="https://i-blog.csdnimg.cn/direct/310a8e924973455995983b8a82b881e5.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 class="heading-element" id="背光曲线"&gt;&lt;span&gt;背光曲线&lt;/span&gt;
+ &lt;a href="#%e8%83%8c%e5%85%89%e6%9b%b2%e7%ba%bf" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;h3 class="heading-element" id="基本概念"&gt;&lt;span&gt;基本概念&lt;/span&gt;
+ &lt;a href="#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;环境光（Ambient Light）&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Android：光感自动调节亮度_高通 光感自动调节配置 xml-CSDN博客</title><link>https://huang8604.github.io/posts/android%E5%85%89%E6%84%9F%E8%87%AA%E5%8A%A8%E8%B0%83%E8%8A%82%E4%BA%AE%E5%BA%A6_%E9%AB%98%E9%80%9A-%E5%85%89%E6%84%9F%E8%87%AA%E5%8A%A8%E8%B0%83%E8%8A%82%E9%85%8D%E7%BD%AE-xml-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Mon, 30 Jun 2025 11:21:48 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android%E5%85%89%E6%84%9F%E8%87%AA%E5%8A%A8%E8%B0%83%E8%8A%82%E4%BA%AE%E5%BA%A6_%E9%AB%98%E9%80%9A-%E5%85%89%E6%84%9F%E8%87%AA%E5%8A%A8%E8%B0%83%E8%8A%82%E9%85%8D%E7%BD%AE-xml-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;展锐光感自动调节亮度功能，光感数据上报对应的背光亮度设置，其实其他平台像 &lt;a href="https://so.csdn.net/so/search?q=MTK%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;MTK&lt;/a&gt; ，高通也差不多，大同小异，主要是搜索关键字：config_autoBrightnessLevels、config_screenBrightnessBacklight，就会发现只是文件路径不太一样。&lt;/p&gt;</description></item><item><title>Android - 深入浅出理解SeLinux-CSDN博客</title><link>https://huang8604.github.io/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:56 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E7%90%86%E8%A7%A3selinux-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;官方文档：&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://source.android.com/docs/security/features/selinux" title="https://source.android.com/docs/security/features/selinux" target="_blank" rel="external nofollow noopener noreferrer"&gt;https://source.android.com/docs/security/features/selinux&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf" title="https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf" target="_blank" rel="external nofollow noopener noreferrer"&gt;https://source.android.com/docs/security/features/selinux/images/SELinux_Treble.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://opensource.com/business/13/11/selinux-policy-guide" title="Your visual how-to guide for SELinux policy enforcement | Opensource.com" target="_blank" rel="external nofollow noopener noreferrer"&gt;Your visual how-to guide for SELinux policy enforcement | Opensource.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;SeLinux（Security-Enhanced Linux）是一个标签系统（labeling system）。每个进程都有一个label（称为process label），每个文件系统所涵盖的文件/目录、网络端口、设备等对象也有一个lable（称为Object label）。SeLinux通过编写规则来控制一个process label对一个Object label的访问，这个规则称之为策略（Policy）。SeLinux的这种安全机制称为Mandatory Access Control (MAC)，是在内核层实现的。&lt;/p&gt;</description></item><item><title>【Android 12】认识窗口_android 窗口模式 窗口层级-CSDN博客</title><link>https://huang8604.github.io/posts/%E8%AE%A4%E8%AF%86%E7%AA%97%E5%8F%A3-%E7%AA%97%E5%8F%A3%E6%A8%A1%E5%BC%8F-%E7%AA%97%E5%8F%A3%E5%B1%82%E7%BA%A7android-12-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E8%AE%A4%E8%AF%86%E7%AA%97%E5%8F%A3-%E7%AA%97%E5%8F%A3%E6%A8%A1%E5%BC%8F-%E7%AA%97%E5%8F%A3%E5%B1%82%E7%BA%A7android-12-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;该文章为窗口层级结构系列文章的总结，重新回看这方面内容的时候我自己也有了一些新的感悟，希望通过本次总结能让大家再次对窗口有一个全面的认识。&lt;/p&gt;
+&lt;p&gt;一般来说，屏幕上最起码包含三个窗口，StatusBar窗口、Activity窗口以及NavigationBar窗口：&lt;/p&gt;</description></item><item><title>Android 14 - 绘制体系 - VSync（1）-CSDN博客</title><link>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-vsync1-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-vsync1-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 class="heading-element" id="整体框架"&gt;&lt;span&gt;&lt;strong&gt;整体框架&lt;/strong&gt;&lt;/span&gt;
+ &lt;a href="#%e6%95%b4%e4%bd%93%e6%a1%86%e6%9e%b6" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;&lt;a class="lightgallery" target="_blank" href="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png" title="8f55ed8ba868727305f113ae9a9235bf\_MD5" data-thumbnail="https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png" data-sub-html="&lt;h2&gt;8f55ed8ba868727305f113ae9a9235bf\_MD5&lt;/h2&gt;"&gt;&lt;img loading="lazy" src='https://picgo.myjojo.fun:666/i/2024/10/11/67090386e6706.png' alt="8f55ed8ba868727305f113ae9a9235bf\_MD5"&gt;&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Android Surface-CSDN博客</title><link>https://huang8604.github.io/posts/android-surface-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-surface-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 class="heading-element" id="一surface介绍"&gt;&lt;span&gt;一、Surface介绍&lt;/span&gt;
+ &lt;a href="#%e4%b8%80surface%e4%bb%8b%e7%bb%8d" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;在Android系统中，Surface是一种用于图形和视频渲染的抽象概念，它可以用来将应用程序绘制的图形或视频显示在屏幕上。一个Surface代表一个屏幕表面，可以是整个屏幕或者应用程序UI的一个独立窗口。&lt;/p&gt;</description></item><item><title>android车机手机黑屏闪黑终结者-Winscope工具使用介绍-CSDN博客</title><link>https://huang8604.github.io/posts/winscope%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/winscope%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 class="heading-element" id="背景"&gt;&lt;span&gt;背景：&lt;/span&gt;
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;设想一下，假如我们又如下场景，一个闪黑一瞬间的问题，正常我们看到黑屏冻屏问题，是不是时刻想到是要来dumpsys SurfaceFlinger和dumpsys window windows相关的信息来辅助我们分析问题，但奈何这个是个瞬时问题。。。我们dumpsys很难抓住那一瞬间，而且即使抓到了黑一瞬间的，我们有时候分析也要又黑屏前一帧后一帧相关等才可以分析进一步原因。&lt;/p&gt;</description></item><item><title>winscope怎么实现user版本上导出方案设计探讨</title><link>https://huang8604.github.io/posts/winscope%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0user%E7%89%88%E6%9C%AC%E4%B8%8A%E5%AF%BC%E5%87%BA%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1%E6%8E%A2%E8%AE%A8-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/winscope%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0user%E7%89%88%E6%9C%AC%E4%B8%8A%E5%AF%BC%E5%87%BA%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1%E6%8E%A2%E8%AE%A8-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 class="heading-element" id="背景"&gt;&lt;span&gt;背景&lt;/span&gt;
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;发现有一个问题，那就发现在user版本的手机设备上发现无法抓取相关的winscope，哪怕可以抓取也发现没办法导出来分析。&lt;/p&gt;</description></item><item><title>汇总binder相关一些常见面试题-安卓系统常见面试题-CSDN博客</title><link>https://huang8604.github.io/posts/%E6%B1%87%E6%80%BBbinder%E7%9B%B8%E5%85%B3%E4%B8%80%E4%BA%9B%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/</link><pubDate>Wed, 06 Nov 2024 06:57:54 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/%E6%B1%87%E6%80%BBbinder%E7%9B%B8%E5%85%B3%E4%B8%80%E4%BA%9B%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/</guid><description>&lt;h3 class="heading-element" id="binder讨论的一些场景面试题"&gt;&lt;span&gt;binder讨论的一些场景面试题&lt;/span&gt;
+ &lt;a href="#binder%e8%ae%a8%e8%ae%ba%e7%9a%84%e4%b8%80%e4%ba%9b%e5%9c%ba%e6%99%af%e9%9d%a2%e8%af%95%e9%a2%98" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;h5 class="heading-element" id="问题1binder中有多个进程作为客户端通过servicemanager获取service的bpbinderbpbinder都会有一个handle那么多个进程获取同一个service对应的handle一样么"&gt;&lt;span&gt;问题1：binder中有多个进程作为客户端通过servicemanager获取service的bpbinder，bpbinder都会有一个handle，那么多个进程获取同一个service对应的handle一样么？&lt;/span&gt;
+ &lt;a href="#%e9%97%ae%e9%a2%981binder%e4%b8%ad%e6%9c%89%e5%a4%9a%e4%b8%aa%e8%bf%9b%e7%a8%8b%e4%bd%9c%e4%b8%ba%e5%ae%a2%e6%88%b7%e7%ab%af%e9%80%9a%e8%bf%87servicemanager%e8%8e%b7%e5%8f%96service%e7%9a%84bpbinderbpbinder%e9%83%bd%e4%bc%9a%e6%9c%89%e4%b8%80%e4%b8%aahandle%e9%82%a3%e4%b9%88%e5%a4%9a%e4%b8%aa%e8%bf%9b%e7%a8%8b%e8%8e%b7%e5%8f%96%e5%90%8c%e4%b8%80%e4%b8%aaservice%e5%af%b9%e5%ba%94%e7%9a%84handle%e4%b8%80%e6%a0%b7%e4%b9%88" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h5&gt;&lt;blockquote&gt;
+&lt;p&gt;是的，多个进程获取同一个服务对应的 &lt;code&gt;BpBinder&lt;/code&gt; 的 handle 是一样的。&lt;/p&gt;</description></item><item><title>Android 14 - 绘制体系 - 概览_blastbufferqueue-CSDN博客</title><link>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-%E6%A6%82%E8%A7%88_blastbufferqueue-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-14-%E7%BB%98%E5%88%B6%E4%BD%93%E7%B3%BB-%E6%A6%82%E8%A7%88_blastbufferqueue-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;从Android 12开始，Android的绘制系统有结构性变化， 在绘制的生产消费者模式中，新增BLASTBufferQueue，客户端进程自行进行queue的生产和消费，随后通过Transation提交到SurfaceFlinger，如此可以使得各进程将缓存提交到SufrfaceFlinger后合并到同一事务后同步提交，在同一帧生效。实际上，从Android12到Android14整个绘制系统在各个环节也都有了或大或小的调整，比如Android13发布了1.3版本的Vulkan, Android14新增了TextureView，等等。本文基于Android14。1&lt;/p&gt;</description></item><item><title>Android SurfaceFlinger-CSDN博客</title><link>https://huang8604.github.io/posts/android-surfaceflinger-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android-surfaceflinger-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 class="heading-element" id="一surfaceflinger介绍"&gt;&lt;span&gt;一、SurfaceFlinger介绍&lt;/span&gt;
+ &lt;a href="#%e4%b8%80surfaceflinger%e4%bb%8b%e7%bb%8d" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;SurfaceFlinger是Android系统中的一个重要组件，它主要负责窗口管理与界面显示。具体来说，SurfaceFlinger作为系统的显示引擎，负责接收各应用程序发来的图像数据，并组合成一张完整的画面，并输出到显示屏上。SurfaceFlinger通过重绘整个屏幕或部分屏幕来更新UI界面。它还提供了多种硬件加速技术，如OpenGL ES、Vulkan等，使应用程序能够更快地渲染UI界面。&lt;/p&gt;</description></item><item><title>Android13 GraphicBuffer 创建流程-CSDN博客</title><link>https://huang8604.github.io/posts/android13-graphicbuffer-%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-graphicbuffer-%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;GraphicBuffer用于管理图形缓存数据的类，GraphicBuffer的构造方法如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/libs/ui/GraphicBuffer.cpp
+class GraphicBuffer
+ : public ANativeObjectBase&amp;lt;ANativeWindowBuffer, GraphicBuffer, RefBase&amp;gt;,
+ public Flattenable&amp;lt;GraphicBuffer&amp;gt;{
+	GraphicBuffer::GraphicBuffer(uint32_t inWidth, uint32_t inHeight, PixelFormat inFormat,
+	 uint32_t inLayerCount, uint64_t inUsage, std::string requestorName)
+	 : GraphicBuffer() {
+	 mInitCheck = initWithSize(inWidth, inHeight, inFormat, inLayerCount, inUsage,
+	 std::move(requestorName));
+	}
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;GraphicBuffer 的构造函数非常简单, 它只是调用了一个初始化函数 initWithSize：&lt;/p&gt;</description></item><item><title>Android13 Surface connect流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-connect%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-connect%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface的connect方法用于建立与BufferQueueCore&lt;a href="Android13%20BufferQueueLayer%20onFirstRef%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2#new%20BufferQueueCore"&gt;Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客#new BufferQueueCore&lt;/a&gt;连接，代码如下：&lt;/p&gt;</description></item><item><title>Android13 SurfaceControl创建流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfacecontrol%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfacecontrol%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;SurfaceControl是Android系统中的一个类，用于管理和控制Surface的创建、显示和销毁，SurfaceControl的创建过程如下：&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger启动流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;在Android13版本中，SurfaceFlinger是由Android.bp去启动init.rc文件，然后再解析文件去加载SurfaceFlinger。&lt;/p&gt;</description></item><item><title>Android13 SurfaceSession创建流程分析_android surfacesession-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfacesession%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfacesession%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;SurfaceSession是Android系统中与图形表面相关的一个关键类，它提供了与SurfaceFlinger服务通信以创建和管理图形表面连接的API，SurfaceSession在WindowManagerService的addWindow时创建，构造方法如下：&lt;/p&gt;</description></item><item><title>Android13 Surface创建流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface是Android中用于表示一个图像缓冲区的类，Surface是在SurfaceControl创建时创建的，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/Client.cpp
+class Client : public BnSurfaceComposerClient
+status_t Client::createSurface(const String8&amp;amp; name, uint32_t w, uint32_t h, PixelFormat format,
+ uint32_t flags, const sp&amp;lt;IBinder&amp;gt;&amp;amp; parentHandle,
+ LayerMetadata metadata, sp&amp;lt;IBinder&amp;gt;* handle,
+ sp&amp;lt;IGraphicBufferProducer&amp;gt;* gbp) {
+ // We rely on createLayer to check permissions.
+ return mFlinger-&amp;gt;createLayer(name, this, w, h, format, flags, std::move(metadata), handle, gbp, parentHandle);
+}
+}&lt;/code&gt;&lt;/pre&gt;&lt;h2 class="heading-element" id="surfaceflinger-createlayer"&gt;&lt;span&gt;SurfaceFlinger createLayer&lt;/span&gt;
+ &lt;a href="#surfaceflinger-createlayer" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;mFlinger是SurfaceFlinger，所以Client的具体实现还是依靠的SurfaceFlinger，并且注意，在应用层的Surface在SurfaceFlinger进程名叫Layer，它和应用层的Surface是一 一对应的关系，我们来看createLayer函数：&lt;/p&gt;</description></item><item><title>BLASTBufferQueue源码深入理解-CSDN博客</title><link>https://huang8604.github.io/posts/blastbufferqueue%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:53 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/blastbufferqueue%E6%BA%90%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h2 class="heading-element" id="blastbufferqueue创建部分"&gt;&lt;span&gt;BLASTBufferQueue创建部分&lt;/span&gt;
+ &lt;a href="#blastbufferqueue%e5%88%9b%e5%bb%ba%e9%83%a8%e5%88%86" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;BLASTBufferQueue::BLASTBufferQueue(const std::string&amp;amp; name, bool updateDestinationFrame)
+ : mSurfaceControl(nullptr),
+ mSize(1, 1),
+ mRequestedSize(mSize),
+ mFormat(PIXEL_FORMAT_RGBA_8888),
+ mTransactionReadyCallback(nullptr),
+ mSyncTransaction(nullptr),
+ mUpdateDestinationFrame(updateDestinationFrame) {
+ //创建BufferQueue部分，并且会给mProducer，mConsumer进行赋值
+ createBufferQueue(&amp;amp;mProducer, &amp;amp;mConsumer);
+ 
+ //创建BLASTBufferItemConsumer部分
+ mBufferItemConsumer = new BLASTBufferItemConsumer(mConsumer,
+ GraphicBuffer::USAGE_HW_COMPOSER |
+ GraphicBuffer::USAGE_HW_TEXTURE,
+ 1, false, this);
+ static int32_t id = 0;
+ mName = name &amp;#43; &amp;#34;#&amp;#34; &amp;#43; std::to_string(id);
+ auto consumerName = mName &amp;#43; &amp;#34;(BLAST Consumer)&amp;#34; &amp;#43; std::to_string(id);
+ mQueuedBufferTrace = &amp;#34;QueuedBuffer - &amp;#34; &amp;#43; mName &amp;#43; &amp;#34;BLAST#&amp;#34; &amp;#43; std::to_string(id);
+ id&amp;#43;&amp;#43;;
+ mBufferItemConsumer-&amp;gt;setName(String8(consumerName.c_str()));
+ mBufferItemConsumer-&amp;gt;setFrameAvailableListener(this);
+ mBufferItemConsumer-&amp;gt;setBufferFreedListener(this);
+
+ ComposerService::getComposerService()-&amp;gt;getMaxAcquiredBufferCount(&amp;amp;mMaxAcquiredBuffers);
+ mBufferItemConsumer-&amp;gt;setMaxAcquiredBufferCount(mMaxAcquiredBuffers);
+ mCurrentMaxAcquiredBufferCount = mMaxAcquiredBuffers;
+ mNumAcquired = 0;
+ mNumFrameAvailable = 0;
+
+}&lt;/code&gt;&lt;/pre&gt;&lt;h3 class="heading-element" id="bufferqueue部分"&gt;&lt;span&gt;BufferQueue部分&lt;/span&gt;
+ &lt;a href="#bufferqueue%e9%83%a8%e5%88%86" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;下面来看看核心的方法createBufferQueue&lt;/p&gt;</description></item><item><title>Android13 BufferQueueConsumer acquireBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueConsumer的acquireBuffer方法的主要作用是从BufferQueue中获取一个可用的图像缓冲区，并返回一个GraphicBuffer对象。它可以用于在应用程序中进行图像处理、渲染或显示等操作。&lt;/p&gt;</description></item><item><title>Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。&lt;/p&gt;
+&lt;p&gt;当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。&lt;/p&gt;</description></item><item><title>Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。&lt;/p&gt;</description></item><item><title>Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueLayer的onFrameAvailable方法用于通知图像或视频帧已经可用并准备好显示，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+sp&amp;lt;SurfaceFlinger&amp;gt; mFlinger;
+sp&amp;lt;BufferLayerConsumer&amp;gt; mConsumer;
+void BufferQueueLayer::onFrameAvailable(const BufferItem&amp;amp; item) {
+ const int32_t layerId = getSequence();
+ const uint64_t bufferId = item.mGraphicBuffer-&amp;gt;getId();
+ mFlinger-&amp;gt;mFrameTracer-&amp;gt;traceTimestamp(layerId, bufferId, item.mFrameNumber, systemTime(),
+ FrameTracer::FrameEvent::QUEUE);
+ mFlinger-&amp;gt;mFrameTracer-&amp;gt;traceFence(layerId, bufferId, item.mFrameNumber,
+ std::make_shared&amp;lt;FenceTime&amp;gt;(item.mFence),
+ FrameTracer::FrameEvent::ACQUIRE_FENCE);
+ 
+ 
+ ATRACE_CALL();
+ // Add this buffer from our internal queue tracker
+ { // Autolock scope
+ const nsecs_t presentTime = item.mIsAutoTimestamp ? 0 : item.mTimestamp;
+ 
+ 
+ using LayerUpdateType = scheduler::LayerHistory::LayerUpdateType;
+ mFlinger-&amp;gt;mScheduler-&amp;gt;recordLayerHistory(this, presentTime, LayerUpdateType::Buffer);
+ 
+ 
+ Mutex::Autolock lock(mQueueItemLock);
+ // Reset the frame number tracker when we receive the first buffer after
+ // a frame number reset
+ if (item.mFrameNumber == 1) {
+ mLastFrameNumberReceived = 0;
+ }
+ 
+ 
+ // Ensure that callbacks are handled in order
+ while (item.mFrameNumber != mLastFrameNumberReceived &amp;#43; 1) {
+ status_t result = mQueueItemCondition.waitRelative(mQueueItemLock, ms2ns(500));
+ if (result != NO_ERROR) {
+ ALOGE(&amp;#34;[%s] Timed out waiting on callback&amp;#34;, getDebugName());
+ break;
+ }
+ }
+ 
+ 
+ auto surfaceFrame = createSurfaceFrameForBuffer(mFrameTimelineInfo, systemTime(), mName);
+ 
+ 
+ mQueueItems.push_back({item, surfaceFrame});
+ mQueuedFrames&amp;#43;&amp;#43;;
+ 
+ 
+ // Wake up any pending callbacks
+ mLastFrameNumberReceived = item.mFrameNumber;
+ mQueueItemCondition.broadcast();
+ }
+ 
+ 
+ mFlinger-&amp;gt;mInterceptor-&amp;gt;saveBufferUpdate(layerId, item.mGraphicBuffer-&amp;gt;getWidth(),
+ item.mGraphicBuffer-&amp;gt;getHeight(), item.mFrameNumber);
+ 
+ 
+ mFlinger-&amp;gt;onLayerUpdate();
+ mConsumer-&amp;gt;onBufferAvailable(item);
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面方法主要处理如下：&lt;/p&gt;</description></item><item><title>Android13 BufferQueueLayer onLayerDisplayed流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-onlayerdisplayed%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-onlayerdisplayed%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueLayer的onLayerDisplayed方法在BufferQueueLayer被显示时调用，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+sp&amp;lt;SurfaceFlinger&amp;gt; mFlinger;
+const std::unique_ptr&amp;lt;FrameTracer&amp;gt; mFrameTracer;
+void BufferQueueLayer::onLayerDisplayed(ftl::SharedFuture&amp;lt;FenceResult&amp;gt; futureFenceResult) {
+ const sp&amp;lt;Fence&amp;gt; releaseFence = futureFenceResult.get().value_or(Fence::NO_FENCE);
+ mConsumer-&amp;gt;setReleaseFence(releaseFence);
+ 
+ 
+ // Prevent tracing the same release multiple times.
+ if (mPreviousFrameNumber != mPreviousReleasedFrameNumber) {
+ mFlinger-&amp;gt;mFrameTracer-&amp;gt;traceFence(getSequence(), mPreviousBufferId, mPreviousFrameNumber,
+ std::make_shared&amp;lt;FenceTime&amp;gt;(releaseFence),
+ FrameTracer::FrameEvent::RELEASE_FENCE);
+ mPreviousReleasedFrameNumber = mPreviousFrameNumber;
+ }
+}&lt;/code&gt;&lt;/pre&gt;&lt;h2 class="heading-element" id="frametracer-tracefence"&gt;&lt;span&gt;FrameTracer traceFence&lt;/span&gt;
+ &lt;a href="#frametracer-tracefence" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;调用FrameTracer的traceFence方法，用于分析和调试界面渲染的性能问题：&lt;/p&gt;</description></item><item><title>Android13 BufferQueueLayer updateTexImage流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueuelayer-updateteximage%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueuelayer-updateteximage%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueLayer的updateTexImage方法用于将当前图形缓冲区的内容更新到纹理中，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+status_t BufferQueueLayer::updateTexImage(bool&amp;amp; recomputeVisibleRegions, nsecs_t latchTime,
+ nsecs_t expectedPresentTime) {
+ // This boolean is used to make sure that SurfaceFlinger&amp;#39;s shadow copy
+ // of the buffer queue isn&amp;#39;t modified when the buffer queue is returning
+ // BufferItem&amp;#39;s that weren&amp;#39;t actually queued. This can happen in shared
+ // buffer mode.
+ bool queuedBuffer = false;
+ const int32_t layerId = getSequence();
+ LayerRejecter r(mDrawingState, getDrawingState(), recomputeVisibleRegions,
+ getProducerStickyTransform() != 0, mName,
+ getTransformToDisplayInverse());
+ 
+ 
+ if (isRemovedFromCurrentState()) {
+ expectedPresentTime = 0;
+ }
+ 
+ 
+ // updateTexImage() below might drop the some buffers at the head of the queue if there is a
+ // buffer behind them which is timely to be presented. However this buffer may not be signaled
+ // yet. The code below makes sure that this wouldn&amp;#39;t happen by setting maxFrameNumber to the
+ // last buffer that was signaled.
+ uint64_t lastSignaledFrameNumber = mLastFrameNumberReceived;
+ {
+ Mutex::Autolock lock(mQueueItemLock);
+ for (size_t i = 0; i &amp;lt; mQueueItems.size(); i&amp;#43;&amp;#43;) {
+ bool fenceSignaled =
+ mQueueItems[i].item.mFenceTime-&amp;gt;getSignalTime() != Fence::SIGNAL_TIME_PENDING;
+ if (!fenceSignaled) {
+ break;
+ }
+ lastSignaledFrameNumber = mQueueItems[i].item.mFrameNumber;
+ }
+ }
+ const uint64_t maxFrameNumberToAcquire =
+ std::min(mLastFrameNumberReceived.load(), lastSignaledFrameNumber);
+ 
+ 
+ bool autoRefresh;
+ status_t updateResult = mConsumer-&amp;gt;updateTexImage(&amp;amp;r, expectedPresentTime, &amp;amp;autoRefresh,
+ &amp;amp;queuedBuffer, maxFrameNumberToAcquire);
+ mDrawingState.autoRefresh = autoRefresh;
+ if (updateResult == BufferQueue::PRESENT_LATER) {
+ // Producer doesn&amp;#39;t want buffer to be displayed yet. Signal a
+ // layer update so we check again at the next opportunity.
+ // Producer 不希望显示缓冲区。 发出图层更新的信号，以便我们在下次有机会时再次检查。
+ mFlinger-&amp;gt;onLayerUpdate(); // (692) SurfaceFlinger onLayerUpdate流程分析 
+ return BAD_VALUE;
+ } else if (updateResult == BufferLayerConsumer::BUFFER_REJECTED) {
+ // If the buffer has been rejected, remove it from the shadow queue
+ // and return early
+ if (queuedBuffer) {
+ Mutex::Autolock lock(mQueueItemLock);
+ if (mQueuedFrames &amp;gt; 0) {
+ mConsumer-&amp;gt;mergeSurfaceDamage(mQueueItems[0].item.mSurfaceDamage);
+ mFlinger-&amp;gt;mTimeStats-&amp;gt;removeTimeRecord(layerId, mQueueItems[0].item.mFrameNumber);
+ if (mQueueItems[0].surfaceFrame) {
+ addSurfaceFrameDroppedForBuffer(mQueueItems[0].surfaceFrame);
+ }
+ mQueueItems.erase(mQueueItems.begin());
+ mQueuedFrames--;
+ }
+ }
+ return BAD_VALUE;
+ } else if (updateResult != NO_ERROR || mUpdateTexImageFailed) {
+ // This can occur if something goes wrong when trying to create the
+ // EGLImage for this buffer. If this happens, the buffer has already
+ // been released, so we need to clean up the queue and bug out
+ // early.
+ if (queuedBuffer) {
+ Mutex::Autolock lock(mQueueItemLock);
+ for (auto&amp;amp; [item, surfaceFrame] : mQueueItems) {
+ if (surfaceFrame) {
+ addSurfaceFrameDroppedForBuffer(surfaceFrame);
+ }
+ }
+ mQueueItems.clear();
+ mQueuedFrames = 0;
+ mFlinger-&amp;gt;mTimeStats-&amp;gt;onDestroy(layerId);
+ mFlinger-&amp;gt;mFrameTracer-&amp;gt;onDestroy(layerId);
+ }
+ 
+ 
+ // Once we have hit this state, the shadow queue may no longer
+ // correctly reflect the incoming BufferQueue&amp;#39;s contents, so even if
+ // updateTexImage starts working, the only safe course of action is
+ // to continue to ignore updates.
+ mUpdateTexImageFailed = true;
+ 
+ 
+ return BAD_VALUE;
+ }
+ 
+ 
+ bool more_frames_pending = false;
+ if (queuedBuffer) {
+ // Autolock scope
+ auto currentFrameNumber = mConsumer-&amp;gt;getFrameNumber();
+ 
+ 
+ Mutex::Autolock lock(mQueueItemLock);
+ 
+ 
+ // Remove any stale buffers that have been dropped during
+ // updateTexImage
+ while (mQueuedFrames &amp;gt; 0 &amp;amp;&amp;amp; mQueueItems[0].item.mFrameNumber != currentFrameNumber) {
+ mConsumer-&amp;gt;mergeSurfaceDamage(mQueueItems[0].item.mSurfaceDamage);
+ mFlinger-&amp;gt;mTimeStats-&amp;gt;removeTimeRecord(layerId, mQueueItems[0].item.mFrameNumber);
+ if (mQueueItems[0].surfaceFrame) {
+ addSurfaceFrameDroppedForBuffer(mQueueItems[0].surfaceFrame);
+ }
+ mQueueItems.erase(mQueueItems.begin());
+ mQueuedFrames--;
+ }
+ 
+ 
+ uint64_t bufferID = mQueueItems[0].item.mGraphicBuffer-&amp;gt;getId();
+ mFlinger-&amp;gt;mTimeStats-&amp;gt;setLatchTime(layerId, currentFrameNumber, latchTime);
+ mFlinger-&amp;gt;mFrameTracer-&amp;gt;traceTimestamp(layerId, bufferID, currentFrameNumber, latchTime,
+ FrameTracer::FrameEvent::LATCH);
+ 
+ 
+ if (mQueueItems[0].surfaceFrame) {
+ addSurfaceFramePresentedForBuffer(mQueueItems[0].surfaceFrame,
+ mQueueItems[0].item.mFenceTime-&amp;gt;getSignalTime(),
+ latchTime);
+ }
+ mQueueItems.erase(mQueueItems.begin());
+ more_frames_pending = (mQueuedFrames.fetch_sub(1) &amp;gt; 1);
+ }
+ 
+ 
+ // Decrement the queued-frames count. Signal another event if we
+ // have more frames pending.
+ //减少排队的帧计数。 如果我们有更多待处理的帧，则发出另一个事件的信号。
+ if ((queuedBuffer &amp;amp;&amp;amp; more_frames_pending) || mDrawingState.autoRefresh) {
+ mFlinger-&amp;gt;onLayerUpdate(); // (692) SurfaceFlinger onLayerUpdate流程分析 | 知识管理 - PingCode 
+ }
+ 
+ 
+ return NO_ERROR;
+}&lt;/code&gt;&lt;/pre&gt;&lt;h2 class="heading-element" id="bufferlayerconsumer-updateteximage"&gt;&lt;span&gt;BufferLayerConsumer updateTexImage&lt;/span&gt;
+ &lt;a href="#bufferlayerconsumer-updateteximage" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h2&gt;&lt;p&gt;调用BufferLayerConsumer的updateTexImage方法：&lt;/p&gt;</description></item><item><title>Android13 BufferQueueProducer dequeueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueproducer-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueProducer的dequeueBuffer方法是Android系统中用于从BufferQueue中获取可用的缓冲区的方法。BufferQueue是一个用于在不同线程之间传递图像数据的队列，它通常用于图像渲染和视频编解码等场景。&lt;/p&gt;</description></item><item><title>Android13 BufferQueueProducer queueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-bufferqueueproducer-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;BufferQueueProducer的queueBuffer方法用于将图形缓冲区添加到队列中。当应用程序完成对图形缓冲区的绘制后，可以调用queueBuffer方法将其提交给SurfaceFlinger进行显示。&lt;/p&gt;</description></item><item><title>Android13 Choreographer postCallback流程分析_choreographer.postcallback-CSDN博客</title><link>https://huang8604.github.io/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-choreographer-postcallback%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Choreographer的postCallback()方法用于将一个任务添加到Choreographer的任务队列中，以便在下一帧绘制之前执行，代码如下：&lt;/p&gt;</description></item><item><title>Android13 EventThread threadMain流程分析_eventthread::threadmain-CSDN博客</title><link>https://huang8604.github.io/posts/android13-eventthread-threadmain%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-eventthread-threadmain%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;EventThread的threadMain方法无限循环处理pendingEvents,对Vsync类型的Event分发到消费者，通过往消费者的FD写数据，通知APP有Vsync信号到来。pendingEvents中的消息处理完了，分发线程等待mCondition的通知，EventThread的threadMain方法代码如下：&lt;/p&gt;</description></item><item><title>Android13 Surface dequeueBuffer流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-dequeuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface::dequeueBuffer是Android系统中Surface类的一个方法，用于从Surface中获取一个可用的Buffer。它通常在图形渲染或视频播放等场景中使用。&lt;/p&gt;</description></item><item><title>Android13 Surface lockCanvas流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-lockcanvas%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-lockcanvas%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface的lockCanvas用于获取Canvas对象，以便进行绘图操作，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/base/core/java/android/view/Surface.java
+public class Surface implements Parcelable {
+ public Canvas lockCanvas(Rect inOutDirty)
+ throws Surface.OutOfResourcesException, IllegalArgumentException {
+ synchronized (mLock) {
+ checkNotReleasedLocked();
+ if (mLockedObject != 0) {
+ // Ideally, nativeLockCanvas() would throw in this situation and prevent the
+ // double-lock, but that won&amp;#39;t happen if mNativeObject was updated. We can&amp;#39;t
+ // abandon the old mLockedObject because it might still be in use, so instead
+ // we just refuse to re-lock the Surface.
+ throw new IllegalArgumentException(&amp;#34;Surface was already locked&amp;#34;);
+ }
+ mLockedObject = nativeLockCanvas(mNativeObject, mCanvas, inOutDirty);
+ return mCanvas;
+ }
+ }
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;调用nativeLockCanvas方法，nativeLockCanvas是一个Native方法在android_view_Surface.cpp中实现：&lt;/p&gt;</description></item><item><title>Android13 Surface queueBuffer流程分析_surface::queuebuffer-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-queuebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface::queueBuffer是Android系统中Surface类的一个成员函数，用于将图像数据放入Surface的缓冲区中。它的调用地方主要包括以下几个：&lt;/p&gt;</description></item><item><title>Android13 Surface unlockCanvasAndPost流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surface-unlockcanvasandpost%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surface-unlockcanvasandpost%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;Surface的unlockCanvasAndPost用于解锁并提交Surface上的画布内容，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//frameworks/base/core/java/android/view/Surface.java
+public class Surface implements Parcelable {
+ public void unlockCanvasAndPost(Canvas canvas) {
+ synchronized (mLock) {
+ checkNotReleasedLocked();
+ 
+ 
+ if (mHwuiContext != null) {
+ mHwuiContext.unlockAndPost(canvas);
+ } else {
+ unlockSwCanvasAndPost(canvas);
+ }
+ }
+ }
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;调用Surface的unlockSwCanvasAndPost方法：&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger commit(提交)流程分析_surfaceflinger::commit-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-commit%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-commit%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;SurfaceFlinger的commit方法用于将应用程序的绘制结果提交到屏幕上显示。&lt;/p&gt;
+&lt;p&gt;主要就是处理app端发起的一系列transaction的事务请求，需要对这些请求进行识别是否当前帧处理，处理过程就是把事务中的属性取出，然后更新到Layer中，偶尔buffer更新的还需要进行相关的latchbuffer操作，SurfaceFlinger的commit代码如下：&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;SurfaceFlinger的composite方法，用于将多个窗口的图像进行合成，主要负责对相关要进行上帧的layer进行，识别排序好，然后合成，有hwc合成的会构建对应OutputLayer传递hwc，GPU合成则直接合成，再传递到hwc中，它主要完成以下几个步骤：&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;onComposerHalVsync是一个Android系统中的一个回调函数，用于在垂直同步（Vsync）事件发生时通知应用程序。Vsync是指显示器刷新的时间点，它通常以固定的频率发生，比如60Hz。应用程序可以通过注册onComposerHalVsync回调函数来获取Vsync事件的通知。&lt;/p&gt;</description></item><item><title>Android13 SurfaceFlinger onLayerUpdate流程分析-CSDN博客</title><link>https://huang8604.github.io/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/android13-surfaceflinger-onlayerupdate%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p&gt;SurfaceFlinger的onLayerUpdate方法用于在图形层更新时进行相应的处理，代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;void SurfaceFlinger::onLayerUpdate() {
+ scheduleCommit(FrameHint::kActive);
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;调用SurfaceFlinger的scheduleCommit方法：&lt;/p&gt;</description></item><item><title>SurfaceControl及SurfaceFlinger中的Layer创建过程深入剖析-CSDN博客</title><link>https://huang8604.github.io/posts/surfacecontrol%E5%8F%8Asurfaceflinger%E4%B8%AD%E7%9A%84layer%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/surfacecontrol%E5%8F%8Asurfaceflinger%E4%B8%AD%E7%9A%84layer%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 class="heading-element" id="surfacecomposerclient创建"&gt;&lt;span&gt;SurfaceComposerClient创建&lt;/span&gt;
+ &lt;a href="#surfacecomposerclient%e5%88%9b%e5%bb%ba" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;SurfaceComposerClient对象是在哪里创建的呢?是在SurfaceSession构造时候创建&lt;br&gt;
+frameworks/base/core/&lt;a href="https://so.csdn.net/so/search?q=jni%5c&amp;amp;spm=1001.2101.3001.7020" target="_blank" rel="external nofollow noopener noreferrer"&gt;jni&lt;/a&gt;/android_view_SurfaceSession.cpp&lt;/p&gt;</description></item><item><title>SurfaceControl之Transaction事物深入剖析-android framework实战开发-CSDN博客</title><link>https://huang8604.github.io/posts/surfacecontrol%E4%B9%8Btransaction%E4%BA%8B%E7%89%A9%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-android-framework%E5%AE%9E%E6%88%98%E5%BC%80%E5%8F%91-csdn%E5%8D%9A%E5%AE%A2/</link><pubDate>Wed, 06 Nov 2024 06:57:52 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/surfacecontrol%E4%B9%8Btransaction%E4%BA%8B%E7%89%A9%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90-android-framework%E5%AE%9E%E6%88%98%E5%BC%80%E5%8F%91-csdn%E5%8D%9A%E5%AE%A2/</guid><description>&lt;h3 class="heading-element" id="背景"&gt;&lt;span&gt;背景&lt;/span&gt;
+ &lt;a href="#%e8%83%8c%e6%99%af" class="heading-mark"&gt;
+ &lt;svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"&gt;&lt;path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+ &lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;前面已经讲解清楚了SurfaceControl整个创建过程，一般SurfaceControl都是一个静态图层的代表，但往往只有静态一个图层是没有意义的，即只是创建了一个图层其实啥也看不到，更多需要是SurfaceControl对应的Transaction,这个事务才是真正可以让SurfaceControl可以显示的关键所在，Transaction才是相当于一个个的动作让SurfaceControl静态东西可以动起来，接下来将详细分析一下Transaction。&lt;/p&gt;</description></item></channel></rss>

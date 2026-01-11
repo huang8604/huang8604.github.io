@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>案例分析 - 标签 - 文韬的文档</title><link>https://huang8604.github.io/tags/%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90/</link><description>简单记录工作总结💼，学习整理。💰🍺</description><generator>Hugo 0.154.4 &amp; FixIt v0.4.1</generator><language>zh-CN</language><managingEditor>huang8604@163.com (wentao)</managingEditor><webMaster>huang8604@163.com (wentao)</webMaster><lastBuildDate>Thu, 02 Jan 2025 09:46:42 +0000</lastBuildDate><atom:link href="https://huang8604.github.io/tags/%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>SD 卡 存储 挂载相关</title><link>https://huang8604.github.io/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/</link><pubDate>Thu, 02 Jan 2025 09:33:48 +0000</pubDate><author>huang8604@163.com (wentao)</author><guid>https://huang8604.github.io/posts/sd-%E5%8D%A1-%E5%AD%98%E5%82%A8-%E6%8C%82%E8%BD%BD%E7%9B%B8%E5%85%B3/</guid><description>&lt;p&gt;背景：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;测试步骤:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1、插入sd卡&lt;br&gt;
+2、观察sd卡名字 （Samsung）&lt;br&gt;
+3、格式化sd卡&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;实测结果:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;格式化SDcard后 名字变成Android&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;预期结果:&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

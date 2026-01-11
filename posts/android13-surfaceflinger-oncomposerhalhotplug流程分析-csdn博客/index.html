@@ -1,0 +1,974 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Android13 SurfaceFlinger OnComposerHalHotplug流程分析-CSDN博客 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。
+"><meta name=keywords content='clippings,转载,blog'><meta itemprop=name content="Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客"><meta itemprop=description content="onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。"><meta itemprop=datePublished content="2024-11-06T06:57:52+00:00"><meta itemprop=dateModified content="2024-11-05T01:33:58+00:00"><meta itemprop=wordCount content="3012"><meta itemprop=keywords content="Clippings,转载,Blog"><meta property="og:url" content="https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客"><meta property="og:description" content="onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:52+00:00"><meta property="article:modified_time" content="2024-11-05T01:33:58+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="转载"><meta property="article:tag" content="Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客"><meta name=twitter:description content="onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 SurfaceFlinger onComposerHalVsync流程分析-CSDN博客"><link rel=next type=text/html href=https://huang8604.github.io/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 SurfaceFlinger composite(合成)流程分析-CSDN博客"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title="Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Android13 SurfaceFlinger onComposerHalHotplug流程分析-CSDN博客","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/"},"genre":"posts","keywords":"clippings, 转载, blog","wordcount":3012,"url":"https:\/\/huang8604.github.io\/posts\/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/","datePublished":"2024-11-06T06:57:52+00:00","dateModified":"2024-11-05T01:33:58+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Android13 SurfaceFlinger OnComposerHalHotplug流程分析-CSDN博客</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/ class=post-collection title="合集 - 图形显示"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> 图形显示</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:52"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:33:58"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="3012 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 3100 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 7 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#surfaceflinger-processdisplayhotplugeventslocked>SurfaceFlinger processDisplayHotplugEventsLocked</a><ul><li><a href=#surfaceflinger-processdisplayremoved>surfaceflinger processDisplayRemoved</a></li><li><a href=#surfaceflinger-processdisplaychanged>surfaceflinger processDisplayChanged</a></li><li><a href=#surfaceflinger-processdisplayadded>Surfaceflinger processDisplayAdded</a><ul><li><a href=#surfaceflinger-initscheduler>SurfaceFlinger initScheduler</a><ul><li><a href=#new-scheduler>new Scheduler</a></li><li><a href=#scheduler-createconnection>Scheduler createConnection</a></li></ul></li></ul></li></ul></li></ul></nav></div></div><div class=content id=content><p>onComposerHalHotplug是一个Android系统中的一个事件回调函数，用于处理Composer HAL（Hardware Abstraction Layer）的热插拔事件。Composer HAL是Android系统中负责处理图形渲染和显示的硬件抽象层，它与硬件驱动程序和图形服务之间进行通信。</p><p>当发生Composer HAL的热插拔事件时，系统会调用onComposerHalHotplug函数来通知相关的应用程序。这个函数可以在应用程序中实现，以便在热插拔事件发生时执行相应的操作。</p><p>SurfaceFlinger的onComposerHalHotplug方法代码如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>onComposerHalHotplug</span><span class=p>(</span><span class=n>hal</span><span class=o>::</span><span class=n>HWDisplayId</span> <span class=n>hwcDisplayId</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                          <span class=n>hal</span><span class=o>::</span><span class=n>Connection</span> <span class=n>connection</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>bool</span> <span class=n>connected</span> <span class=o>=</span> <span class=n>connection</span> <span class=o>==</span> <span class=n>hal</span><span class=o>::</span><span class=n>Connection</span><span class=o>::</span><span class=n>CONNECTED</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>ALOGI</span><span class=p>(</span><span class=s>&#34;%s HAL display %&#34;</span> <span class=n>PRIu64</span><span class=p>,</span> <span class=n>connected</span> <span class=o>?</span> <span class=s>&#34;Connecting&#34;</span> <span class=o>:</span> <span class=s>&#34;Disconnecting&#34;</span><span class=p>,</span> <span class=n>hwcDisplayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Only lock if we&#39;re not on the main thread. This function is normally
+</span></span></span><span class=line><span class=cl>    <span class=c1>// called on a hwbinder thread, but for the primary display it&#39;s called on
+</span></span></span><span class=line><span class=cl>    <span class=c1>// the main thread with the state lock already held, so don&#39;t attempt to
+</span></span></span><span class=line><span class=cl>    <span class=c1>// acquire it here.
+</span></span></span><span class=line><span class=cl>    <span class=n>ConditionalLock</span> <span class=nf>lock</span><span class=p>(</span><span class=n>mStateLock</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>this_thread</span><span class=o>::</span><span class=n>get_id</span><span class=p>()</span> <span class=o>!=</span> <span class=n>mMainThreadId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mPendingHotplugEvents</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>HotplugEvent</span><span class=p>{</span><span class=n>hwcDisplayId</span><span class=p>,</span> <span class=n>connection</span><span class=p>});</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>this_thread</span><span class=o>::</span><span class=n>get_id</span><span class=p>()</span> <span class=o>==</span> <span class=n>mMainThreadId</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Process all pending hot plug events immediately if we are on the main thread.
+</span></span></span><span class=line><span class=cl>        <span class=c1>// 如果我们在主线程上，请立即处理所有待处理的热插拔事件。
+</span></span></span><span class=line><span class=cl>        <span class=n>processDisplayHotplugEventsLocked</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>setTransactionFlags</span><span class=p>(</span><span class=n>eDisplayTransactionNeeded</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h2 class=heading-element id=surfaceflinger-processdisplayhotplugeventslocked><span>SurfaceFlinger processDisplayHotplugEventsLocked</span>
+<a href=#surfaceflinger-processdisplayhotplugeventslocked class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>调用SurfaceFlinger的processDisplayHotplugEventsLocked方法，处理所有待处理的热插拔事件：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>processDisplayHotplugEventsLocked</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span><span class=o>&amp;</span> <span class=nl>event</span> <span class=p>:</span> <span class=n>mPendingHotplugEvents</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>optional</span><span class=o>&lt;</span><span class=n>DisplayIdentificationInfo</span><span class=o>&gt;</span> <span class=n>info</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>                <span class=n>getHwComposer</span><span class=p>().</span><span class=n>onHotplug</span><span class=p>(</span><span class=n>event</span><span class=p>.</span><span class=n>hwcDisplayId</span><span class=p>,</span> <span class=n>event</span><span class=p>.</span><span class=n>connection</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>info</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=k>auto</span> <span class=n>displayId</span> <span class=o>=</span> <span class=n>info</span><span class=o>-&gt;</span><span class=n>id</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=k>auto</span> <span class=n>token</span> <span class=o>=</span> <span class=n>mPhysicalDisplayTokens</span><span class=p>.</span><span class=n>get</span><span class=p>(</span><span class=n>displayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>event</span><span class=p>.</span><span class=n>connection</span> <span class=o>==</span> <span class=n>hal</span><span class=o>::</span><span class=n>Connection</span><span class=o>::</span><span class=n>CONNECTED</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>auto</span> <span class=p>[</span><span class=n>supportedModes</span><span class=p>,</span> <span class=n>activeMode</span><span class=p>]</span> <span class=o>=</span> <span class=n>loadDisplayModes</span><span class=p>(</span><span class=n>displayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>token</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>ALOGV</span><span class=p>(</span><span class=s>&#34;Creating display %s&#34;</span><span class=p>,</span> <span class=n>to_string</span><span class=p>(</span><span class=n>displayId</span><span class=p>).</span><span class=n>c_str</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=n>DisplayDeviceState</span> <span class=n>state</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>physical</span> <span class=o>=</span> <span class=p>{.</span><span class=n>id</span> <span class=o>=</span> <span class=n>displayId</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>.</span><span class=n>type</span> <span class=o>=</span> <span class=n>getHwComposer</span><span class=p>().</span><span class=n>getDisplayConnectionType</span><span class=p>(</span><span class=n>displayId</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>.</span><span class=n>hwcDisplayId</span> <span class=o>=</span> <span class=n>event</span><span class=p>.</span><span class=n>hwcDisplayId</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>.</span><span class=n>deviceProductInfo</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>info</span><span class=o>-&gt;</span><span class=n>deviceProductInfo</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>.</span><span class=n>supportedModes</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>supportedModes</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                  <span class=p>.</span><span class=n>activeMode</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>activeMode</span><span class=p>)};</span>
+</span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>isSecure</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span> <span class=c1>// All physical displays are currently considered secure.
+</span></span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>displayName</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>info</span><span class=o>-&gt;</span><span class=n>name</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=n>sp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;</span> <span class=n>token</span> <span class=o>=</span> <span class=k>new</span> <span class=n>BBinder</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>.</span><span class=n>add</span><span class=p>(</span><span class=n>token</span><span class=p>,</span> <span class=n>state</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>mPhysicalDisplayTokens</span><span class=p>.</span><span class=n>try_emplace</span><span class=p>(</span><span class=n>displayId</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>token</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>                <span class=n>mInterceptor</span><span class=o>-&gt;</span><span class=n>saveDisplayCreation</span><span class=p>(</span><span class=n>state</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>ALOGV</span><span class=p>(</span><span class=s>&#34;Recreating display %s&#34;</span><span class=p>,</span> <span class=n>to_string</span><span class=p>(</span><span class=n>displayId</span><span class=p>).</span><span class=n>c_str</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>                <span class=k>auto</span><span class=o>&amp;</span> <span class=n>state</span> <span class=o>=</span> <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>.</span><span class=n>editValueFor</span><span class=p>(</span><span class=n>token</span><span class=o>-&gt;</span><span class=n>get</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>sequenceId</span> <span class=o>=</span> <span class=n>DisplayDeviceState</span><span class=p>{}.</span><span class=n>sequenceId</span><span class=p>;</span> <span class=c1>// Generate new sequenceId.
+</span></span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>supportedModes</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>supportedModes</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>activeMode</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>activeMode</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>getHwComposer</span><span class=p>().</span><span class=n>updatesDeviceProductInfoOnHotplugReconnect</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>deviceProductInfo</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>info</span><span class=o>-&gt;</span><span class=n>deviceProductInfo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>ALOGV</span><span class=p>(</span><span class=s>&#34;Removing display %s&#34;</span><span class=p>,</span> <span class=n>to_string</span><span class=p>(</span><span class=n>displayId</span><span class=p>).</span><span class=n>c_str</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=n>ssize_t</span> <span class=n>index</span> <span class=o>=</span> <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>.</span><span class=n>indexOfKey</span><span class=p>(</span><span class=n>token</span><span class=o>-&gt;</span><span class=n>get</span><span class=p>());</span> <span class=n>index</span> <span class=o>&gt;=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>state</span> <span class=o>=</span> <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>.</span><span class=n>valueAt</span><span class=p>(</span><span class=n>index</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>mInterceptor</span><span class=o>-&gt;</span><span class=n>saveDisplayDeletion</span><span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>sequenceId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>.</span><span class=n>removeItemsAt</span><span class=p>(</span><span class=n>index</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>            <span class=n>mPhysicalDisplayTokens</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>displayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>processDisplayChangesLocked</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mPendingHotplugEvents</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>调用processDisplayChangesLocked方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>processDisplayChangesLocked</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// here we take advantage of Vector&#39;s copy-on-write semantics to
+</span></span></span><span class=line><span class=cl>    <span class=c1>// improve performance by skipping the transaction entirely when
+</span></span></span><span class=line><span class=cl>    <span class=c1>// know that the lists are identical
+</span></span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>KeyedVector</span><span class=o>&lt;</span><span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;</span><span class=p>,</span> <span class=n>DisplayDeviceState</span><span class=o>&gt;&amp;</span> <span class=n>curr</span><span class=p>(</span><span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>KeyedVector</span><span class=o>&lt;</span><span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;</span><span class=p>,</span> <span class=n>DisplayDeviceState</span><span class=o>&gt;&amp;</span> <span class=n>draw</span><span class=p>(</span><span class=n>mDrawingState</span><span class=p>.</span><span class=n>displays</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>curr</span><span class=p>.</span><span class=n>isIdenticalTo</span><span class=p>(</span><span class=n>draw</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mVisibleRegionsDirty</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// find the displays that were removed
+</span></span></span><span class=line><span class=cl>        <span class=c1>// (ie: in drawing state but not in current state)
+</span></span></span><span class=line><span class=cl>        <span class=c1>// also handle displays that changed
+</span></span></span><span class=line><span class=cl>        <span class=c1>// (ie: displays that are in both lists)
+</span></span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=n>size_t</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>draw</span><span class=p>.</span><span class=n>size</span><span class=p>();</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;&amp;</span> <span class=n>displayToken</span> <span class=o>=</span> <span class=n>draw</span><span class=p>.</span><span class=n>keyAt</span><span class=p>(</span><span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>ssize_t</span> <span class=n>j</span> <span class=o>=</span> <span class=n>curr</span><span class=p>.</span><span class=n>indexOfKey</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>j</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=c1>// in drawing state but not in current state
+</span></span></span><span class=line><span class=cl>                <span class=n>processDisplayRemoved</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=c1>// this display is in both lists. see if something changed.
+</span></span></span><span class=line><span class=cl>                <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>currentState</span> <span class=o>=</span> <span class=n>curr</span><span class=p>[</span><span class=n>j</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>                <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>drawingState</span> <span class=o>=</span> <span class=n>draw</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>                <span class=n>processDisplayChanged</span><span class=p>(</span><span class=n>displayToken</span><span class=p>,</span> <span class=n>currentState</span><span class=p>,</span> <span class=n>drawingState</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// find displays that were added
+</span></span></span><span class=line><span class=cl>        <span class=c1>// (ie: in current state but not in drawing state)
+</span></span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=n>size_t</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>curr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;&amp;</span> <span class=n>displayToken</span> <span class=o>=</span> <span class=n>curr</span><span class=p>.</span><span class=n>keyAt</span><span class=p>(</span><span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>draw</span><span class=p>.</span><span class=n>indexOfKey</span><span class=p>(</span><span class=n>displayToken</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>processDisplayAdded</span><span class=p>(</span><span class=n>displayToken</span><span class=p>,</span> <span class=n>curr</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mDrawingState</span><span class=p>.</span><span class=n>displays</span> <span class=o>=</span> <span class=n>mCurrentState</span><span class=p>.</span><span class=n>displays</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>上面方法主要处理如下：</p><p>1、调用processDisplayRemoved方法。</p><p>2、调用processDisplayChanged方法。</p><p>3、调用processDisplayAdded方法。</p><p>下面分别进行分析：</p><h3 class=heading-element id=surfaceflinger-processdisplayremoved><span>surfaceflinger processDisplayRemoved</span>
+<a href=#surfaceflinger-processdisplayremoved class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>调用processDisplayRemoved方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>processDisplayRemoved</span><span class=p>(</span><span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;&amp;</span> <span class=n>displayToken</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>getDisplayDeviceLocked</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>display</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>display</span><span class=o>-&gt;</span><span class=n>disconnect</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>isVirtual</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>releaseVirtualDisplay</span><span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>getVirtualId</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>dispatchDisplayHotplugEvent</span><span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>getPhysicalId</span><span class=p>(),</span> <span class=nb>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mDisplays</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>display</span> <span class=o>&amp;&amp;</span> <span class=n>display</span><span class=o>-&gt;</span><span class=n>isVirtual</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>static_cast</span><span class=o>&lt;</span><span class=kt>void</span><span class=o>&gt;</span><span class=p>(</span><span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>schedule</span><span class=p>([</span><span class=n>display</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>display</span><span class=p>)]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// Destroy the display without holding the mStateLock.
+</span></span></span><span class=line><span class=cl>            <span class=c1>// This is a temporary solution until we can manage transaction queues without
+</span></span></span><span class=line><span class=cl>            <span class=c1>// holding the mStateLock.
+</span></span></span><span class=line><span class=cl>            <span class=c1>// With blast, the IGBP that is passed to the VirtualDisplaySurface is owned by the
+</span></span></span><span class=line><span class=cl>            <span class=c1>// client. When the IGBP is disconnected, its buffer cache in SF will be cleared
+</span></span></span><span class=line><span class=cl>            <span class=c1>// via SurfaceComposerClient::doUncacheBufferTransaction. This call from the client
+</span></span></span><span class=line><span class=cl>            <span class=c1>// ends up running on the main thread causing a deadlock since setTransactionstate
+</span></span></span><span class=line><span class=cl>            <span class=c1>// will try to acquire the mStateLock. Instead we extend the lifetime of
+</span></span></span><span class=line><span class=cl>            <span class=c1>// DisplayDevice and destroy it in the main thread without holding the mStateLock.
+</span></span></span><span class=line><span class=cl>            <span class=c1>// The display will be disconnected and removed from the mDisplays list so it will
+</span></span></span><span class=line><span class=cl>            <span class=c1>// not be accessible.
+</span></span></span><span class=line><span class=cl>        <span class=p>}));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h3 class=heading-element id=surfaceflinger-processdisplaychanged><span>surfaceflinger processDisplayChanged</span>
+<a href=#surfaceflinger-processdisplaychanged class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>调用processDisplayChanged方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>processDisplayChanged</span><span class=p>(</span><span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;&amp;</span> <span class=n>displayToken</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                           <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>currentState</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                           <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>drawingState</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;</span> <span class=n>currentBinder</span> <span class=o>=</span> <span class=n>IInterface</span><span class=o>::</span><span class=n>asBinder</span><span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>surface</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;</span> <span class=n>drawingBinder</span> <span class=o>=</span> <span class=n>IInterface</span><span class=o>::</span><span class=n>asBinder</span><span class=p>(</span><span class=n>drawingState</span><span class=p>.</span><span class=n>surface</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Recreate the DisplayDevice if the surface or sequence ID changed.
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>currentBinder</span> <span class=o>!=</span> <span class=n>drawingBinder</span> <span class=o>||</span> <span class=n>currentState</span><span class=p>.</span><span class=n>sequenceId</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>sequenceId</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>getRenderEngine</span><span class=p>().</span><span class=n>cleanFramebufferCache</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>getDisplayDeviceLocked</span><span class=p>(</span><span class=n>displayToken</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>display</span><span class=o>-&gt;</span><span class=n>disconnect</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>isVirtual</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>releaseVirtualDisplay</span><span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>getVirtualId</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mDisplays</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span><span class=o>&amp;</span> <span class=n>physical</span> <span class=o>=</span> <span class=n>currentState</span><span class=p>.</span><span class=n>physical</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>getHwComposer</span><span class=p>().</span><span class=n>allocatePhysicalDisplay</span><span class=p>(</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>hwcDisplayId</span><span class=p>,</span> <span class=n>physical</span><span class=o>-&gt;</span><span class=n>id</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>processDisplayAdded</span><span class=p>(</span><span class=n>displayToken</span><span class=p>,</span> <span class=n>currentState</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>physical</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>getDisplayDeviceLocked</span><span class=p>(</span><span class=n>displayToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>setPowerModeInternal</span><span class=p>(</span><span class=n>display</span><span class=p>,</span> <span class=n>hal</span><span class=o>::</span><span class=n>PowerMode</span><span class=o>::</span><span class=n>ON</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>            <span class=c1>// TODO(b/175678251) Call a listener instead.
+</span></span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>hwcDisplayId</span> <span class=o>==</span> <span class=n>getHwComposer</span><span class=p>().</span><span class=n>getPrimaryHwcDisplayId</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>updateInternalDisplayVsyncLocked</span><span class=p>(</span><span class=n>display</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>getDisplayDeviceLocked</span><span class=p>(</span><span class=n>displayToken</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>layerStack</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>layerStack</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>display</span><span class=o>-&gt;</span><span class=n>setLayerStack</span><span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>layerStack</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>flags</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>flags</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>display</span><span class=o>-&gt;</span><span class=n>setFlags</span><span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>flags</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>((</span><span class=n>currentState</span><span class=p>.</span><span class=n>orientation</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>orientation</span><span class=p>)</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>            <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>layerStackSpaceRect</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>layerStackSpaceRect</span><span class=p>)</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>            <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>orientedDisplaySpaceRect</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>orientedDisplaySpaceRect</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>display</span><span class=o>-&gt;</span><span class=n>setProjection</span><span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>orientation</span><span class=p>,</span> <span class=n>currentState</span><span class=p>.</span><span class=n>layerStackSpaceRect</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                   <span class=n>currentState</span><span class=p>.</span><span class=n>orientedDisplaySpaceRect</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>isDisplayActiveLocked</span><span class=p>(</span><span class=n>display</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>mActiveDisplayTransformHint</span> <span class=o>=</span> <span class=n>display</span><span class=o>-&gt;</span><span class=n>getTransformHint</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>width</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>width</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>            <span class=n>currentState</span><span class=p>.</span><span class=n>height</span> <span class=o>!=</span> <span class=n>drawingState</span><span class=p>.</span><span class=n>height</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>display</span><span class=o>-&gt;</span><span class=n>setDisplaySize</span><span class=p>(</span><span class=n>currentState</span><span class=p>.</span><span class=n>width</span><span class=p>,</span> <span class=n>currentState</span><span class=p>.</span><span class=n>height</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>isDisplayActiveLocked</span><span class=p>(</span><span class=n>display</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>onActiveDisplaySizeChanged</span><span class=p>(</span><span class=n>display</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h3 class=heading-element id=surfaceflinger-processdisplayadded><span>Surfaceflinger processDisplayAdded</span>
+<a href=#surfaceflinger-processdisplayadded class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>调用processDisplayAdded方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=o>/</span><span class=n>frameworks</span><span class=o>/</span><span class=n>native</span><span class=o>/</span><span class=n>services</span><span class=o>/</span><span class=n>surfaceflinger</span><span class=o>/</span><span class=n>Surfaceflinger</span><span class=p>.</span><span class=n>cpp</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>processDisplayAdded</span><span class=p>(</span><span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>IBinder</span><span class=o>&gt;&amp;</span> <span class=n>displayToken</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=k>const</span> <span class=n>DisplayDeviceState</span><span class=o>&amp;</span> <span class=n>state</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>ui</span><span class=o>::</span><span class=n>Size</span> <span class=n>resolution</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>ui</span><span class=o>::</span><span class=n>PixelFormat</span> <span class=n>pixelFormat</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>ui</span><span class=o>::</span><span class=n>PixelFormat</span><span class=o>&gt;</span><span class=p>(</span><span class=n>PIXEL_FORMAT_UNKNOWN</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>resolution</span> <span class=o>=</span> <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>activeMode</span><span class=o>-&gt;</span><span class=n>getResolution</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=n>pixelFormat</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>ui</span><span class=o>::</span><span class=n>PixelFormat</span><span class=o>&gt;</span><span class=p>(</span><span class=n>PIXEL_FORMAT_RGBA_8888</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=nf>if</span> <span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>surface</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>status</span> <span class=o>=</span> <span class=n>state</span><span class=p>.</span><span class=n>surface</span><span class=o>-&gt;</span><span class=n>query</span><span class=p>(</span><span class=n>NATIVE_WINDOW_WIDTH</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>resolution</span><span class=p>.</span><span class=n>width</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>ALOGE_IF</span><span class=p>(</span><span class=n>status</span> <span class=o>!=</span> <span class=n>NO_ERROR</span><span class=p>,</span> <span class=s>&#34;Unable to query width (%d)&#34;</span><span class=p>,</span> <span class=n>status</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>status</span> <span class=o>=</span> <span class=n>state</span><span class=p>.</span><span class=n>surface</span><span class=o>-&gt;</span><span class=n>query</span><span class=p>(</span><span class=n>NATIVE_WINDOW_HEIGHT</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>resolution</span><span class=p>.</span><span class=n>height</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>ALOGE_IF</span><span class=p>(</span><span class=n>status</span> <span class=o>!=</span> <span class=n>NO_ERROR</span><span class=p>,</span> <span class=s>&#34;Unable to query height (%d)&#34;</span><span class=p>,</span> <span class=n>status</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>format</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>status</span> <span class=o>=</span> <span class=n>state</span><span class=p>.</span><span class=n>surface</span><span class=o>-&gt;</span><span class=n>query</span><span class=p>(</span><span class=n>NATIVE_WINDOW_FORMAT</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>format</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>ALOGE_IF</span><span class=p>(</span><span class=n>status</span> <span class=o>!=</span> <span class=n>NO_ERROR</span><span class=p>,</span> <span class=s>&#34;Unable to query format (%d)&#34;</span><span class=p>,</span> <span class=n>status</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>pixelFormat</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>ui</span><span class=o>::</span><span class=n>PixelFormat</span><span class=o>&gt;</span><span class=p>(</span><span class=n>format</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Virtual displays without a surface are dormant:
+</span></span></span><span class=line><span class=cl>        <span class=c1>// they have external state (layer stack, projection,
+</span></span></span><span class=line><span class=cl>        <span class=c1>// etc.) but no internal state (i.e. a DisplayDevice).
+</span></span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>compositionengine</span><span class=o>::</span><span class=n>DisplayCreationArgsBuilder</span> <span class=n>builder</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span><span class=o>&amp;</span> <span class=n>physical</span> <span class=o>=</span> <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>builder</span><span class=p>.</span><span class=n>setId</span><span class=p>(</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>id</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>builder</span><span class=p>.</span><span class=n>setId</span><span class=p>(</span><span class=n>acquireVirtualDisplay</span><span class=p>(</span><span class=n>resolution</span><span class=p>,</span> <span class=n>pixelFormat</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>builder</span><span class=p>.</span><span class=n>setPixels</span><span class=p>(</span><span class=n>resolution</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>builder</span><span class=p>.</span><span class=n>setIsSecure</span><span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>isSecure</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>builder</span><span class=p>.</span><span class=n>setPowerAdvisor</span><span class=p>(</span><span class=n>mPowerAdvisor</span><span class=p>.</span><span class=n>get</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=n>builder</span><span class=p>.</span><span class=n>setName</span><span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>displayName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>compositionDisplay</span> <span class=o>=</span> <span class=n>getCompositionEngine</span><span class=p>().</span><span class=n>createDisplay</span><span class=p>(</span><span class=n>builder</span><span class=p>.</span><span class=n>build</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=n>compositionDisplay</span><span class=o>-&gt;</span><span class=n>setLayerCachingEnabled</span><span class=p>(</span><span class=n>mLayerCachingEnabled</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>compositionengine</span><span class=o>::</span><span class=n>DisplaySurface</span><span class=o>&gt;</span> <span class=n>displaySurface</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;</span> <span class=n>producer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;</span> <span class=n>bqProducer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferConsumer</span><span class=o>&gt;</span> <span class=n>bqConsumer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>getFactory</span><span class=p>().</span><span class=n>createBufferQueue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>bqProducer</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>bqConsumer</span><span class=p>,</span> <span class=cm>/*consumerIsSurfaceFlinger =*/</span><span class=nb>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>isVirtual</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=k>auto</span> <span class=n>displayId</span> <span class=o>=</span> <span class=n>VirtualDisplayId</span><span class=o>::</span><span class=n>tryCast</span><span class=p>(</span><span class=n>compositionDisplay</span><span class=o>-&gt;</span><span class=n>getId</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>LOG_FATAL_IF</span><span class=p>(</span><span class=o>!</span><span class=n>displayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>auto</span> <span class=n>surface</span> <span class=o>=</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>VirtualDisplaySurface</span><span class=o>&gt;::</span><span class=n>make</span><span class=p>(</span><span class=n>getHwComposer</span><span class=p>(),</span> <span class=o>*</span><span class=n>displayId</span><span class=p>,</span> <span class=n>state</span><span class=p>.</span><span class=n>surface</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                       <span class=n>bqProducer</span><span class=p>,</span> <span class=n>bqConsumer</span><span class=p>,</span> <span class=n>state</span><span class=p>.</span><span class=n>displayName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>displaySurface</span> <span class=o>=</span> <span class=n>surface</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>producer</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>surface</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>ALOGE_IF</span><span class=p>(</span><span class=n>state</span><span class=p>.</span><span class=n>surface</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                 <span class=s>&#34;adding a supported display, but rendering &#34;</span>
+</span></span><span class=line><span class=cl>                 <span class=s>&#34;surface is provided (%p), ignoring it&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                 <span class=n>state</span><span class=p>.</span><span class=n>surface</span><span class=p>.</span><span class=n>get</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=k>auto</span> <span class=n>displayId</span> <span class=o>=</span> <span class=n>PhysicalDisplayId</span><span class=o>::</span><span class=n>tryCast</span><span class=p>(</span><span class=n>compositionDisplay</span><span class=o>-&gt;</span><span class=n>getId</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>LOG_FATAL_IF</span><span class=p>(</span><span class=o>!</span><span class=n>displayId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>displaySurface</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>                <span class=n>sp</span><span class=o>&lt;</span><span class=n>FramebufferSurface</span><span class=o>&gt;::</span><span class=n>make</span><span class=p>(</span><span class=n>getHwComposer</span><span class=p>(),</span> <span class=o>*</span><span class=n>displayId</span><span class=p>,</span> <span class=n>bqConsumer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                             <span class=n>state</span><span class=p>.</span><span class=n>physical</span><span class=o>-&gt;</span><span class=n>activeMode</span><span class=o>-&gt;</span><span class=n>getResolution</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                                             <span class=n>ui</span><span class=o>::</span><span class=n>Size</span><span class=p>(</span><span class=n>maxGraphicsWidth</span><span class=p>,</span> <span class=n>maxGraphicsHeight</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=n>producer</span> <span class=o>=</span> <span class=n>bqProducer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>LOG_FATAL_IF</span><span class=p>(</span><span class=o>!</span><span class=n>displaySurface</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>setupNewDisplayDeviceInternal</span><span class=p>(</span><span class=n>displayToken</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>compositionDisplay</span><span class=p>),</span> <span class=n>state</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                 <span class=n>displaySurface</span><span class=p>,</span> <span class=n>producer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>isPrimary</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>initScheduler</span><span class=p>(</span><span class=n>display</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>state</span><span class=p>.</span><span class=n>isVirtual</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>dispatchDisplayHotplugEvent</span><span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>getPhysicalId</span><span class=p>(),</span> <span class=nb>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mDisplays</span><span class=p>.</span><span class=n>try_emplace</span><span class=p>(</span><span class=n>displayToken</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>display</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h4 class=heading-element id=surfaceflinger-initscheduler><span>SurfaceFlinger initScheduler</span>
+<a href=#surfaceflinger-initscheduler class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h4><p>调用initScheduler方法，初始化Scheduler：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Surfaceflinger.cpp
+</span></span></span><span class=line><span class=cl><span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;</span><span class=n>scheduler</span><span class=o>::</span><span class=n>Scheduler</span><span class=o>&gt;</span> <span class=n>mScheduler</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>SurfaceFlinger</span><span class=o>::</span><span class=n>initScheduler</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>DisplayDevice</span><span class=o>&gt;&amp;</span> <span class=n>display</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>mScheduler</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// If the scheduler is already initialized, this means that we received
+</span></span></span><span class=line><span class=cl>        <span class=c1>// a hotplug(connected) on the primary display. In that case we should
+</span></span></span><span class=line><span class=cl>        <span class=c1>// update the scheduler with the most recent display information.
+</span></span></span><span class=line><span class=cl>        <span class=n>ALOGW</span><span class=p>(</span><span class=s>&#34;Scheduler already initialized, updating instead&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>setRefreshRateConfigs</span><span class=p>(</span><span class=n>display</span><span class=o>-&gt;</span><span class=n>holdRefreshRateConfigs</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=k>auto</span> <span class=n>currRefreshRate</span> <span class=o>=</span> <span class=n>display</span><span class=o>-&gt;</span><span class=n>getActiveMode</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>getFps</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>mRefreshRateStats</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>scheduler</span><span class=o>::</span><span class=n>RefreshRateStats</span><span class=o>&gt;</span><span class=p>(</span><span class=o>*</span><span class=n>mTimeStats</span><span class=p>,</span> <span class=n>currRefreshRate</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                                      <span class=n>hal</span><span class=o>::</span><span class=n>PowerMode</span><span class=o>::</span><span class=n>OFF</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mVsyncConfiguration</span> <span class=o>=</span> <span class=n>getFactory</span><span class=p>().</span><span class=n>createVsyncConfiguration</span><span class=p>(</span><span class=n>currRefreshRate</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>mVsyncModulator</span> <span class=o>=</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>VsyncModulator</span><span class=o>&gt;::</span><span class=n>make</span><span class=p>(</span><span class=n>mVsyncConfiguration</span><span class=o>-&gt;</span><span class=n>getCurrentConfigs</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>using</span> <span class=n>Feature</span> <span class=o>=</span> <span class=n>scheduler</span><span class=o>::</span><span class=n>Feature</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>scheduler</span><span class=o>::</span><span class=n>FeatureFlags</span> <span class=n>features</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>sysprop</span><span class=o>::</span><span class=n>use_content_detection_for_refresh_rate</span><span class=p>(</span><span class=nb>false</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>features</span> <span class=o>|=</span> <span class=n>Feature</span><span class=o>::</span><span class=n>kContentDetection</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>base</span><span class=o>::</span><span class=n>GetBoolProperty</span><span class=p>(</span><span class=s>&#34;debug.sf.show_predicted_vsync&#34;</span><span class=n>s</span><span class=p>,</span> <span class=nb>false</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>features</span> <span class=o>|=</span> <span class=n>Feature</span><span class=o>::</span><span class=n>kTracePredictedVsync</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>base</span><span class=o>::</span><span class=n>GetBoolProperty</span><span class=p>(</span><span class=s>&#34;debug.sf.vsync_reactor_ignore_present_fences&#34;</span><span class=n>s</span><span class=p>,</span> <span class=nb>false</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>        <span class=o>!</span><span class=n>getHwComposer</span><span class=p>().</span><span class=n>hasCapability</span><span class=p>(</span><span class=n>Capability</span><span class=o>::</span><span class=n>PRESENT_FENCE_IS_NOT_RELIABLE</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>features</span> <span class=o>|=</span> <span class=n>Feature</span><span class=o>::</span><span class=n>kPresentFences</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// 创建Scheduler对象
+</span></span></span><span class=line><span class=cl>    <span class=n>mScheduler</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>scheduler</span><span class=o>::</span><span class=n>Scheduler</span><span class=o>&gt;</span><span class=p>(</span><span class=k>static_cast</span><span class=o>&lt;</span><span class=n>ICompositor</span><span class=o>&amp;&gt;</span><span class=p>(</span><span class=o>*</span><span class=k>this</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                                        <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>ISchedulerCallback</span><span class=o>&amp;&gt;</span><span class=p>(</span><span class=o>*</span><span class=k>this</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                                        <span class=n>features</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>auto</span> <span class=n>configs</span> <span class=o>=</span> <span class=n>display</span><span class=o>-&gt;</span><span class=n>holdRefreshRateConfigs</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>configs</span><span class=o>-&gt;</span><span class=n>kernelIdleTimerController</span><span class=p>().</span><span class=n>has_value</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>features</span> <span class=o>|=</span> <span class=n>Feature</span><span class=o>::</span><span class=n>kKernelIdleTimer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>createVsyncSchedule</span><span class=p>(</span><span class=n>features</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>setRefreshRateConfigs</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>configs</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>setVsyncEnabled</span><span class=p>(</span><span class=nb>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>startTimers</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=k>auto</span> <span class=n>configs</span> <span class=o>=</span> <span class=n>mVsyncConfiguration</span><span class=o>-&gt;</span><span class=n>getCurrentConfigs</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>nsecs_t</span> <span class=n>vsyncPeriod</span> <span class=o>=</span> <span class=n>currRefreshRate</span><span class=p>.</span><span class=n>getPeriodNsecs</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>mAppConnectionHandle</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>            <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>createConnection</span><span class=p>(</span><span class=s>&#34;app&#34;</span><span class=p>,</span> <span class=n>mFrameTimeline</span><span class=o>-&gt;</span><span class=n>getTokenManager</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                                         <span class=cm>/*workDuration=*/</span><span class=n>configs</span><span class=p>.</span><span class=n>late</span><span class=p>.</span><span class=n>appWorkDuration</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=cm>/*readyDuration=*/</span><span class=n>configs</span><span class=p>.</span><span class=n>late</span><span class=p>.</span><span class=n>sfWorkDuration</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=n>impl</span><span class=o>::</span><span class=n>EventThread</span><span class=o>::</span><span class=n>InterceptVSyncsCallback</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=n>mSfConnectionHandle</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>            <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>createConnection</span><span class=p>(</span><span class=s>&#34;appSf&#34;</span><span class=p>,</span> <span class=n>mFrameTimeline</span><span class=o>-&gt;</span><span class=n>getTokenManager</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                                         <span class=cm>/*workDuration=*/</span><span class=n>std</span><span class=o>::</span><span class=n>chrono</span><span class=o>::</span><span class=n>nanoseconds</span><span class=p>(</span><span class=n>vsyncPeriod</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                         <span class=cm>/*readyDuration=*/</span><span class=n>configs</span><span class=p>.</span><span class=n>late</span><span class=p>.</span><span class=n>sfWorkDuration</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=p>[</span><span class=k>this</span><span class=p>](</span><span class=n>nsecs_t</span> <span class=n>timestamp</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                                             <span class=n>mInterceptor</span><span class=o>-&gt;</span><span class=n>saveVSyncEvent</span><span class=p>(</span><span class=n>timestamp</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                                         <span class=p>});</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>initVsync</span><span class=p>(</span><span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>getVsyncDispatch</span><span class=p>(),</span> <span class=o>*</span><span class=n>mFrameTimeline</span><span class=o>-&gt;</span><span class=n>getTokenManager</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                          <span class=n>configs</span><span class=p>.</span><span class=n>late</span><span class=p>.</span><span class=n>sfWorkDuration</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mRegionSamplingThread</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>            <span class=k>new</span> <span class=n>RegionSamplingThread</span><span class=p>(</span><span class=o>*</span><span class=k>this</span><span class=p>,</span> <span class=n>RegionSamplingThread</span><span class=o>::</span><span class=n>EnvironmentTimingTunables</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=n>mFpsReporter</span> <span class=o>=</span> <span class=k>new</span> <span class=n>FpsReporter</span><span class=p>(</span><span class=o>*</span><span class=n>mFrameTimeline</span><span class=p>,</span> <span class=o>*</span><span class=k>this</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Dispatch a mode change request for the primary display on scheduler
+</span></span></span><span class=line><span class=cl>    <span class=c1>// initialization, so that the EventThreads always contain a reference to a
+</span></span></span><span class=line><span class=cl>    <span class=c1>// prior configuration.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This is a bit hacky, but this avoids a back-pointer into the main SF
+</span></span></span><span class=line><span class=cl>    <span class=c1>// classes from EventThread, and there should be no run-time binder cost
+</span></span></span><span class=line><span class=cl>    <span class=c1>// anyway since there are no connected apps at this point.
+</span></span></span><span class=line><span class=cl>    <span class=n>mScheduler</span><span class=o>-&gt;</span><span class=n>onPrimaryDisplayModeChanged</span><span class=p>(</span><span class=n>mAppConnectionHandle</span><span class=p>,</span> <span class=n>display</span><span class=o>-&gt;</span><span class=n>getActiveMode</span><span class=p>());</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>上面方法主要处理如下：</p><p>1、创建Scheduler对象，Scheduler是SurfaceFlinger的调度器。</p><p>2、调用mScheduler(Scheduler)的createConnection方法创建mAppConnectionHandle和mSfConnectionHandle对象。</p><p>3、调用Scheduler的initVsync方法，初始化Vsync。</p><p>下面分别进行分析：</p><h5 class=heading-element id=new-scheduler><span>new Scheduler</span>
+<a href=#new-scheduler class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>创建Scheduler对象，Scheduler是SurfaceFlinger的调度器，Scheduler的构造方法：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Scheduler/Scheduler.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Scheduler</span> <span class=o>:</span> <span class=n>impl</span><span class=o>::</span><span class=n>MessageQueue</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>Scheduler</span><span class=o>::</span><span class=n>Scheduler</span><span class=p>(</span><span class=n>ICompositor</span><span class=o>&amp;</span> <span class=n>compositor</span><span class=p>,</span> <span class=n>ISchedulerCallback</span><span class=o>&amp;</span> <span class=n>callback</span><span class=p>,</span> <span class=n>FeatureFlags</span> <span class=n>features</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>impl</span><span class=o>::</span><span class=n>MessageQueue</span><span class=p>(</span><span class=n>compositor</span><span class=p>),</span> <span class=n>mFeatures</span><span class=p>(</span><span class=n>features</span><span class=p>),</span> <span class=n>mSchedulerCallback</span><span class=p>(</span><span class=n>callback</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><h5 class=heading-element id=scheduler-createconnection><span>Scheduler createConnection</span>
+<a href=#scheduler-createconnection class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h5><p>调用mScheduler(Scheduler)的createConnection方法创建mAppConnectionHandle和mSfConnectionHandle对象：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Scheduler/Scheduler.cpp
+</span></span></span><span class=line><span class=cl><span class=n>ConnectionHandle</span> <span class=n>Scheduler</span><span class=o>::</span><span class=n>createConnection</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=kt>char</span><span class=o>*</span> <span class=n>connectionName</span><span class=p>,</span> <span class=n>frametimeline</span><span class=o>::</span><span class=n>TokenManager</span><span class=o>*</span> <span class=n>tokenManager</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>chrono</span><span class=o>::</span><span class=n>nanoseconds</span> <span class=n>workDuration</span><span class=p>,</span> <span class=n>std</span><span class=o>::</span><span class=n>chrono</span><span class=o>::</span><span class=n>nanoseconds</span> <span class=n>readyDuration</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>impl</span><span class=o>::</span><span class=n>EventThread</span><span class=o>::</span><span class=n>InterceptVSyncsCallback</span> <span class=n>interceptCallback</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>vsyncSource</span> <span class=o>=</span> <span class=n>makePrimaryDispSyncSource</span><span class=p>(</span><span class=n>connectionName</span><span class=p>,</span> <span class=n>workDuration</span><span class=p>,</span> <span class=n>readyDuration</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>throttleVsync</span> <span class=o>=</span> <span class=n>makeThrottleVsyncCallback</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>getVsyncPeriod</span> <span class=o>=</span> <span class=n>makeGetVsyncPeriodFunction</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>eventThread</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=n>make_unique</span><span class=o>&lt;</span><span class=n>impl</span><span class=o>::</span><span class=n>EventThread</span><span class=o>&gt;</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>vsyncSource</span><span class=p>),</span> <span class=n>tokenManager</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                                           <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>interceptCallback</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                                           <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>throttleVsync</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                                                           <span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>getVsyncPeriod</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nf>createConnection</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>eventThread</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>创建EventThread对象，EventThread的构造方法如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/Scheduler/EventThread.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>EventThread</span> <span class=o>:</span> <span class=k>public</span> <span class=n>android</span><span class=o>::</span><span class=n>EventThread</span><span class=p>,</span> <span class=k>private</span> <span class=n>VSyncSource</span><span class=o>::</span><span class=n>Callback</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>EventThread</span><span class=o>::</span><span class=n>EventThread</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>unique_ptr</span><span class=o>&lt;</span><span class=n>VSyncSource</span><span class=o>&gt;</span> <span class=n>vsyncSource</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>android</span><span class=o>::</span><span class=n>frametimeline</span><span class=o>::</span><span class=n>TokenManager</span><span class=o>*</span> <span class=n>tokenManager</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>InterceptVSyncsCallback</span> <span class=n>interceptVSyncsCallback</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>ThrottleVsyncCallback</span> <span class=n>throttleVsyncCallback</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                         <span class=n>GetVsyncPeriodFunction</span> <span class=n>getVsyncPeriodFunction</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>mVSyncSource</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>vsyncSource</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mTokenManager</span><span class=p>(</span><span class=n>tokenManager</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mInterceptVSyncsCallback</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>interceptVSyncsCallback</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mThrottleVsyncCallback</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>throttleVsyncCallback</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mGetVsyncPeriodFunction</span><span class=p>(</span><span class=n>std</span><span class=o>::</span><span class=n>move</span><span class=p>(</span><span class=n>getVsyncPeriodFunction</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mThreadName</span><span class=p>(</span><span class=n>mVSyncSource</span><span class=o>-&gt;</span><span class=n>getName</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>LOG_ALWAYS_FATAL_IF</span><span class=p>(</span><span class=n>getVsyncPeriodFunction</span> <span class=o>==</span> <span class=k>nullptr</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;getVsyncPeriodFunction must not be null&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mVSyncSource</span><span class=o>-&gt;</span><span class=n>setCallback</span><span class=p>(</span><span class=k>this</span><span class=p>);</span> <span class=c1>//设置VsyncSource回调
+</span></span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>mThread</span> <span class=o>=</span> <span class=n>std</span><span class=o>::</span><span class=kr>thread</span><span class=p>([</span><span class=k>this</span><span class=p>]()</span> <span class=n>NO_THREAD_SAFETY_ANALYSIS</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>unique_lock</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>mutex</span><span class=o>&gt;</span> <span class=n>lock</span><span class=p>(</span><span class=n>mMutex</span><span class=p>);</span> <span class=c1>//创建一个线程
+</span></span></span><span class=line><span class=cl>        <span class=n>threadMain</span><span class=p>(</span><span class=n>lock</span><span class=p>);</span> <span class=c1>//调用threadMain方法，接收回调消息
+</span></span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>pthread_setname_np</span><span class=p>(</span><span class=n>mThread</span><span class=p>.</span><span class=n>native_handle</span><span class=p>(),</span> <span class=n>mThreadName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>pid_t</span> <span class=n>tid</span> <span class=o>=</span> <span class=n>pthread_gettid_np</span><span class=p>(</span><span class=n>mThread</span><span class=p>.</span><span class=n>native_handle</span><span class=p>());</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Use SCHED_FIFO to minimize jitter
+</span></span></span><span class=line><span class=cl>    <span class=k>constexpr</span> <span class=kt>int</span> <span class=n>EVENT_THREAD_PRIORITY</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=nc>sched_param</span> <span class=n>param</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=n>param</span><span class=p>.</span><span class=n>sched_priority</span> <span class=o>=</span> <span class=n>EVENT_THREAD_PRIORITY</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>pthread_setschedparam</span><span class=p>(</span><span class=n>mThread</span><span class=p>.</span><span class=n>native_handle</span><span class=p>(),</span> <span class=n>SCHED_FIFO</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>param</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>ALOGE</span><span class=p>(</span><span class=s>&#34;Couldn&#39;t set SCHED_FIFO for EventThread&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>set_sched_policy</span><span class=p>(</span><span class=n>tid</span><span class=p>,</span> <span class=n>SP_FOREGROUND</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>在上面方法中先会设置VsyncSource回调，然后创建一个线程，调用调用threadMain方法，在threadMain方法中会循环接收回调消息，然后进行处理：</p><p><a href=/Android13%20EventThread%20threadMain%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-CSDN%E5%8D%9A%E5%AE%A2>Android13 EventThread threadMain流程分析-CSDN博客</a></p></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・图形显示</span></span></a> 43</div><div class=collection-nav><a href=/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=prev title="Android13 SurfaceFlinger Composite(合成)流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>Android13 SurfaceFlinger Composite(合成)流程分析-CSDN博客</span>
+</a><a href=/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=next title="Android13 SurfaceFlinger OnComposerHalVsync流程分析-CSDN博客"><span>Android13 SurfaceFlinger OnComposerHalVsync流程分析-CSDN博客</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:33:58">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/android13-surfaceflinger-oncomposerhalhotplug%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ data-title="Android13 SurfaceFlinger OnComposerHalHotplug流程分析-CSDN博客"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android13-surfaceflinger-oncomposerhalvsync%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=prev title="Android13 SurfaceFlinger OnComposerHalVsync流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android13 SurfaceFlinger OnComposerHalVsync流程分析-CSDN博客</a><a href=/posts/android13-surfaceflinger-composite%E5%90%88%E6%88%90%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=next title="Android13 SurfaceFlinger Composite(合成)流程分析-CSDN博客">Android13 SurfaceFlinger Composite(合成)流程分析-CSDN博客<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><a href=#surfaceflinger-processdisplayhotplugeventslocked>SurfaceFlinger processDisplayHotplugEventsLocked</a><ul><li><a href=#surfaceflinger-processdisplayremoved>surfaceflinger processDisplayRemoved</a></li><li><a href=#surfaceflinger-processdisplaychanged>surfaceflinger processDisplayChanged</a></li><li><a href=#surfaceflinger-processdisplayadded>Surfaceflinger processDisplayAdded</a><ul><li><a href=#surfaceflinger-initscheduler>SurfaceFlinger initScheduler</a><ul><li><a href=#new-scheduler>new Scheduler</a></li><li><a href=#scheduler-createconnection>Scheduler createConnection</a></li></ul></li></ul></li></ul></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/4e4b47d8c4386e2f59ec469a903d6f44.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

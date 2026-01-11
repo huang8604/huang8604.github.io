@@ -1,0 +1,171 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。
+当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。
+"><meta name=keywords content='clippings,转载,blog'><meta itemprop=name content="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客"><meta itemprop=description content="BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。
+当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。"><meta itemprop=datePublished content="2024-11-06T06:57:52+00:00"><meta itemprop=dateModified content="2024-11-05T01:33:58+00:00"><meta itemprop=wordCount content="601"><meta itemprop=keywords content="Clippings,转载,Blog"><meta property="og:url" content="https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客"><meta property="og:description" content="BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。
+当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:52+00:00"><meta property="article:modified_time" content="2024-11-05T01:33:58+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="转载"><meta property="article:tag" content="Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客"><meta name=twitter:description content="BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。
+当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客"><link rel=next type=text/html href=https://huang8604.github.io/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueConsumer acquireBuffer流程分析-CSDN博客"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/"},"genre":"posts","keywords":"clippings, 转载, blog","wordcount":601,"url":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/","datePublished":"2024-11-06T06:57:52+00:00","dateModified":"2024-11-05T01:33:58+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/ class=post-collection title="合集 - 图形显示"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> 图形显示</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:52"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:33:58"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="601 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 2 分钟</span>&nbsp;</div></div><div class=content id=content><p>BufferQueueConsumer的releaseBuffer方法用于释放图形缓冲区。</p><p>当应用程序使用图形缓冲区进行绘制或渲染操作时，需要从BufferQueueConsumer中获取可用的缓冲区。使用完毕后，可以通过调用releaseBuffer方法将缓冲区释放回给BufferQueueConsumer。</p><p>releaseBuffer方法的作用是将指定的缓冲区添加到可用缓冲区队列中，以便其他应用程序或系统可以继续使用该缓冲区进行绘制或渲染操作。释放缓冲区后，应用程序不再拥有该缓冲区的所有权。</p><p>BufferQueueConsumer的releaseBuffer方法代码如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/lib/gui/BufferQueueConsumer.cpp
+</span></span></span><span class=line><span class=cl><span class=n>status_t</span> <span class=n>BufferQueueConsumer</span><span class=o>::</span><span class=n>releaseBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>,</span> <span class=kt>uint64_t</span> <span class=n>frameNumber</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;&amp;</span> <span class=n>releaseFence</span><span class=p>,</span> <span class=n>EGLDisplay</span> <span class=n>eglDisplay</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>EGLSyncKHR</span> <span class=n>eglFence</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>ATRACE_CALL</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>ATRACE_BUFFER_INDEX</span><span class=p>(</span><span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>slot</span> <span class=o>&lt;</span> <span class=mi>0</span> <span class=o>||</span> <span class=n>slot</span> <span class=o>&gt;=</span> <span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span> <span class=o>||</span>
+</span></span><span class=line><span class=cl>            <span class=n>releaseFence</span> <span class=o>==</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;releaseBuffer: slot %d out of range or fence %p NULL&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>releaseFence</span><span class=p>.</span><span class=n>get</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IProducerListener</span><span class=o>&gt;</span> <span class=n>listener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=c1>// Autolock scope
+</span></span></span><span class=line><span class=cl>        <span class=n>std</span><span class=o>::</span><span class=n>lock_guard</span><span class=o>&lt;</span><span class=n>std</span><span class=o>::</span><span class=n>mutex</span><span class=o>&gt;</span> <span class=n>lock</span><span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// If the frame number has changed because the buffer has been reallocated,
+</span></span></span><span class=line><span class=cl>        <span class=c1>// we can ignore this releaseBuffer for the old buffer.
+</span></span></span><span class=line><span class=cl>        <span class=c1>// Ignore this for the shared buffer where the frame number can easily
+</span></span></span><span class=line><span class=cl>        <span class=c1>// get out of sync due to the buffer being queued and acquired at the
+</span></span></span><span class=line><span class=cl>        <span class=c1>// same time.
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>frameNumber</span> <span class=o>!=</span> <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mFrameNumber</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>                <span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isShared</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>STALE_BUFFER_SLOT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isAcquired</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>BQ_LOGE</span><span class=p>(</span><span class=s>&#34;releaseBuffer: attempted to release buffer slot %d &#34;</span>
+</span></span><span class=line><span class=cl>                    <span class=s>&#34;but its state was %s&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>string</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>BAD_VALUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mEglDisplay</span> <span class=o>=</span> <span class=n>eglDisplay</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mEglFence</span> <span class=o>=</span> <span class=n>eglFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mFence</span> <span class=o>=</span> <span class=n>releaseFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>release</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=c1>// After leaving shared buffer mode, the shared buffer will
+</span></span></span><span class=line><span class=cl>        <span class=c1>// still be around. Mark it as no longer shared if this
+</span></span></span><span class=line><span class=cl>        <span class=c1>// operation causes it to be free.
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mSharedBufferMode</span> <span class=o>&amp;&amp;</span> <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isFree</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>mShared</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Don&#39;t put the shared buffer on the free list.
+</span></span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mSlots</span><span class=p>[</span><span class=n>slot</span><span class=p>].</span><span class=n>mBufferState</span><span class=p>.</span><span class=n>isShared</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mActiveBuffers</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mFreeBuffers</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mBufferReleasedCbEnabled</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>listener</span> <span class=o>=</span> <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mConnectedProducerListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>BQ_LOGV</span><span class=p>(</span><span class=s>&#34;releaseBuffer: releasing slot %d&#34;</span><span class=p>,</span> <span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=n>mCore</span><span class=o>-&gt;</span><span class=n>mDequeueCondition</span><span class=p>.</span><span class=n>notify_all</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=n>VALIDATE_CONSISTENCY</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=c1>// Autolock scope
+</span></span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Call back without lock held
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>listener</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>listener</span><span class=o>-&gt;</span><span class=n>onBufferReleased</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>NO_ERROR</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・图形显示</span></span></a> 43</div><div class=collection-nav><a href=/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=prev title="Android13 BufferQueueConsumer AcquireBuffer流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>Android13 BufferQueueConsumer AcquireBuffer流程分析-CSDN博客</span>
+</a><a href=/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=next title="Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客"><span>Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:33:58">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ data-title="Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=prev title="Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客</a><a href=/posts/android13-bufferqueueconsumer-acquirebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=next title="Android13 BufferQueueConsumer AcquireBuffer流程分析-CSDN博客">Android13 BufferQueueConsumer AcquireBuffer流程分析-CSDN博客<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录></aside></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/272b75304536ce266fa2eeb5a75885a6.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>

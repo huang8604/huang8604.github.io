@@ -1,0 +1,1175 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客 - 文韬的文档</title><meta name=author content="wentao"><meta name=description content="BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。
+"><meta name=keywords content='clippings,blog,转载'><meta itemprop=name content="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客"><meta itemprop=description content="BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。"><meta itemprop=datePublished content="2024-11-06T06:57:52+00:00"><meta itemprop=dateModified content="2024-11-05T01:33:58+00:00"><meta itemprop=wordCount content="4632"><meta itemprop=keywords content="Clippings,Blog,转载"><meta property="og:url" content="https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="文韬的文档"><meta property="og:title" content="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客"><meta property="og:description" content="BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-06T06:57:52+00:00"><meta property="article:modified_time" content="2024-11-05T01:33:58+00:00"><meta property="article:tag" content="Clippings"><meta property="article:tag" content="Blog"><meta property="article:tag" content="转载"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客"><meta name=twitter:description content="BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。"><meta name=application-name content="文涛的记录"><meta name=apple-mobile-web-app-title content="文涛的记录"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical type=text/html href=https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客 - 文韬的文档"><link rel=prev type=text/html href=https://huang8604.github.io/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueLayer onFrameAvailable流程分析-CSDN博客"><link rel=next type=text/html href=https://huang8604.github.io/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ title="Android13 BufferQueueConsumer releaseBuffer流程分析-CSDN博客"><link rel=alternate type=text/markdown href=https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title="Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客 - 文韬的文档"><link rel=stylesheet href=/css/config.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload href=/lib/fontawesome-free/all.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload href=/lib/animate/animate.min.css as=style onload='this.removeAttribute("onload"),this.rel="stylesheet"'><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Android13 BufferQueueLayer onFirstRef流程分析-CSDN博客","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/"},"genre":"posts","keywords":"clippings, blog, 转载","wordcount":4632,"url":"https:\/\/huang8604.github.io\/posts\/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2\/","datePublished":"2024-11-06T06:57:52+00:00","dateModified":"2024-11-05T01:33:58+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wentao"},"description":""}</script><script src=/js/head/color-scheme.min.js></script></head><body data-instant-intensity=viewport data-header-desktop=sticky data-header-mobile=auto><div class=wrapper data-page-style=wide><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=32 width=32><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容…… id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></li><li class="menu-item theme-switch" role=button aria-label=切换主题 title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=文韬的文档><img class=logo src=/images/doc.jpg alt=文韬的文档 height=26 width=26><span class=header-title-text>文韬的文档</span></a><span class=header-subtitle></span></div><div class=theme-switch role=button aria-label=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></div><div class=menu-toggle id=menu-toggle-mobile role=button aria-labelledby=menu-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容…… id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fa-solid fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fa-solid fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></li><li class=menu-item><a class=menu-link href=/archives/><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden=true></i> 归档</a></li><li class=menu-item><a class=menu-link href=/categories/><i class="fa-solid fa-folder-tree fa-fw fa-sm" aria-hidden=true></i> 分类</a></li><li class=menu-item><a class=menu-link href=/tags/><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden=true></i> 标签</a></li><li class=menu-item><a class=menu-link href=/collections/><i class="fa-solid fa-group fa-fw fa-sm" aria-hidden=true></i> 合集</a></li><li class="menu-item menu-system"></li></ul></nav></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=fi-container><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label=合集></aside><article class="page single"><div class=header><h1 class="single-title animate__animated animate__flipInX"><span>Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客</span></h1></div><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/huang8604 title=作者 target=_blank rel="external nofollow noopener noreferrer author" class=author><img class=avatar src='https://www.gravatar.com/avatar/b89538cdbc35c279ce1df9f3435f42a1?s=32&d=' alt=wentao height=16 width=16>&nbsp;wentao</a></span><span class=post-included-in>&nbsp;收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/ class=post-collection title="合集 - 图形显示"><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> 图形显示</a></span></div><div class=post-meta-line><span title="发布于 2024-11-06 06:57:52"><i class="fa-solid fa-calendar-days fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-06>2024-11-06</time></span>&nbsp;<span title="更新于 2024-11-05 01:33:58"><i class="fa-regular fa-calendar-check fa-fw me-1" aria-hidden=true></i><time datetime=2024-11-05>2024-11-05</time></span>&nbsp;<span title="4632 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden=true></i>约 4700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden=true></i>预计阅读 10 分钟</span>&nbsp;</div></div><div class="details toc" id=toc-static data-kept=false><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fa-solid fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#bufferqueue-createbufferqueue>BufferQueue createBufferQueue</a><ul><li><a href=#new-bufferqueuecore>new BufferQueueCore</a></li><li><a href=#new-bufferqueueproducer>new BufferQueueProducer</a></li><li><a href=#new-bufferqueueconsumer>new BufferQueueConsumer</a></li></ul></li><li><a href=#new-monitoredproducer>new MonitoredProducer</a></li><li><a href=#new-bufferlayerconsumer>new BufferLayerConsumer</a></li><li><a href=#bufferlayerconsumer-setcontentschangedlistener>BufferLayerConsumer setContentsChangedListener</a></li></ul></nav></div></div><div class=content id=content><p>BufferQueueLayer是Android系统中的一个图层，用于管理图像缓冲区的队列。它是SurfaceFlinger系统服务的一部分，负责接收应用程序或系统组件提交的图像缓冲区，并将其显示在屏幕上。onFirstRef是BufferQueueLayer类的一个方法，它是在第一次引用BufferQueueLayer对象时被调用的。在这个方法中，可以进行一些初始化操作，例如创建和配置图像缓冲区队列。</p><p>在创建BufferQueueLayer同时会创建一套生产者-消费者模型架构，核心是如下几个类：</p><p>BufferQueueLayer：创建了BufferQueue、MonitoredProducer、BufferLayerConsumer</p><p>BufferQueue：buffer队列，创建BufferQueueCore，BufferQueueProducer</p><p>BufferQueueProducer：生产者</p><p>BufferQueueConsumer：消费者</p><p>MonitoredProducer：生产者的封装</p><p>BufferLayerConsumer：消费者的封装</p><p>生产者提供图形数据，放入BufferQueue，消费者拿到图形数据进行合成，通常认为生产者为Surface，消费者为SurfaceFlinger，下面我们就分析一下生产者-消费者模型架构的搭建。</p><p><figure><a class=lightgallery target=_blank href=https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png title=" BufferQueue" data-thumbnail=https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png data-sub-html="<h2>841e2b18f38d679c90587b9589409df0_MD5</h2><p> BufferQueue</p>"><img loading=lazy src=https://picgo.myjojo.fun:666/i/2024/09/25/66f3e6dd98737.png alt=841e2b18f38d679c90587b9589409df0\_MD5></a><figcaption class=image-caption>BufferQueue</figcaption></figure></p><p>我们以BufferQueueLayer的创建为入口分析：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/BufferQueueLayer.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>BufferQueueLayer</span><span class=o>::</span><span class=n>onFirstRef</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>BufferLayer</span><span class=o>::</span><span class=n>onFirstRef</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;</span> <span class=n>producer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferConsumer</span><span class=o>&gt;</span> <span class=n>consumer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//步骤1
+</span></span></span><span class=line><span class=cl>    <span class=n>BufferQueue</span><span class=o>::</span><span class=n>createBufferQueue</span><span class=p>(</span><span class=o>&amp;</span><span class=n>producer</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>consumer</span><span class=p>,</span> <span class=nb>true</span><span class=p>);</span> <span class=c1>//创建BufferQueue
+</span></span></span><span class=line><span class=cl>    <span class=c1>//步骤2
+</span></span></span><span class=line><span class=cl>    <span class=n>mProducer</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MonitoredProducer</span><span class=p>(</span><span class=n>producer</span><span class=p>,</span> <span class=n>mFlinger</span><span class=p>,</span> <span class=k>this</span><span class=p>);</span> <span class=c1>//创建一个生产者
+</span></span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Grab the SF state lock during this since it&#39;s the only safe way to access RenderEngine
+</span></span></span><span class=line><span class=cl>        <span class=n>Mutex</span><span class=o>::</span><span class=n>Autolock</span> <span class=n>lock</span><span class=p>(</span><span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>mStateLock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=c1>//步骤3
+</span></span></span><span class=line><span class=cl>        <span class=n>mConsumer</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>                <span class=k>new</span> <span class=n>BufferLayerConsumer</span><span class=p>(</span><span class=n>consumer</span><span class=p>,</span> <span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>getRenderEngine</span><span class=p>(),</span> <span class=n>mTextureName</span><span class=p>,</span> <span class=k>this</span><span class=p>);</span>  <span class=c1>//创建一个消费者
+</span></span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//步骤4
+</span></span></span><span class=line><span class=cl>    <span class=n>mConsumer</span><span class=o>-&gt;</span><span class=n>setConsumerUsageBits</span><span class=p>(</span><span class=n>getEffectiveUsage</span><span class=p>(</span><span class=mi>0</span><span class=p>));</span>  <span class=c1>//设置缓冲区的类型,会保存到BufferQueueCore中的mConsumerUsageBits变量中
+</span></span></span><span class=line><span class=cl>    <span class=c1>//步骤5
+</span></span></span><span class=line><span class=cl>    <span class=n>mConsumer</span><span class=o>-&gt;</span><span class=n>setContentsChangedListener</span><span class=p>(</span><span class=k>this</span><span class=p>);</span>  <span class=c1>//设置缓冲区内容改变的监听器
+</span></span></span><span class=line><span class=cl>    <span class=n>mConsumer</span><span class=o>-&gt;</span><span class=n>setName</span><span class=p>(</span><span class=n>mName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// BufferQueueCore::mMaxDequeuedBufferCount is default to 1
+</span></span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>isLayerTripleBufferingDisabled</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mProducer</span><span class=o>-&gt;</span><span class=n>setMaxDequeuedBufferCount</span><span class=p>(</span><span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=n>display</span> <span class=o>=</span> <span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>getDefaultDisplayDevice</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>updateTransformHint</span><span class=p>(</span><span class=n>display</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>mLayerExt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLayerType</span> <span class=o>=</span> <span class=n>mFlinger</span><span class=o>-&gt;</span><span class=n>mLayerExt</span><span class=o>-&gt;</span><span class=n>getLayerClass</span><span class=p>(</span><span class=n>mName</span><span class=p>.</span><span class=n>string</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>上面这个函数就是创建SurfaceFlinger生产者-消费者模型的核心代码，我们分步骤分析：</p><h2 class=heading-element id=bufferqueue-createbufferqueue><span>BufferQueue createBufferQueue</span>
+<a href=#bufferqueue-createbufferqueue class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>步骤1：createBufferQueue，从名字看就能知道是创建BufferQueue，并且将生产者producer和消费者consumer的地址传了过去，显然这两个对象也会在createBufferQueue中创建。</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferQueue.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>BufferQueue</span><span class=o>::</span><span class=n>createBufferQueue</span><span class=p>(</span><span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;*</span> <span class=n>outProducer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferConsumer</span><span class=o>&gt;*</span> <span class=n>outConsumer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=kt>bool</span> <span class=n>consumerIsSurfaceFlinger</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>BufferQueueCore</span><span class=o>&gt;</span> <span class=n>core</span><span class=p>(</span><span class=k>new</span> <span class=n>BufferQueueCore</span><span class=p>());</span> <span class=c1>//创建BufferQueueCore
+</span></span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;</span> <span class=n>producer</span><span class=p>(</span><span class=k>new</span> <span class=n>BufferQueueProducer</span><span class=p>(</span><span class=n>core</span><span class=p>,</span> <span class=n>consumerIsSurfaceFlinger</span><span class=p>));</span> <span class=c1>//创建BufferQueueProducer
+</span></span></span><span class=line><span class=cl>   
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferConsumer</span><span class=o>&gt;</span> <span class=n>consumer</span><span class=p>(</span><span class=k>new</span> <span class=n>BufferQueueConsumer</span><span class=p>(</span><span class=n>core</span><span class=p>));</span> <span class=c1>//创建BufferQueueConsumer
+</span></span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=o>*</span><span class=n>outProducer</span> <span class=o>=</span> <span class=n>producer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>*</span><span class=n>outConsumer</span> <span class=o>=</span> <span class=n>consumer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>可以看到这个函数中并没有创建BufferQueue，而是创建的BufferQueueCore，可见BufferQueue的核心实现其实是依靠BufferQueueCore的，接着又创建了生产者的具体实现类BufferQueueProducer，消费者的具体实现类BufferQueueConsumer，并且这两个类都持有BufferQueueCore的引用，最后outProducer，outConsumer分别指向创建的生产者-消费者，下面分别进行分析：</p><h3 class=heading-element id=new-bufferqueuecore><span>new BufferQueueCore</span>
+<a href=#new-bufferqueuecore class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>创建BufferQueueCore对象，BufferQueueCore的构造方法如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferQueueCore.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BufferQueueCore</span> <span class=o>:</span> <span class=k>public</span> <span class=k>virtual</span> <span class=n>RefBase</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>BufferQueueCore</span><span class=o>::</span><span class=n>BufferQueueCore</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>      <span class=o>:</span> <span class=n>mMutex</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mIsAbandoned</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConsumerControlledByApp</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConsumerName</span><span class=p>(</span><span class=n>getUniqueName</span><span class=p>()),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConsumerListener</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConsumerUsageBits</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConsumerIsProtected</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConnectedApi</span><span class=p>(</span><span class=n>NO_CONNECTED_API</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLinkedToDeath</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mConnectedProducerListener</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mBufferReleasedCbEnabled</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSlots</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mQueue</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mFreeSlots</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mFreeBuffers</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mUnusedSlots</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mActiveBuffers</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDequeueCondition</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDequeueBufferCannotBlock</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mQueueBufferCanDrop</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLegacyBufferDrop</span><span class=p>(</span><span class=nb>true</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDefaultBufferFormat</span><span class=p>(</span><span class=n>PIXEL_FORMAT_RGBA_8888</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDefaultWidth</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDefaultHeight</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mDefaultBufferDataSpace</span><span class=p>(</span><span class=n>HAL_DATASPACE_UNKNOWN</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mMaxBufferCount</span><span class=p>(</span><span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mMaxAcquiredBufferCount</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mMaxDequeuedBufferCount</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mBufferHasBeenQueued</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mFrameCounter</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mTransformHint</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mIsAllocating</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mIsAllocatingCondition</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mAllowAllocation</span><span class=p>(</span><span class=nb>true</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mBufferAge</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mGenerationNumber</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mAsyncMode</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSharedBufferMode</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mAutoRefresh</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSharedBufferSlot</span><span class=p>(</span><span class=n>INVALID_BUFFER_SLOT</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mSharedBufferCache</span><span class=p>(</span><span class=n>Rect</span><span class=o>::</span><span class=n>INVALID_RECT</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=n>NATIVE_WINDOW_SCALING_MODE_FREEZE</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                           <span class=n>HAL_DATASPACE_UNKNOWN</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mLastQueuedSlot</span><span class=p>(</span><span class=n>INVALID_BUFFER_SLOT</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mUniqueId</span><span class=p>(</span><span class=n>getUniqueId</span><span class=p>()),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mAutoPrerotation</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=n>mTransformHintInUse</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>numStartingBuffers</span> <span class=o>=</span> <span class=n>getMaxBufferCountLocked</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>s</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>s</span> <span class=o>&lt;</span> <span class=n>numStartingBuffers</span><span class=p>;</span> <span class=n>s</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mFreeSlots</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>s</span> <span class=o>=</span> <span class=n>numStartingBuffers</span><span class=p>;</span> <span class=n>s</span> <span class=o>&lt;</span> <span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>s</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mUnusedSlots</span><span class=p>.</span><span class=n>push_front</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h3 class=heading-element id=new-bufferqueueproducer><span>new BufferQueueProducer</span>
+<a href=#new-bufferqueueproducer class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>创建BufferQueueProducer对象，BufferQueueProducer的构造方法如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferQueueProducer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BufferQueueProducer</span> <span class=o>:</span> <span class=k>public</span> <span class=n>BnGraphicBufferProducer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                            <span class=k>private</span> <span class=n>IBinder</span><span class=o>::</span><span class=n>DeathRecipient</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>BufferQueueProducer</span><span class=o>::</span><span class=n>BufferQueueProducer</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>BufferQueueCore</span><span class=o>&gt;&amp;</span> <span class=n>core</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=kt>bool</span> <span class=n>consumerIsSurfaceFlinger</span><span class=p>)</span> <span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>mCore</span><span class=p>(</span><span class=n>core</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mSlots</span><span class=p>(</span><span class=n>core</span><span class=o>-&gt;</span><span class=n>mSlots</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mConsumerName</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mStickyTransform</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mConsumerIsSurfaceFlinger</span><span class=p>(</span><span class=n>consumerIsSurfaceFlinger</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mLastQueueBufferFence</span><span class=p>(</span><span class=n>Fence</span><span class=o>::</span><span class=n>NO_FENCE</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mLastQueuedTransform</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mCallbackMutex</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mNextCallbackTicket</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mCurrentCallbackTicket</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mCallbackCondition</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mDequeueTimeout</span><span class=p>(</span><span class=o>-</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mDequeueWaitingForAllocation</span><span class=p>(</span><span class=nb>false</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h3 class=heading-element id=new-bufferqueueconsumer><span>new BufferQueueConsumer</span>
+<a href=#new-bufferqueueconsumer class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h3><p>创建BufferQueueConsumer对象，BufferQueueConsumer的构造方法如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/libs/gui/BufferQueueConsumer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BufferQueueConsumer</span> <span class=o>:</span> <span class=k>public</span> <span class=n>BnGraphicBufferConsumer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>BufferQueueConsumer</span><span class=o>::</span><span class=n>BufferQueueConsumer</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>BufferQueueCore</span><span class=o>&gt;&amp;</span> <span class=n>core</span><span class=p>)</span> <span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>mCore</span><span class=p>(</span><span class=n>core</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mSlots</span><span class=p>(</span><span class=n>core</span><span class=o>-&gt;</span><span class=n>mSlots</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=n>mConsumerName</span><span class=p>()</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><h2 class=heading-element id=new-monitoredproducer><span>new MonitoredProducer</span>
+<a href=#new-monitoredproducer class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>步骤2：为生产者对象创建一个MonitoredProducer，这个类完全就是生产者的封装类，它里面的所有函数几乎都是通过传递进去的producer来完成的，MonitoredProducer类定义如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=2 style=--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/MonitoredProducer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>MonitoredProducer</span> <span class=o>:</span> <span class=k>public</span> <span class=n>BnGraphicBufferProducer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>MonitoredProducer</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;&amp;</span> <span class=n>producer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>SurfaceFlinger</span><span class=o>&gt;&amp;</span> <span class=n>flinger</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>Layer</span><span class=o>&gt;&amp;</span> <span class=n>layer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=o>~</span><span class=n>MonitoredProducer</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// From IGraphicBufferProducer
+</span></span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>requestBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>,</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;*</span> <span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setMaxDequeuedBufferCount</span><span class=p>(</span><span class=kt>int</span> <span class=n>maxDequeuedBuffers</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setAsyncMode</span><span class=p>(</span><span class=kt>bool</span> <span class=n>async</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>dequeueBuffer</span><span class=p>(</span><span class=kt>int</span><span class=o>*</span> <span class=n>slot</span><span class=p>,</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;*</span> <span class=n>fence</span><span class=p>,</span> <span class=kt>uint32_t</span> <span class=n>w</span><span class=p>,</span> <span class=kt>uint32_t</span> <span class=n>h</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                   <span class=n>PixelFormat</span> <span class=n>format</span><span class=p>,</span> <span class=kt>uint64_t</span> <span class=n>usage</span><span class=p>,</span> <span class=kt>uint64_t</span><span class=o>*</span> <span class=n>outBufferAge</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                   <span class=n>FrameEventHistoryDelta</span><span class=o>*</span> <span class=n>outTimestamps</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>detachBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>detachNextBuffer</span><span class=p>(</span><span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;*</span> <span class=n>outBuffer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;*</span> <span class=n>outFence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>attachBuffer</span><span class=p>(</span><span class=kt>int</span><span class=o>*</span> <span class=n>outSlot</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;&amp;</span> <span class=n>buffer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>queueBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>,</span> <span class=k>const</span> <span class=n>QueueBufferInput</span><span class=o>&amp;</span> <span class=n>input</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>QueueBufferOutput</span><span class=o>*</span> <span class=n>output</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>cancelBuffer</span><span class=p>(</span><span class=kt>int</span> <span class=n>slot</span><span class=p>,</span> <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;&amp;</span> <span class=n>fence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>int</span> <span class=nf>query</span><span class=p>(</span><span class=kt>int</span> <span class=n>what</span><span class=p>,</span> <span class=kt>int</span><span class=o>*</span> <span class=n>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>connect</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>IProducerListener</span><span class=o>&gt;&amp;</span> <span class=n>token</span><span class=p>,</span> <span class=kt>int</span> <span class=n>api</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=kt>bool</span> <span class=n>producerControlledByApp</span><span class=p>,</span> <span class=n>QueueBufferOutput</span><span class=o>*</span> <span class=n>output</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>disconnect</span><span class=p>(</span><span class=kt>int</span> <span class=n>api</span><span class=p>,</span> <span class=n>DisconnectMode</span> <span class=n>mode</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setSidebandStream</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>NativeHandle</span><span class=o>&gt;&amp;</span> <span class=n>stream</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>allocateBuffers</span><span class=p>(</span><span class=kt>uint32_t</span> <span class=n>width</span><span class=p>,</span> <span class=kt>uint32_t</span> <span class=n>height</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>PixelFormat</span> <span class=n>format</span><span class=p>,</span> <span class=kt>uint64_t</span> <span class=n>usage</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>allowAllocation</span><span class=p>(</span><span class=kt>bool</span> <span class=n>allow</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setGenerationNumber</span><span class=p>(</span><span class=kt>uint32_t</span> <span class=n>generationNumber</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>String8</span> <span class=nf>getConsumerName</span><span class=p>()</span> <span class=k>const</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setDequeueTimeout</span><span class=p>(</span><span class=n>nsecs_t</span> <span class=n>timeout</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setLegacyBufferDrop</span><span class=p>(</span><span class=kt>bool</span> <span class=n>drop</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>getLastQueuedBuffer</span><span class=p>(</span><span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;*</span> <span class=n>outBuffer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;*</span> <span class=n>outFence</span><span class=p>,</span> <span class=kt>float</span> <span class=n>outTransformMatrix</span><span class=p>[</span><span class=mi>16</span><span class=p>])</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>IBinder</span><span class=o>*</span> <span class=nf>onAsBinder</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setSharedBufferMode</span><span class=p>(</span><span class=kt>bool</span> <span class=n>sharedBufferMode</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>setAutoRefresh</span><span class=p>(</span><span class=kt>bool</span> <span class=n>autoRefresh</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>getFrameTimestamps</span><span class=p>(</span><span class=n>FrameEventHistoryDelta</span> <span class=o>*</span><span class=n>outDelta</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>getUniqueId</span><span class=p>(</span><span class=kt>uint64_t</span><span class=o>*</span> <span class=n>outId</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>getConsumerUsage</span><span class=p>(</span><span class=kt>uint64_t</span><span class=o>*</span> <span class=n>outUsage</span><span class=p>)</span> <span class=k>const</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// The Layer which created this producer, and on which queued Buffer&#39;s will be displayed.
+</span></span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Layer</span><span class=o>&gt;</span> <span class=n>getLayer</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl><span class=k>private</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferProducer</span><span class=o>&gt;</span> <span class=n>mProducer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>SurfaceFlinger</span><span class=o>&gt;</span> <span class=n>mFlinger</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// The Layer which created this producer, and on which queued Buffer&#39;s will be displayed.
+</span></span></span><span class=line><span class=cl>    <span class=n>wp</span><span class=o>&lt;</span><span class=n>Layer</span><span class=o>&gt;</span> <span class=n>mLayer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl><span class=p>};</span> <span class=c1>// namespace android
+</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><h2 class=heading-element id=new-bufferlayerconsumer><span>new BufferLayerConsumer</span>
+<a href=#new-bufferlayerconsumer class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>步骤3：为生产者对象创建一个BufferLayerConsumer，这个类完全就是消费者的封装类，BufferLayerConsumer类定义如下：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=3 style=--fi-max-shown-lines:10;--fi-line-digit:3;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span><span class=lnt>241
+</span><span class=lnt>242
+</span><span class=lnt>243
+</span><span class=lnt>244
+</span><span class=lnt>245
+</span><span class=lnt>246
+</span><span class=lnt>247
+</span><span class=lnt>248
+</span><span class=lnt>249
+</span><span class=lnt>250
+</span><span class=lnt>251
+</span><span class=lnt>252
+</span><span class=lnt>253
+</span><span class=lnt>254
+</span><span class=lnt>255
+</span><span class=lnt>256
+</span><span class=lnt>257
+</span><span class=lnt>258
+</span><span class=lnt>259
+</span><span class=lnt>260
+</span><span class=lnt>261
+</span><span class=lnt>262
+</span><span class=lnt>263
+</span><span class=lnt>264
+</span><span class=lnt>265
+</span><span class=lnt>266
+</span><span class=lnt>267
+</span><span class=lnt>268
+</span><span class=lnt>269
+</span><span class=lnt>270
+</span><span class=lnt>271
+</span><span class=lnt>272
+</span><span class=lnt>273
+</span><span class=lnt>274
+</span><span class=lnt>275
+</span><span class=lnt>276
+</span><span class=lnt>277
+</span><span class=lnt>278
+</span><span class=lnt>279
+</span><span class=lnt>280
+</span><span class=lnt>281
+</span><span class=lnt>282
+</span><span class=lnt>283
+</span><span class=lnt>284
+</span><span class=lnt>285
+</span><span class=lnt>286
+</span><span class=lnt>287
+</span><span class=lnt>288
+</span><span class=lnt>289
+</span><span class=lnt>290
+</span><span class=lnt>291
+</span><span class=lnt>292
+</span><span class=lnt>293
+</span><span class=lnt>294
+</span><span class=lnt>295
+</span><span class=lnt>296
+</span><span class=lnt>297
+</span><span class=lnt>298
+</span><span class=lnt>299
+</span><span class=lnt>300
+</span><span class=lnt>301
+</span><span class=lnt>302
+</span><span class=lnt>303
+</span><span class=lnt>304
+</span><span class=lnt>305
+</span><span class=lnt>306
+</span><span class=lnt>307
+</span><span class=lnt>308
+</span><span class=lnt>309
+</span><span class=lnt>310
+</span><span class=lnt>311
+</span><span class=lnt>312
+</span><span class=lnt>313
+</span><span class=lnt>314
+</span><span class=lnt>315
+</span><span class=lnt>316
+</span><span class=lnt>317
+</span><span class=lnt>318
+</span><span class=lnt>319
+</span><span class=lnt>320
+</span><span class=lnt>321
+</span><span class=lnt>322
+</span><span class=lnt>323
+</span><span class=lnt>324
+</span><span class=lnt>325
+</span><span class=lnt>326
+</span><span class=lnt>327
+</span><span class=lnt>328
+</span><span class=lnt>329
+</span><span class=lnt>330
+</span><span class=lnt>331
+</span><span class=lnt>332
+</span><span class=lnt>333
+</span><span class=lnt>334
+</span><span class=lnt>335
+</span><span class=lnt>336
+</span><span class=lnt>337
+</span><span class=lnt>338
+</span><span class=lnt>339
+</span><span class=lnt>340
+</span><span class=lnt>341
+</span><span class=lnt>342
+</span><span class=lnt>343
+</span><span class=lnt>344
+</span><span class=lnt>345
+</span><span class=lnt>346
+</span><span class=lnt>347
+</span><span class=lnt>348
+</span><span class=lnt>349
+</span><span class=lnt>350
+</span><span class=lnt>351
+</span><span class=lnt>352
+</span><span class=lnt>353
+</span><span class=lnt>354
+</span><span class=lnt>355
+</span><span class=lnt>356
+</span><span class=lnt>357
+</span><span class=lnt>358
+</span><span class=lnt>359
+</span><span class=lnt>360
+</span><span class=lnt>361
+</span><span class=lnt>362
+</span><span class=lnt>363
+</span><span class=lnt>364
+</span><span class=lnt>365
+</span><span class=lnt>366
+</span><span class=lnt>367
+</span><span class=lnt>368
+</span><span class=lnt>369
+</span><span class=lnt>370
+</span><span class=lnt>371
+</span><span class=lnt>372
+</span><span class=lnt>373
+</span><span class=lnt>374
+</span><span class=lnt>375
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>//frameworks/native/services/surfaceflinger/BufferLayerConsumer.cpp
+</span></span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>BufferLayerConsumer</span> <span class=o>:</span> <span class=k>public</span> <span class=n>ConsumerBase</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>static</span> <span class=k>const</span> <span class=n>status_t</span> <span class=n>BUFFER_REJECTED</span> <span class=o>=</span> <span class=n>UNKNOWN_ERROR</span> <span class=o>+</span> <span class=mi>8</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>BufferRejecter</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>friend</span> <span class=k>class</span> <span class=nc>BufferLayerConsumer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>virtual</span> <span class=kt>bool</span> <span class=nf>reject</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;&amp;</span> <span class=n>buf</span><span class=p>,</span> <span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>protected</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>virtual</span> <span class=o>~</span><span class=n>BufferRejecter</span><span class=p>()</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=nc>ContentsChangedListener</span> <span class=o>:</span> <span class=k>public</span> <span class=n>FrameAvailableListener</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>onSidebandStreamChanged</span><span class=p>()</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// BufferLayerConsumer constructs a new BufferLayerConsumer object.  The
+</span></span></span><span class=line><span class=cl>    <span class=c1>// tex parameter indicates the name of the RenderEngine texture to which
+</span></span></span><span class=line><span class=cl>    <span class=c1>// images are to be streamed.
+</span></span></span><span class=line><span class=cl>    <span class=n>BufferLayerConsumer</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>IGraphicBufferConsumer</span><span class=o>&gt;&amp;</span> <span class=n>bq</span><span class=p>,</span> <span class=n>renderengine</span><span class=o>::</span><span class=n>RenderEngine</span><span class=o>&amp;</span> <span class=n>engine</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=kt>uint32_t</span> <span class=n>tex</span><span class=p>,</span> <span class=n>Layer</span><span class=o>*</span> <span class=n>layer</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Sets the contents changed listener. This should be used instead of
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ConsumerBase::setFrameAvailableListener().
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>setContentsChangedListener</span><span class=p>(</span><span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>ContentsChangedListener</span><span class=o>&gt;&amp;</span> <span class=n>listener</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// updateTexImage acquires the most recently queued buffer, and sets the
+</span></span></span><span class=line><span class=cl>    <span class=c1>// image contents of the target texture to it.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This call may only be made while RenderEngine is current.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This calls doFenceWait to ensure proper synchronization unless native
+</span></span></span><span class=line><span class=cl>    <span class=c1>// fence is supported.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// Unlike the GLConsumer version, this version takes a functor that may be
+</span></span></span><span class=line><span class=cl>    <span class=c1>// used to reject the newly acquired buffer.  It also does not bind the
+</span></span></span><span class=line><span class=cl>    <span class=c1>// RenderEngine texture until bindTextureImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>updateTexImage</span><span class=p>(</span><span class=n>BufferRejecter</span><span class=o>*</span> <span class=n>rejecter</span><span class=p>,</span> <span class=n>nsecs_t</span> <span class=n>expectedPresentTime</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                            <span class=kt>bool</span><span class=o>*</span> <span class=n>autoRefresh</span><span class=p>,</span> <span class=kt>bool</span><span class=o>*</span> <span class=n>queuedBuffer</span><span class=p>,</span> <span class=kt>uint64_t</span> <span class=n>maxFrameNumber</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// See BufferLayerConsumer::bindTextureImageLocked().
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>bindTextureImage</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// setReleaseFence stores a fence that will signal when the current buffer
+</span></span></span><span class=line><span class=cl>    <span class=c1>// is no longer being read. This fence will be returned to the producer
+</span></span></span><span class=line><span class=cl>    <span class=c1>// when the current buffer is released by updateTexImage(). Multiple
+</span></span></span><span class=line><span class=cl>    <span class=c1>// fences can be set for a given buffer; they will be merged into a single
+</span></span></span><span class=line><span class=cl>    <span class=c1>// union fence.
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>setReleaseFence</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;&amp;</span> <span class=n>fence</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=nf>releasePendingBuffer</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;</span> <span class=n>getPrevFinalReleaseFence</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// See GLConsumer::getTransformMatrix.
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>getTransformMatrix</span><span class=p>(</span><span class=kt>float</span> <span class=n>mtx</span><span class=p>[</span><span class=mi>16</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getTimestamp retrieves the timestamp associated with the texture image
+</span></span></span><span class=line><span class=cl>    <span class=c1>// set by the most recent call to updateTexImage.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// The timestamp is in nanoseconds, and is monotonically increasing. Its
+</span></span></span><span class=line><span class=cl>    <span class=c1>// other semantics (zero point, etc) are source-dependent and should be
+</span></span></span><span class=line><span class=cl>    <span class=c1>// documented by the source.
+</span></span></span><span class=line><span class=cl>    <span class=kt>int64_t</span> <span class=nf>getTimestamp</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getDataSpace retrieves the DataSpace associated with the texture image
+</span></span></span><span class=line><span class=cl>    <span class=c1>// set by the most recent call to updateTexImage.
+</span></span></span><span class=line><span class=cl>    <span class=n>ui</span><span class=o>::</span><span class=n>Dataspace</span> <span class=n>getCurrentDataSpace</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentHdrMetadata retrieves the HDR metadata associated with the
+</span></span></span><span class=line><span class=cl>    <span class=c1>// texture image set by the most recent call to updateTexImage.
+</span></span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>HdrMetadata</span><span class=o>&amp;</span> <span class=n>getCurrentHdrMetadata</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getFrameNumber retrieves the frame number associated with the texture
+</span></span></span><span class=line><span class=cl>    <span class=c1>// image set by the most recent call to updateTexImage.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// The frame number is an incrementing counter set to 0 at the creation of
+</span></span></span><span class=line><span class=cl>    <span class=c1>// the BufferQueue associated with this consumer.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint64_t</span> <span class=nf>getFrameNumber</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=nf>getTransformToDisplayInverse</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// must be called from SF main thread
+</span></span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>Region</span><span class=o>&amp;</span> <span class=n>getSurfaceDamage</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Merge the given damage region into the current damage region value.
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>mergeSurfaceDamage</span><span class=p>(</span><span class=k>const</span> <span class=n>Region</span><span class=o>&amp;</span> <span class=n>damage</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentApi retrieves the API which queues the current buffer.
+</span></span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=nf>getCurrentApi</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// See GLConsumer::setDefaultBufferSize.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>setDefaultBufferSize</span><span class=p>(</span><span class=kt>uint32_t</span> <span class=n>width</span><span class=p>,</span> <span class=kt>uint32_t</span> <span class=n>height</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// setFilteringEnabled sets whether the transform matrix should be computed
+</span></span></span><span class=line><span class=cl>    <span class=c1>// for use with bilinear filtering.
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>setFilteringEnabled</span><span class=p>(</span><span class=kt>bool</span> <span class=n>enabled</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentBuffer returns the buffer associated with the current image.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// When outSlot is not nullptr, the current buffer slot index is also
+</span></span></span><span class=line><span class=cl>    <span class=c1>// returned. Simiarly, when outFence is not nullptr, the current output
+</span></span></span><span class=line><span class=cl>    <span class=c1>// fence is returned.
+</span></span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;</span> <span class=n>getCurrentBuffer</span><span class=p>(</span><span class=kt>int</span><span class=o>*</span> <span class=n>outSlot</span> <span class=o>=</span> <span class=k>nullptr</span><span class=p>,</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;*</span> <span class=n>outFence</span> <span class=o>=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentCrop returns the cropping rectangle of the current buffer.
+</span></span></span><span class=line><span class=cl>    <span class=n>Rect</span> <span class=nf>getCurrentCrop</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentTransform returns the transform of the current buffer.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=nf>getCurrentTransform</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentScalingMode returns the scaling mode of the current buffer.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=nf>getCurrentScalingMode</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentFence returns the fence indicating when the current buffer is
+</span></span></span><span class=line><span class=cl>    <span class=c1>// ready to be read from.
+</span></span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;</span> <span class=n>getCurrentFence</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentFence returns the FenceTime indicating when the current
+</span></span></span><span class=line><span class=cl>    <span class=c1>// buffer is ready to be read from.
+</span></span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>shared_ptr</span><span class=o>&lt;</span><span class=n>FenceTime</span><span class=o>&gt;</span> <span class=n>getCurrentFenceTime</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// setConsumerUsageBits overrides the ConsumerBase method to OR
+</span></span></span><span class=line><span class=cl>    <span class=c1>// DEFAULT_USAGE_FLAGS to usage.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>setConsumerUsageBits</span><span class=p>(</span><span class=kt>uint64_t</span> <span class=n>usage</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>onBufferAvailable</span><span class=p>(</span><span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>)</span> <span class=n>EXCLUDES</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl><span class=k>protected</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// abandonLocked overrides the ConsumerBase method to clear
+</span></span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTextureImage in addition to the ConsumerBase behavior.
+</span></span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>void</span> <span class=n>abandonLocked</span><span class=p>()</span> <span class=n>EXCLUDES</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// dumpLocked overrides the ConsumerBase method to dump BufferLayerConsumer-
+</span></span></span><span class=line><span class=cl>    <span class=c1>// specific info in addition to the ConsumerBase behavior.
+</span></span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>dumpLocked</span><span class=p>(</span><span class=n>String8</span><span class=o>&amp;</span> <span class=n>result</span><span class=p>,</span> <span class=k>const</span> <span class=kt>char</span><span class=o>*</span> <span class=n>prefix</span><span class=p>)</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// See ConsumerBase::acquireBufferLocked
+</span></span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=n>status_t</span> <span class=nf>acquireBufferLocked</span><span class=p>(</span><span class=n>BufferItem</span><span class=o>*</span> <span class=n>item</span><span class=p>,</span> <span class=n>nsecs_t</span> <span class=n>presentWhen</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                         <span class=kt>uint64_t</span> <span class=n>maxFrameNumber</span> <span class=o>=</span> <span class=mi>0</span><span class=p>)</span> <span class=k>override</span>
+</span></span><span class=line><span class=cl>            <span class=n>EXCLUDES</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=nf>canUseImageCrop</span><span class=p>(</span><span class=k>const</span> <span class=n>Rect</span><span class=o>&amp;</span> <span class=n>crop</span><span class=p>)</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=nc>PendingRelease</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>PendingRelease</span><span class=p>()</span> <span class=o>:</span> <span class=n>isPending</span><span class=p>(</span><span class=nb>false</span><span class=p>),</span> <span class=n>currentTexture</span><span class=p>(</span><span class=o>-</span><span class=mi>1</span><span class=p>),</span> <span class=n>graphicBuffer</span><span class=p>()</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>        <span class=kt>bool</span> <span class=n>isPending</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>currentTexture</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;</span> <span class=n>graphicBuffer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// This releases the buffer in the slot referenced by mCurrentTexture,
+</span></span></span><span class=line><span class=cl>    <span class=c1>// then updates state to refer to the BufferItem, which must be a
+</span></span></span><span class=line><span class=cl>    <span class=c1>// newly-acquired buffer. If pendingRelease is not null, the parameters
+</span></span></span><span class=line><span class=cl>    <span class=c1>// which would have been passed to releaseBufferLocked upon the successful
+</span></span></span><span class=line><span class=cl>    <span class=c1>// completion of the method will instead be returned to the caller, so that
+</span></span></span><span class=line><span class=cl>    <span class=c1>// it may call releaseBufferLocked itself later.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>updateAndReleaseLocked</span><span class=p>(</span><span class=k>const</span> <span class=n>BufferItem</span><span class=o>&amp;</span> <span class=n>item</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>PendingRelease</span><span class=o>*</span> <span class=n>pendingRelease</span> <span class=o>=</span> <span class=k>nullptr</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>EXCLUDES</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Binds mTexName and the current buffer to TEXTURE_EXTERNAL target.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// If the bind succeeds, this calls doFenceWait.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>bindTextureImageLocked</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl><span class=k>private</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Utility class for managing GraphicBuffer references into renderengine
+</span></span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Image</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>Image</span><span class=p>(</span><span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;&amp;</span> <span class=n>graphicBuffer</span><span class=p>,</span> <span class=n>renderengine</span><span class=o>::</span><span class=n>RenderEngine</span><span class=o>&amp;</span> <span class=n>engine</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>virtual</span> <span class=o>~</span><span class=n>Image</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;&amp;</span> <span class=n>graphicBuffer</span><span class=p>()</span> <span class=p>{</span> <span class=k>return</span> <span class=n>mGraphicBuffer</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=k>private</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// mGraphicBuffer is the buffer that was used to create this image.
+</span></span></span><span class=line><span class=cl>        <span class=n>sp</span><span class=o>&lt;</span><span class=n>GraphicBuffer</span><span class=o>&gt;</span> <span class=n>mGraphicBuffer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Back-reference into renderengine to initiate cleanup.
+</span></span></span><span class=line><span class=cl>        <span class=n>renderengine</span><span class=o>::</span><span class=n>RenderEngine</span><span class=o>&amp;</span> <span class=n>mRE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>DISALLOW_COPY_AND_ASSIGN</span><span class=p>(</span><span class=n>Image</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// freeBufferLocked frees up the given buffer slot. If the slot has been
+</span></span></span><span class=line><span class=cl>    <span class=c1>// initialized this will release the reference to the GraphicBuffer in
+</span></span></span><span class=line><span class=cl>    <span class=c1>// that slot.  Otherwise it has no effect.
+</span></span></span><span class=line><span class=cl>    <span class=c1>//
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This method must be called with mMutex locked.
+</span></span></span><span class=line><span class=cl>    <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>freeBufferLocked</span><span class=p>(</span><span class=kt>int</span> <span class=n>slotIndex</span><span class=p>)</span> <span class=n>EXCLUDES</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// IConsumerListener interface
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>onDisconnect</span><span class=p>()</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>onSidebandStreamChanged</span><span class=p>()</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>addAndGetFrameTimestamps</span><span class=p>(</span><span class=k>const</span> <span class=n>NewFrameEventsEntry</span><span class=o>*</span> <span class=n>newTimestamps</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                  <span class=n>FrameEventHistoryDelta</span><span class=o>*</span> <span class=n>outDelta</span><span class=p>)</span> <span class=k>override</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// computeCurrentTransformMatrixLocked computes the transform matrix for the
+</span></span></span><span class=line><span class=cl>    <span class=c1>// current texture.  It uses mCurrentTransform and the current GraphicBuffer
+</span></span></span><span class=line><span class=cl>    <span class=c1>// to compute this matrix and stores it in mCurrentTransformMatrix.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTextureImage must not be nullptr.
+</span></span></span><span class=line><span class=cl>    <span class=kt>void</span> <span class=nf>computeCurrentTransformMatrixLocked</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// doFenceWaitLocked inserts a wait command into the RenderEngine command
+</span></span></span><span class=line><span class=cl>    <span class=c1>// stream to ensure that it is safe for future RenderEngine commands to
+</span></span></span><span class=line><span class=cl>    <span class=c1>// access the current texture buffer.
+</span></span></span><span class=line><span class=cl>    <span class=n>status_t</span> <span class=nf>doFenceWaitLocked</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// getCurrentCropLocked returns the cropping rectangle of the current buffer.
+</span></span></span><span class=line><span class=cl>    <span class=n>Rect</span> <span class=nf>getCurrentCropLocked</span><span class=p>()</span> <span class=k>const</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// The default consumer usage flags that BufferLayerConsumer always sets on its
+</span></span></span><span class=line><span class=cl>    <span class=c1>// BufferQueue instance; these will be OR:d with any additional flags passed
+</span></span></span><span class=line><span class=cl>    <span class=c1>// from the BufferLayerConsumer user. In particular, BufferLayerConsumer will always
+</span></span></span><span class=line><span class=cl>    <span class=c1>// consume buffers as hardware textures.
+</span></span></span><span class=line><span class=cl>    <span class=k>static</span> <span class=k>const</span> <span class=kt>uint64_t</span> <span class=n>DEFAULT_USAGE_FLAGS</span> <span class=o>=</span> <span class=n>GraphicBuffer</span><span class=o>::</span><span class=n>USAGE_HW_TEXTURE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTextureBuffer is the buffer containing the current texture. It&#39;s
+</span></span></span><span class=line><span class=cl>    <span class=c1>// possible that this buffer is not associated with any buffer slot, so we
+</span></span></span><span class=line><span class=cl>    <span class=c1>// must track it separately in order to support the getCurrentBuffer method.
+</span></span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>shared_ptr</span><span class=o>&lt;</span><span class=n>Image</span><span class=o>&gt;</span> <span class=n>mCurrentTextureBuffer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentCrop is the crop rectangle that applies to the current texture.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// It gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=n>Rect</span> <span class=n>mCurrentCrop</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTransform is the transform identifier for the current texture. It
+</span></span></span><span class=line><span class=cl>    <span class=c1>// gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=n>mCurrentTransform</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentScalingMode is the scaling mode for the current texture. It gets
+</span></span></span><span class=line><span class=cl>    <span class=c1>// set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=n>mCurrentScalingMode</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentFence is the fence received from BufferQueue in updateTexImage.
+</span></span></span><span class=line><span class=cl>    <span class=n>sp</span><span class=o>&lt;</span><span class=n>Fence</span><span class=o>&gt;</span> <span class=n>mCurrentFence</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// The FenceTime wrapper around mCurrentFence.
+</span></span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>shared_ptr</span><span class=o>&lt;</span><span class=n>FenceTime</span><span class=o>&gt;</span> <span class=n>mCurrentFenceTime</span><span class=p>{</span><span class=n>FenceTime</span><span class=o>::</span><span class=n>NO_FENCE</span><span class=p>};</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTransformMatrix is the transform matrix for the current texture.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// It gets computed by computeTransformMatrix each time updateTexImage is
+</span></span></span><span class=line><span class=cl>    <span class=c1>// called.
+</span></span></span><span class=line><span class=cl>    <span class=kt>float</span> <span class=n>mCurrentTransformMatrix</span><span class=p>[</span><span class=mi>16</span><span class=p>];</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTimestamp is the timestamp for the current texture. It
+</span></span></span><span class=line><span class=cl>    <span class=c1>// gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=kt>int64_t</span> <span class=n>mCurrentTimestamp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentDataSpace is the dataspace for the current texture. It
+</span></span></span><span class=line><span class=cl>    <span class=c1>// gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=n>ui</span><span class=o>::</span><span class=n>Dataspace</span> <span class=n>mCurrentDataSpace</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentHdrMetadata is the HDR metadata for the current texture. It
+</span></span></span><span class=line><span class=cl>    <span class=c1>// gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=n>HdrMetadata</span> <span class=n>mCurrentHdrMetadata</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentFrameNumber is the frame counter for the current texture.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// It gets set each time updateTexImage is called.
+</span></span></span><span class=line><span class=cl>    <span class=kt>uint64_t</span> <span class=n>mCurrentFrameNumber</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Indicates this buffer must be transformed by the inverse transform of the screen
+</span></span></span><span class=line><span class=cl>    <span class=c1>// it is displayed onto. This is applied after BufferLayerConsumer::mCurrentTransform.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// This must be set/read from SurfaceFlinger&#39;s main thread.
+</span></span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>mCurrentTransformToDisplayInverse</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// The portion of this surface that has changed since the previous frame
+</span></span></span><span class=line><span class=cl>    <span class=n>Region</span> <span class=n>mCurrentSurfaceDamage</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>mCurrentApi</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=kt>uint32_t</span> <span class=n>mDefaultWidth</span><span class=p>,</span> <span class=n>mDefaultHeight</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mFilteringEnabled indicates whether the transform matrix is computed for
+</span></span></span><span class=line><span class=cl>    <span class=c1>// use with bilinear filtering. It defaults to true and is changed by
+</span></span></span><span class=line><span class=cl>    <span class=c1>// setFilteringEnabled().
+</span></span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>mFilteringEnabled</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>renderengine</span><span class=o>::</span><span class=n>RenderEngine</span><span class=o>&amp;</span> <span class=n>mRE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mTexName is the name of the RenderEngine texture to which streamed
+</span></span></span><span class=line><span class=cl>    <span class=c1>// images will be bound when bindTexImage is called. It is set at
+</span></span></span><span class=line><span class=cl>    <span class=c1>// construction time.
+</span></span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>uint32_t</span> <span class=n>mTexName</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// The layer for this BufferLayerConsumer
+</span></span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>Layer</span><span class=o>&gt;</span> <span class=n>mLayer</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=n>wp</span><span class=o>&lt;</span><span class=n>ContentsChangedListener</span><span class=o>&gt;</span> <span class=n>mContentsChangedListener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// mCurrentTexture is the buffer slot index of the buffer that is currently
+</span></span></span><span class=line><span class=cl>    <span class=c1>// bound to the RenderEngine texture. It is initialized to INVALID_BUFFER_SLOT,
+</span></span></span><span class=line><span class=cl>    <span class=c1>// indicating that no buffer slot is currently bound to the texture. Note,
+</span></span></span><span class=line><span class=cl>    <span class=c1>// however, that a value of INVALID_BUFFER_SLOT does not necessarily mean
+</span></span></span><span class=line><span class=cl>    <span class=c1>// that no buffer is bound to the texture. A call to setBufferCount will
+</span></span></span><span class=line><span class=cl>    <span class=c1>// reset mCurrentTexture to INVALID_BUFFER_SLOT.
+</span></span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>mCurrentTexture</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Shadow buffer cache for cleaning up renderengine references.
+</span></span></span><span class=line><span class=cl>    <span class=n>std</span><span class=o>::</span><span class=n>shared_ptr</span><span class=o>&lt;</span><span class=n>Image</span><span class=o>&gt;</span> <span class=n>mImages</span><span class=p>[</span><span class=n>BufferQueueDefs</span><span class=o>::</span><span class=n>NUM_BUFFER_SLOTS</span><span class=p>]</span> <span class=n>GUARDED_BY</span><span class=p>(</span><span class=n>mImagesMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// Separate mutex guarding the shadow buffer cache.
+</span></span></span><span class=line><span class=cl>    <span class=c1>// mImagesMutex can be manipulated with binder threads (e.g. onBuffersAllocated)
+</span></span></span><span class=line><span class=cl>    <span class=c1>// which is contentious enough that we can&#39;t just use mMutex.
+</span></span></span><span class=line><span class=cl>    <span class=k>mutable</span> <span class=n>std</span><span class=o>::</span><span class=n>mutex</span> <span class=n>mImagesMutex</span><span class=p>;</span>
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl> 
+</span></span><span class=line><span class=cl>    <span class=c1>// A release that is pending on the receipt of a new release fence from
+</span></span></span><span class=line><span class=cl>    <span class=c1>// presentDisplay
+</span></span></span><span class=line><span class=cl>    <span class=n>PendingRelease</span> <span class=n>mPendingRelease</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div><div class=code-expand-btn aria-label=展开或折叠代码块 role=button><i class="fa-solid fa-angles-down" aria-hidden=true></i></div></div></div><p>步骤4：setConsumerUsageBits设置缓冲区的类型,会保存到BufferQueueCore中的mConsumerUsageBits变量中。</p><h2 class=heading-element id=bufferlayerconsumer-setcontentschangedlistener><span>BufferLayerConsumer setContentsChangedListener</span>
+<a href=#bufferlayerconsumer-setcontentschangedlistener class=heading-mark><svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5.0 114.95 4.95l-2.5 2.5a3.5 3.5.0 01-4.95.0.751.751.0 01.018-1.042.751.751.0 011.042-.018 1.998 1.998.0 002.83.0l2.5-2.5a2.002 2.002.0 00-2.83-2.83l-1.25 1.25a.751.751.0 01-1.042-.018.751.751.0 01-.018-1.042zm-4.69 9.64a1.998 1.998.0 002.83.0l1.25-1.25a.751.751.0 011.042.018.751.751.0 01.018 1.042l-1.25 1.25a3.5 3.5.0 11-4.95-4.95l2.5-2.5a3.5 3.5.0 014.95.0.751.751.0 01-.018 1.042.751.751.0 01-1.042.018 1.998 1.998.0 00-2.83.0l-2.5 2.5a1.998 1.998.0 000 2.83z"/></svg></a></h2><p>步骤5：通过setContentsChangedListener给消费者设置一个缓冲区内容变化的监听器：</p><div class="code-block highlight" data-mode=classic data-copyable=true><div class=chroma><div class="code-header language-cpp"><span class=code-title><i class="arrow fa-solid fa-chevron-down fa-fw" aria-hidden=true></i></span><span class=ellipses-btn aria-label="Show more options" role=button><i class="fa-solid fa-ellipsis-h fa-fw" aria-hidden=true></i></span><span class=line-nos-btn aria-label=切换行号 role=button title=切换行号><i class="fa-solid fa-list-ol fa-fw" aria-hidden=true></i></span><span class=line-wrap-btn aria-label=切换自动换行 role=button title=切换自动换行><i class="fa-solid fa-right-left fa-fw" aria-hidden=true></i></span><span class=copy-btn aria-label=复制到剪贴板 role=button title=复制到剪贴板><i class="fa-regular fa-clone fa-fw" aria-hidden=true></i></span></div><div class=code-wrapper data-max=10 data-line-digit=1 style=--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>// frameworks/native/services/surfaceflinger/BufferLayerConsumer.cpp
+</span></span></span><span class=line><span class=cl><span class=kt>void</span> <span class=n>BufferLayerConsumer</span><span class=o>::</span><span class=n>setContentsChangedListener</span><span class=p>(</span><span class=k>const</span> <span class=n>wp</span><span class=o>&lt;</span><span class=n>ContentsChangedListener</span><span class=o>&gt;&amp;</span> <span class=n>listener</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>setFrameAvailableListener</span><span class=p>(</span><span class=n>listener</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Mutex</span><span class=o>::</span><span class=n>Autolock</span> <span class=n>lock</span><span class=p>(</span><span class=n>mMutex</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>mContentsChangedListener</span> <span class=o>=</span> <span class=n>listener</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div><p>生产者dequeue一块buffer，应用程序进行绘制，绘制完成后queue此块buffer，此时生产者调用BufferQueueCore的mConsumerListener的onFrameAvailable回调函数，mConsumerListener其实是BufferQueue::ProxyConsumerListener，BufferQueue::ProxyConsumerListener在创建时又接收了ConsumerBase，所以调用到了ConsumerBase的onFrameAvailable中，ConsumerBase这里面又有一个成员变量mFrameAvailableListener，类型为BufferQueueLayer，所以最终是调用到了BufferQueueLayer的具体实现onFrameAvailable中，对这块已经绘制好的buffer进一步处理。</p></div><div class=collection-card><div class="collection-title text-secondary">收录于 <a href=/collections/%E5%9B%BE%E5%BD%A2%E6%98%BE%E7%A4%BA/><i class="fa-solid fa-layer-group fa-fw" aria-hidden=true></i> <span>合集・图形显示</span></span></a> 43</div><div class=collection-nav><a href=/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=prev title="Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i><span>Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客</span>
+</a><a href=/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=collection-nav-item rel=next title="Android13 BufferQueueLayer OnFrameAvailable流程分析-CSDN博客"><span>Android13 BufferQueueLayer OnFrameAvailable流程分析-CSDN博客</span><i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span title="更新于 2024-11-05 01:33:58">更新于 2024-11-05&nbsp;</span></div><div class=post-info-license><span><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div><div class=post-info-line><div class=post-info-md><span><a href=/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/index.md title=阅读原始文档 class=link-to-markdown>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=https://huang8604.github.io/posts/android13-bufferqueuelayer-onfirstref%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ data-title="Android13 BufferQueueLayer OnFirstRef流程分析-CSDN博客"><i class="fa-brands fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fa-solid fa-tags fa-fw me-1" aria-hidden=true></i><a href=/tags/clippings/ class=post-tag title="标签 - Clippings">Clippings</a><a href=/tags/blog/ class=post-tag title="标签 - Blog">Blog</a><a href=/tags/%E8%BD%AC%E8%BD%BD/ class=post-tag title="标签 - 转载">转载</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/android13-bufferqueuelayer-onframeavailable%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=prev title="Android13 BufferQueueLayer OnFrameAvailable流程分析-CSDN博客"><i class="fa-solid fa-angle-left fa-fw" aria-hidden=true></i>Android13 BufferQueueLayer OnFrameAvailable流程分析-CSDN博客</a><a href=/posts/android13-bufferqueueconsumer-releasebuffer%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-csdn%E5%8D%9A%E5%AE%A2/ class=post-nav-item rel=next title="Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客">Android13 BufferQueueConsumer ReleaseBuffer流程分析-CSDN博客<i class="fa-solid fa-angle-right fa-fw" aria-hidden=true></i></a></div></div><div class=post-reward><div class=comment></div><input type=checkbox class=reward-input name=reward id=fi-reward hidden>
+<label class=reward-button for=fi-reward><i class="fa-solid fa-qrcode fa-fw" aria-hidden=true></i>赞赏</label><div class=reward-ways data-mode=static></div></div><div id=comments><div id=giscus class=comment><script src=https://giscus.app/client.js data-repo=huang8604/huang8604.github.io data-repo-id=R_kgDOMx3bEg data-category=Announcements data-category-id=DIC_kwDOMx3bEs4CigIp data-mapping=pathname data-strict=0 data-theme=preferred_color_scheme data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-lang=zh-CN data-loading=lazy crossorigin=anonymous async defer></script></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/ rel="external nofollow noopener noreferrer">giscus</a>.</noscript></div></article><aside class=toc id=toc-auto aria-label=目录><h2 class=toc-title>目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden=true></i></h2><div class=toc-content id=toc-content-auto></div></aside><dialog id=toc-dialog aria-labelledby=toc-dialog-title role=dialog><div class=toc><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-drawer><nav><ul><li><a href=#bufferqueue-createbufferqueue>BufferQueue createBufferQueue</a><ul><li><a href=#new-bufferqueuecore>new BufferQueueCore</a></li><li><a href=#new-bufferqueueproducer>new BufferQueueProducer</a></li><li><a href=#new-bufferqueueconsumer>new BufferQueueConsumer</a></li></ul></li><li><a href=#new-monitoredproducer>new MonitoredProducer</a></li><li><a href=#new-bufferlayerconsumer>new BufferLayerConsumer</a></li><li><a href=#bufferlayerconsumer-setcontentschangedlistener>BufferLayerConsumer setContentsChangedListener</a></li></ul></nav></div></div></dialog></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.154.4"><img class=hugo-icon src=/images/hugo.min.svg alt="Hugo logo"> Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.4.1"><img class=fixit-icon src=/images/fixit.min.svg alt="FixIt logo"> FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
+<span itemprop=copyrightYear>2021 - 2026</span><span class=author itemprop=copyrightHolder>
+<a href=https://github.com/huang8604 target=_blank rel="external nofollow noopener noreferrer">wentao</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a></span></div></div></footer></div><div class=widgets><div class=fixed-buttons><div class="fixed-button back-to-top animate__faster d-none" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i></div><div id=toc-drawer-button class="fixed-button toc-drawer-button d-none" role=button aria-label=目录><i class="fa-solid fa-bars fa-fw" aria-hidden=true></i></div><div class="fixed-button view-comments d-none" role=button aria-label=查看评论><i class="fa-solid fa-comment fa-fw" aria-hidden=true></i></div></div><div id=mask></div><noscript><div class=noscript-warning>该网站在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/lightgallery/css/lightgallery-bundle.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/autocomplete/autocomplete.min.js defer></script><script src=/lib/fuse/fuse.min.js defer></script><script src=/lib/instant-page/instantpage.min.js async defer type=module></script><script src=/lib/lightgallery/lightgallery.min.js defer></script><script src=/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js defer></script><script src=/lib/lightgallery/plugins/zoom/lg-zoom.min.js defer></script><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script src=/js/config/abcac01d0588e090c6d56f62570f1bf7.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/custom.min.js defer></script></body></html>
