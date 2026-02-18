@@ -1,0 +1,174 @@
+# 「置顶」博客文章目录
+
+本博客内容主要集中在 Android 开发和优化相关的话题，包括一些性能工具的使用、Android App 优化知识、Android Framework 知识讲解，性能理论知识讲解等，这里整理了一份目录供大家参考，大家可以挑感兴趣的部分来看。这里不仅仅包含博客中的内容，一些我在 [知乎](https://www.zhihu.com/people/gracker) 或者 [知识星球 - The Performance](https://t.zsxq.com/mIimiey) 的回答也会放到这里，不过这个目录里面放的都是我原创的博客，另外还收集了一些优秀文章，我也会不定期更新 [Android 性能优化必知必会](https://androidperformance.com/2018/05/07/Android-performance-optimization-skills-and-tools/)。
+
+博客的每次更新都会更新这篇目录，方便大家查阅。我会尽量保证每周一更，学无止境，与大家共勉，有什么想了解的或者博客中不足的地方，请大家在博客或者知乎、微博、微信留言给我，我会积极改正。
+
+## 理论知识
+
+1. [Android 性能优化的术、道、器](https://www.androidperformance.com/2022/01/07/The-Performace-1-Performance-Tools/)
+2. [The Performance 知识星球简介](https://www.androidperformance.com/2022/03/13/the-performance)
+3. [The Performance 星球茶话会 - 第一期](https://www.androidperformance.com/2022/03/27/the-performance-tea-part-01/)
+4. [OS 设计之性能设计](https://androidperformance.com/2023/08/21/the-performance-design-of-os/)
+
+## Perfetto 系列
+
+1. [Perfetto 系列目录](https://www.androidperformance.com/2024/03/27/Android-Perfetto-101/)
+2. [Android Perfetto 系列 1：Perfetto 工具简介](https://www.androidperformance.com/2024/05/21/Android-Perfetto-01-What-is-perfetto/)
+3. [Android Perfetto 系列 2：Perfetto Trace 抓取](https://www.androidperformance.com/2024/05/21/Android-Perfetto-02-how-to-get-perfetto/)
+4. [Android Perfetto 系列 3：熟悉 Perfetto View](https://www.androidperformance.com/2024/05/21/Android-Perfetto-03-how-to-analysis-perfetto/)
+
+## Systrace 系列
+
+Systrace 工具是分析 Android 性能问题的利器，它可以从一个图形的角度，来展现整机的运行情况。Systrace 工具不仅可以分析性能问题，用它来进行 Framework 的学习也是很好的，这也是我写本系列文章的一个原因
+
+1. [Systrace 简介](https://www.androidperformance.com/2019/05/28/Android-Systrace-About/)
+2. [Systrace 基础知识 - Systrace 预备知识](https://www.androidperformance.com/2019/07/23/Android-Systrace-Pre/)
+3. [Systrace 基础知识 - Why 60 fps ？](https://www.androidperformance.com/2019/05/27/why-60-fps/)
+4. [Systrace 基础知识 - SystemServer 解读](https://androidperformance.com/2019/06/29/Android-Systrace-SystemServer/)
+5. [Systrace 基础知识 - Input 解读](https://www.androidperformance.com/2019/11/04/Android-Systrace-Input/)
+6. [Systrace 基础知识 - Vsync 产生与工作机制解读](https://www.androidperformance.com/2019/12/01/Android-Systrace-Vsync/)
+7. [Systrace 基础知识 - Vsync-App ：基于 Choreographer 的渲染机制详解](https://androidperformance.com/2019/10/22/Android-Choreographer/)
+8. [Systrace 基础知识 - MainThread 和 RenderThread 解读](https://www.androidperformance.com/2019/11/06/Android-Systrace-MainThread-And-RenderThread/)
+9. [Systrace 基础知识 - Binder 和锁竞争解读](https://www.androidperformance.com/2019/12/06/Android-Systrace-Binder/)
+10. [Systrace 基础知识 - Triple Buffer 解读](https://www.androidperformance.com/2019/12/15/Android-Systrace-Triple-Buffer)
+11. [Systrace 基础知识 - CPU Info 解读](https://www.androidperformance.com/2019/12/21/Android-Systrace-CPU)
+12. [Systrace 基础知识 - SystemServer 解读](https://www.androidperformance.com/2019/06/29/Android-Systrace-SystemServer/)
+13. [Systrace 基础知识 - SurfaceFlinger 解读](https://www.androidperformance.com/2020/02/14/Android-Systrace-SurfaceFlinger/)
+14. [Systrace 流畅性实战 1 ：了解卡顿原理](https://www.androidperformance.com/2021/04/24/android-systrace-smooth-in-action-1/)
+15. [Systrace 流畅性实战 2 ：案例分析: MIUI 桌面滑动卡顿分析](https://www.androidperformance.com/2021/04/24/android-systrace-smooth-in-action-2/)
+16. [Systrace 流畅性实战 3 ：卡顿分析过程中的一些疑问](https://www.androidperformance.com/2021/04/24/android-systrace-smooth-in-action-3/)
+17. [Systrace 响应速度实战 1 ：了解响应速度原理](https://www.androidperformance.com/2021/09/13/android-systrace-Responsiveness-in-action-1/)
+18. [Systrace 响应速度实战 2 ：响应速度实战分析-以启动速度为例](https://www.androidperformance.com/2021/09/13/android-systrace-Responsiveness-in-action-2/)
+19. [Systrace 响应速度实战 3 ：响应速度延伸知识](https://www.androidperformance.com/2021/09/13/android-systrace-Responsiveness-in-action-3/)
+20. [Systrace 线程 CPU 运行状态分析技巧 - Runnable 篇](https://www.androidperformance.com/2022/01/21/android-systrace-cpu-state-runnable/)
+21. [Systrace 线程 CPU 运行状态分析技巧 - Running 篇](https://www.androidperformance.com/2022/03/13/android-systrace-cpu-state-running/)
+22. [Systrace 线程 CPU 运行状态分析技巧 - Sleep 和 Uninterruptible Sleep 篇](https://www.androidperformance.com/2022/03/13/android-systrace-cpu-state-sleep/)
+
+## 流畅性
+
+流畅性主要指的是卡顿、掉帧，对应的英文是 Smooth vs Jank
+
+1. [Android 中的卡顿丢帧原因概述 - 方法论](https://www.androidperformance.com/2019/09/05/Android-Jank-Debug/)
+2. [Android 中的卡顿丢帧原因概述 - 系统篇](https://www.androidperformance.com/2019/09/05/Android-Jank-Due-To-System/)
+3. [Android 中的卡顿丢帧原因概述 - 应用篇](https://www.androidperformance.com/2019/09/05/Android-Jank-Due-To-App/)
+4. [Android 中的卡顿丢帧原因概述 - 低内存篇](https://androidperformance.com/2019/09/18/Android-Jank-Due-To-Low-Memory/)
+5. [关于 Android 系统流畅性的一些思考](https://androidperformance.com/2018/08/13/Some-Thoughts-on-the-Fluency-of-Android/)
+6. [新的流畅体验，90Hz 漫谈](https://androidperformance.com/2019/05/15/90hz-on-android/)
+7. [Android性能优化之过渡绘制(一)](https://androidperformance.com/2014/10/20/android-performance-optimization-overdraw-1/)
+8. [Android性能优化之过渡绘制( 二)](https://androidperformance.com/2015/01/13/android-performance-optimization-overdraw-2/)
+9. [Android性能优化后续](https://androidperformance.com/2015/03/31/android-performance-case-study-follow-up/)
+10. [华为手机刷微博体验更好？技术角度的一些分析和思考](https://www.androidperformance.com/2020/08/20/weibo-imageload-opt-on-huawei/)
+
+## 响应速度
+
+响应速度主要指的是 App 冷热启动、界面跳转速度、亮灭屏速度等，对应的英文是 Fast vs Slow
+
+1. [Android App 启动优化全记录](https://androidperformance.com/2019/11/18/Android-App-Lunch-Optimize/)
+2. [知乎 救救你的 StartingWindow](https://androidperformance.com/2018/05/20/zhihu-startingwindow/)
+3. [Android 中如何计算 App 的启动时间？](https://androidperformance.com/2015/12/31/How-to-calculation-android-app-lunch-time/)
+4. [Android 应用启动优化:一种 DelayLoad 的实现和原理(上篇)](https://androidperformance.com/2015/11/18/Android-app-lunch-optimize-delay-load/)
+5. [Android 应用启动优化:一种 DelayLoad 的实现和原理(下篇)](https://androidperformance.com/2015/12/29/Android%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96-%E4%B8%80%E7%A7%8DDelayLoad%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%8E%9F%E7%90%86-%E4%B8%8B%E7%AF%87/)
+
+## 内存
+
+主要记录 Android 内存优化相关的知识和工具，以及对系统的影响
+
+1. [Android 中低内存对性能的影响](https://androidperformance.com/2019/09/18/Android-Jank-Due-To-Low-Memory/)
+2. [Android 系统不释放内存吗？](https://androidperformance.com/2018/09/13/android-memory/)
+3. [Android 代码内存优化建议-Android 资源篇](https://androidperformance.com/2015/07/20/Android-Performance-Memory-AndroidResource/)
+4. [Android 代码内存优化建议-Android 官方篇](https://androidperformance.com/2015/07/20/Android-Performance-Memory-Google/)
+5. [Android 代码内存优化建议-Java 官方篇](https://androidperformance.com/2015/07/20/Android-Performance-Memory-Java/)
+6. [Android 内存优化之一：MAT 使用入门](https://androidperformance.com/2015/04/11/AndroidMemory-Usage-Of-MAT/)
+7. [Android内存优化之二：MAT使用进阶](https://androidperformance.com/2015/04/11/AndroidMemory-Usage-Of-MAT-Pro/)
+8. [Android内存优化之三：打开MAT中的Bitmap原图](https://androidperformance.com/2015/04/11/AndroidMemory-Open-Bitmap-Object-In-MAT/)
+
+## Framework 知识
+
+博客中 Framework 相关的内容会集中在这里，包括一些 Framework 的运行原理、Framework 问题的解题思路、Framework 优化方法等
+
+1. [当 App 有了系统权限，真的可以为所欲为？](https://www.androidperformance.com/2023/05/14/bad-android-app-with-system-permissions/#/6-5-WriteSettingsExecutor)
+2. [Android 中的“后台无效动画“行为分析](https://androidperformance.com/2019/10/24/Android-Background-Animation/)
+3. [Android 框架问题分析案例 - 谁杀了桌面?](https://androidperformance.com/2019/09/17/Android-Kill-Background-App-Debug/)
+4. [Android 中的 Activity Launch Mode 详解](https://androidperformance.com/2019/09/01/Android-Activity-Lunch-Mode/)
+5. [Android 中的 Hardware Layer 详解](https://androidperformance.com/2019/07/27/Android-Hardware-Layer/)
+6. [Android 平台应用宝和讯飞输入法无障碍服务导致的全局卡顿分析](https://androidperformance.com/2019/01/21/android-performance-case-jank-accessbility/)
+7. [从用户角度来理解 Android 应用的状态](https://androidperformance.com/2018/10/24/android-process-review-with-user-side/)
+8. [Android hwui 中 RenderThread 工作流程](https://androidperformance.com/2015/08/12/AndroidL-hwui-RenderThread-workflow/)
+9. [HashMap 源码分析](https://androidperformance.com/2015/08/05/HashMap/)
+10. [细说Java单例模式](https://androidperformance.com/2015/05/06/Java-Singleton/)
+11. [Android 系统开发源码环境搭建](https://androidperformance.com/2018/11/01/android-system-develop-0/)
+12. [Android App 链式唤醒分析](https://www.androidperformance.com/2020/05/07/Android-App-Chain-Wakeup/)
+13. [一个「闰」字引发的事故 - 三星系统重启分析](https://www.androidperformance.com/2020/05/26/samsung_crash/)
+14. [Android 系统开发系列（1）：Android 12 源代码下载、编译和刷机](https://www.androidperformance.com/2021/10/26/build-android-12/)
+
+## App 开发
+
+这里主要记录一些 App 开发相关的博文，由于写的比较早，大家随便看一下就可以了
+
+1. [Android Bottom navigation 规范一：使用方法](https://androidperformance.com/2016/04/05/android-bottom-bar-1/)
+2. [Android Bottom navigation 规范二：样式、行为与规格](https://androidperformance.com/2016/04/05/android-bottom-bar-2/)
+3. [Android Service：开发自己的通知中心(1):辅助性服务介绍](https://androidperformance.com/2014/03/17/android-build-your-own-android-notification-service-app/)
+4. [Android Service：开发自己的通知中心(2):辅助性服务实战](https://androidperformance.com/2014/04/01/android-service-build-your-own-notification-servers-app/)
+5. [Android开发:Log2File工具类](https://androidperformance.com/2014/05/02/android_log_to_file/)
+6. [Android:Ubuntu下执行Adb命令找不到设备](https://androidperformance.com/2014/03/25/ubuntu-adb-can-not-find-devices/)
+7. [Android小技巧:如何让EditText不自动获取焦点](https://androidperformance.com/2014/06/03/android-edittext-do-not-auto-get-focus/)
+
+## 个人总结和好物推荐
+
+与技术无关，但是可以提高幸福感和工作效率
+
+1. [2023 年的方方面面](https://androidperformance.com/2024/01/01/2023-review/)
+2. [回顾 2021](https://www.androidperformance.com/2022/01/03/2021-Review/)
+3. [我是 Gracker，这是我的利器](https://androidperformance.com/2019/04/07/liqi/)
+4. [Gracker 的 2018 年度最推荐 - 给辛勤工作的自己一点奖励](https://androidperformance.com/2019/01/12/recommend-of-2018/)
+5. [陆奇：除了好代码，工程师怎样才算优秀？](https://androidperformance.com/2018/10/25/How-do-engineers-count-well/)
+6. [2017 年度最推荐 - 给辛勤工作的自己一点奖励](https://androidperformance.com/2018/01/06/2017%E5%B9%B4%E5%BA%A6%E6%9C%80%E6%8E%A8%E8%8D%90/)
+7. [关于 2017](https://androidperformance.com/2017/04/23/About-work/)
+8. [Android 开发者学习路线(2020 版本)](https://www.androidperformance.com/2020/02/03/android-development-learning-path-2020-edition/)
+9. [我的 2020 年读书单](https://www.androidperformance.com/2020/01/28/2020-read/)
+
+## 读书笔记
+
+1. [一本讲 Android 流畅性的书，应该有什么内容？](https://www.androidperformance.com/2021/10/27/if-i-write-a-book-about-performance/)
+2. [程序员的修炼-01：绝地反击之术](https://www.androidperformance.com/2018/09/19/how-to-stop-sucking-and-be-awesome-instead-1/)
+3. [程序员的修炼-02：编程之道](https://www.androidperformance.com/2018/09/20/how-to-stop-sucking-and-be-awesome-instead-2/)
+4. [程序员的修炼-03：Web 设计原则](https://www.androidperformance.com/2018/09/26/how-to-stop-sucking-and-be-awesome-instead-3/)
+5. [程序员的修炼-04：关于测试的一些思考](https://www.androidperformance.com/2018/09/27/how-to-stop-sucking-and-be-awesome-instead-4/)
+6. [程序员的修炼-05：了解你的用户](https://www.androidperformance.com/2018/09/28/how-to-stop-sucking-and-be-awesome-instead-5/)
+7. [程序员的修炼-06：互联网那些事](https://www.androidperformance.com/2018/09/29/how-to-stop-sucking-and-be-awesome-instead-6/)
+8. [程序员的修炼-07：游戏与编程](https://www.androidperformance.com/2018/09/30/how-to-stop-sucking-and-be-awesome-instead-7/)
+9. [程序员的修炼-08：阅读之美](https://www.androidperformance.com/2018/10/01/how-to-stop-sucking-and-be-awesome-instead-8/)
+
+## 性能优化典范和 Tips
+
+性能优化典范是 Google 出品的一系列性能相关的短视频，总共出了 6 季，之前想的是每一集都来一个文章配合，后面发现不是很现实；Android Tips 则是翻译的另外一个博主的文章
+
+1. [Android性能优化典范综述](https://androidperformance.com/2015/04/19/Android-Performance-Patterns/)
+2. [Android性能优化典范之Render Performance](https://androidperformance.com/2015/04/19/Android-Performance-Patterns-1/)
+3. [Android性能优化典范之Understanding Overdraw](https://androidperformance.com/2015/04/19/Android-Performance-Patterns-2/)
+4. [Android性能优化典范之Understanding VSYNC](https://www.androidperformance.com/2015/04/19/Android-Performance-Patterns-3/)
+5. [Android性能优化典范之Profile GPU Rendering](https://androidperformance.com/2015/04/19/Android-Performance-Patterns-4/)
+6. [Android Tips 1](https://androidperformance.com/2014/05/28/android-tips-round-up-1/)
+7. [Android Tips 2](https://androidperformance.com/2014/05/31/android-tips-round-up-2/)
+8. [Android Tips 3](https://androidperformance.com/2015/03/15/android-tips-round-up-3/)
+9. [Android Tips 4](https://androidperformance.com/2015/03/15/android-tips-round-up-4/)
+10. [Android Tips 5](https://androidperformance.com/2015/03/15/android-tips-round-up-5/)
+
+## 知乎问答
+
+知乎专栏会搬运一部分文章，这里只贴一些高赞的回答
+
+1. [个人知乎主页](https://www.zhihu.com/people/gracker) ，欢迎大家点赞关注
+2. [如何看待小米部分机型运行《王者荣耀》时两个大核被锁](https://www.zhihu.com/question/67627009/answer/255199992)
+3. [Flyme 5 相对于 Flyme 4 流畅得脱胎换骨，其中根本的变化是什么？](https://www.zhihu.com/question/38533041/answer/77512815)
+4. [Android 系统不释放内存吗？](https://www.zhihu.com/question/24976909/answer/49711238)
+5. [了解Android的Framework层对工作有什么帮助吗？](https://www.zhihu.com/question/350047125)
+6. [怎么看待三星大量手机在今天（5.23）凌晨系统崩溃并数据丢失？](https://www.zhihu.com/question/396666758/answer/1245994988)
+
+
+---
+
+> 作者: [wentao](https://github.com/huang8604)  
+> URL: https://huang8604.github.io/posts/%E7%BD%AE%E9%A1%B6%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E7%9B%AE%E5%BD%95/  
+
